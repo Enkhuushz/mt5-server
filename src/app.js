@@ -23,11 +23,9 @@ app.use(cors());
 app.use(express.json());
 
 const loggingMiddleware = (req, res, next) => {
-  logger.info("New request received:", {
-    ip: req.ip,
-    url: req.url,
-    method: req.method,
-  });
+  logger.info(
+    `New request received: ip = ${req.ip}, url = ${req.url}, method = ${req.method}`
+  );
 
   next();
 };
