@@ -2,8 +2,7 @@ const { authAndGetRequest, authAndPostRequest } = require("./MT5Request");
 const { MT5_GROUP_TYPE, MT5_SERVER_TYPE } = require("../../lib/constants");
 const { log } = require("winston");
 const logger = require("../../config/winston");
-// "real\\pro", "real\\standart"
-// 50.0
+const fs = require("fs");
 
 const batchBalanceLowHighAndCredit = async (
   group,
@@ -13,6 +12,7 @@ const batchBalanceLowHighAndCredit = async (
   type
 ) => {
   logger.info(`batchBalanceLowHighAndCredit Started...`);
+  const processedUsers = {};
 
   const res = await authAndGetRequest(
     `/api/user/get_batch?group=${group}`,
@@ -32,64 +32,75 @@ const batchBalanceLowHighAndCredit = async (
   logger.info(`filteredDatas length: ${filteredDatas.length}`);
 
   for (const filtered of filteredDatas) {
+    logger.info(`============================================================`);
     const login = filtered.Login;
-    logger.info(`Login: ${login}`);
-    // Check if the user has an open position
-    const positionRes = await authAndGetRequest(
-      `/api/position/get_page?login=${login}&offset=0&total=1`,
-      type
-    );
-    logger.info(`positionRes: ${JSON.stringify(positionRes)}`);
-
-    if (positionRes.answer.length === 0) {
-      // If no open positions, get user information
-      const userRes = await authAndGetRequest(
-        `/api/user/get?login=${login}`,
+    if (!processedUsers[login]) {
+      processedUsers[login] = true;
+      logger.info(`Login: ${login}`);
+      // Check if the user has an open position
+      const positionRes = await authAndGetRequest(
+        `/api/position/get_page?login=${login}&offset=0&total=1`,
         type
       );
-      logger.info(`userRes: ${JSON.stringify(userRes)}`);
+      logger.info(`positionRes: ${JSON.stringify(positionRes.answer)}`);
 
-      if (userRes && userRes.answer.Balance && userRes.answer.Credit) {
-        const balance = Math.abs(parseFloat(userRes.answer.Balance));
-        if (balance !== 0) {
-          const comment = encodeURIComponent("Negative balance correction");
+      if (positionRes.answer.length === 0) {
+        // If no open positions, get user information
+        const userRes = await authAndGetRequest(
+          `/api/user/get?login=${login}`,
+          type
+        );
+        logger.info(`userRes: ${JSON.stringify(userRes.answer)}`);
 
-          // Perform the trade balance operation
+        if (userRes && userRes.answer.Balance && userRes.answer.Credit) {
+          const balance = Math.abs(parseFloat(userRes.answer.Balance));
+          if (balance !== 0) {
+            const comment = encodeURIComponent("Negative balance correction");
 
-          const tradeBalanceRes = await authAndGetRequest(
-            `/api/trade/balance?login=${login}&type=${5}&balance=${balance}&comment=${comment}`,
-            type
-          );
-          logger.info(`tradeBalanceRes: ${tradeBalanceRes}`);
-
-          if (balance < credit) {
-            const tradeCreditRes = await authAndGetRequest(
-              `/api/trade/balance?login=${login}&type=${3}&balance=-${balance}&comment=${comment}`,
+            // Perform the trade balance operation
+            const tradeBalanceRes = await authAndGetRequest(
+              `/api/trade/balance?login=${login}&type=${5}&balance=${balance}&comment=${comment}`,
               type
             );
-            logger.info(`tradeCreditRes: ${tradeCreditRes}`);
+            logger.info(`tradeBalanceRes ${login}: ${tradeBalanceRes}`);
+
+            if (balance < credit) {
+              const tradeCreditRes = await authAndGetRequest(
+                `/api/trade/balance?login=${login}&type=${3}&balance=-${balance}&comment=${comment}`,
+                type
+              );
+              logger.info(`tradeCreditRes ${login}: ${tradeCreditRes}`);
+            } else {
+              const tradeCreditRes = await authAndGetRequest(
+                `/api/trade/balance?login=${login}&type=${3}&balance=-${credit}&comment=${comment}`,
+                type
+              );
+              logger.info(`tradeCreditRes ${login}: ${tradeCreditRes}`);
+            }
+            fs.appendFile(
+              "file/duplicatedLogins.txt",
+              `Login: ${login}\n`,
+              (err) => {
+                if (err) {
+                  logger.error(`Error appending to file: ${err}`);
+                }
+              }
+            );
           } else {
-            const tradeCreditRes = await authAndGetRequest(
-              `/api/trade/balance?login=${login}&type=${3}&balance=-${credit}&comment=${comment}`,
-              type
-            );
-            logger.info(`tradeCreditRes: ${tradeCreditRes}`);
+            logger.info(`Balance is 0 for login ${login}, skipping.`);
           }
         } else {
-          logger.info(`Balance is 0 for login ${login}, skipping.`);
+          logger.info(`No user information found for login ${login}`);
         }
       } else {
-        logger.info(`No user information found for login ${login}`);
+        logger.info(`Login ${login} has open positions, skipping.`);
       }
-    } else {
-      logger.info(`Login ${login} has open positions, skipping.`);
     }
   }
   logger.info(`batchBalanceLowHighAndCredit END...`);
   return "true";
 };
 
-// "real\\pro", "real\\standart"
 const batchBalanceLowerThanZeroAndCreditZero = async (group, type) => {
   logger.info(`batchBalanceLowerThanZeroAndCreditZero Started...`);
   const res = await authAndGetRequest(
@@ -153,21 +164,6 @@ const batchBalanceLowerThanZeroAndCreditZero = async (group, type) => {
 
   return "true";
 };
-
-// batchBalanceLowHighAndCredit(
-//   "real\\pro",
-//   50.0,
-//   -72,
-//   0,
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => console.log(res));
-// batchBalanceLowHighAndCredit(
-//   MT5_GROUP_TYPE.PRO,
-//   50.0,
-//   -72,
-//   0,
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => console.log(res));
 
 module.exports = {
   batchBalanceLowHighAndCredit,
