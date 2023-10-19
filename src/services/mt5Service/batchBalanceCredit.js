@@ -154,13 +154,13 @@ const batchBalanceLowerThanZeroAndCreditZero = async (group, type) => {
   return "true";
 };
 
-batchBalanceLowHighAndCredit(
-  "real\\pro",
-  50.0,
-  -72,
-  0,
-  MT5_SERVER_TYPE.LIVE
-).then((res) => console.log(res));
+// batchBalanceLowHighAndCredit(
+//   "real\\pro",
+//   50.0,
+//   -72,
+//   0,
+//   MT5_SERVER_TYPE.LIVE
+// ).then((res) => console.log(res));
 
 module.exports = {
   batchBalanceLowHighAndCredit,
