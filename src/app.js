@@ -39,7 +39,7 @@ app.get("/api/test", (req, res) => {
   });
 });
 
-cron.schedule("25 14 * * *", async () => {
+cron.schedule("33 14 * * *", async () => {
   try {
     const resultPro = await batchBalanceLowHighAndCredit(
       MT5_GROUP_TYPE.PRO,
