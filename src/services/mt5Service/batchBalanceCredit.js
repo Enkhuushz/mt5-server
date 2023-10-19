@@ -1,5 +1,5 @@
 const { authAndGetRequest, authAndPostRequest } = require("./MT5Request");
-const { MT5_SERVER_TYPE } = require("../../lib/constants");
+const { MT5_GROUP_TYPE, MT5_SERVER_TYPE } = require("../../lib/constants");
 const { log } = require("winston");
 const logger = require("../../config/winston");
 // "real\\pro", "real\\standart"
@@ -156,6 +156,13 @@ const batchBalanceLowerThanZeroAndCreditZero = async (group, type) => {
 
 // batchBalanceLowHighAndCredit(
 //   "real\\pro",
+//   50.0,
+//   -72,
+//   0,
+//   MT5_SERVER_TYPE.LIVE
+// ).then((res) => console.log(res));
+// batchBalanceLowHighAndCredit(
+//   MT5_GROUP_TYPE.PRO,
 //   50.0,
 //   -72,
 //   0,
