@@ -22,13 +22,6 @@ const server = http.createServer(app);
 app.use(cors());
 app.use(express.json());
 
-app.get("/api/test", (req, res) => {
-  res.status(200).json({
-    success: true,
-    data: "working...",
-  });
-});
-
 const loggingMiddleware = (req, res, next) => {
   logger.info("New request received:", {
     ip: req.ip,
@@ -40,6 +33,13 @@ const loggingMiddleware = (req, res, next) => {
 };
 
 app.use(loggingMiddleware);
+
+app.get("/api/test", (req, res) => {
+  res.status(200).json({
+    success: true,
+    data: "working...",
+  });
+});
 
 cron.schedule("0 */2 * * *", async () => {
   try {
