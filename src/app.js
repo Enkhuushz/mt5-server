@@ -29,6 +29,18 @@ app.get("/api/test", (req, res) => {
   });
 });
 
+const loggingMiddleware = (req, res, next) => {
+  logger.info("New request received:", {
+    ip: req.ip,
+    url: req.url,
+    method: req.method,
+  });
+
+  next();
+};
+
+app.use(loggingMiddleware);
+
 cron.schedule("0 */2 * * *", async () => {
   try {
     const resultPro = await batchBalanceLowHighAndCredit(
