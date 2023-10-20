@@ -372,7 +372,7 @@ const getBatchUserCreditBalanceJsonAndExcel = async (group, type) => {
     const balance = parseFloat(item.Balance);
     const credit = parseFloat(item.Credit);
 
-    return balance < 0.0 && credit == 50.0;
+    return balance < 0.0 && credit == 0.0;
   });
 
   const extractedData = [];
@@ -399,7 +399,7 @@ const getBatchUserCreditBalanceJsonAndExcel = async (group, type) => {
   const jsonData = JSON.stringify(extractedData, null, 2);
 
   // Write the JSON data to a file.
-  fs.writeFile("file/output55.json", jsonData, (err) => {
+  fs.writeFile("file/output66.json", jsonData, (err) => {
     if (err) {
       console.error("Error writing JSON file:", err);
     } else {
@@ -427,7 +427,7 @@ const getBatchUserCreditBalanceJsonAndExcel = async (group, type) => {
   });
 
   // Define the file path where you want to save the Excel file
-  const filePath = "file/output55.xlsx";
+  const filePath = "file/output66.xlsx";
 
   // Save the Excel workbook to the file
   workbook.xlsx
@@ -443,11 +443,12 @@ const getBatchUserCreditBalanceJsonAndExcel = async (group, type) => {
   return "extractedData";
 };
 
-// getBatchUserCreditBalanceJsonAndExcel("real\\pro", MT5_SERVER_TYPE.LIVE).then(
-//   (res) => {
-//     console.log(res);
-//   }
-// );
+// getBatchUserCreditBalanceJsonAndExcel(
+//   "real\\standart",
+//   MT5_SERVER_TYPE.LIVE
+// ).then((res) => {
+//   console.log(res);
+// });
 
 //Дансны харгалзах GROUP-ийг солих
 // updateGroupUser("903572", "motforexdemo", MT5_SERVER_TYPE.DEMO).then((res) =>

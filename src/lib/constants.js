@@ -30,6 +30,16 @@ const MT5_GROUP_TYPE = {
   PRO: "real\\pro",
   STANDART: "real\\standart",
 };
+const EXCLUDE_LOGINS = [
+  "511217",
+  "511218",
+  "511219",
+  "511220",
+  "511221",
+  "511222",
+  "511223",
+  "1044",
+];
 
 module.exports = {
   PAYMENT_STATUSES,
@@ -38,4 +48,5 @@ module.exports = {
   TRADING_ACCOUNT_STATUS,
   MT5_SERVER_TYPE,
   MT5_GROUP_TYPE,
+  EXCLUDE_LOGINS,
 };

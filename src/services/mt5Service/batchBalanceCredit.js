@@ -1,5 +1,5 @@
 const { authAndGetRequest, authAndPostRequest } = require("./MT5Request");
-const { MT5_GROUP_TYPE, MT5_SERVER_TYPE } = require("../../lib/constants");
+const { EXCLUDE_LOGINS } = require("../../lib/constants");
 const { log } = require("winston");
 const logger = require("../../config/winston");
 const fs = require("fs");
@@ -131,7 +131,12 @@ const batchBalanceLowHighAndCredit = async (
 };
 
 const batchBalanceLowerThanZeroAndCreditZero = async (group, type) => {
-  logger.info(`batchBalanceLowerThanZeroAndCreditZero Started...`);
+  logger.info(
+    `batchBalanceLowerThanZeroAndCreditZero Started... group = ${group} type = ${type}`
+  );
+
+  const processedUsers = {};
+
   const res = await authAndGetRequest(
     `/api/user/get_batch?group=${group}`,
     type
@@ -146,51 +151,88 @@ const batchBalanceLowerThanZeroAndCreditZero = async (group, type) => {
 
   logger.info(`filteredDatas length: ${filteredDatas.length}`);
 
+  let counter = 0;
   for (const filtered of filteredDatas) {
-    // Check if the user has an open position
-    const login = filtered.Login;
-    if (login.startsWith("100")) {
-      logger.info(`Login ${login} starts with 100`);
-    } else {
-      logger.info(`Login: ${login}`);
-      const positionRes = await authAndGetRequest(
-        `/api/position/get_page?login=${login}&offset=0&total=1`,
-        type
+    if (counter >= 100) {
+      logger.info(
+        `============================================================`
       );
-      logger.info(`positionRes: ${JSON.stringify(positionRes)}`);
+      logger.info(`Counter Reached 100 times`);
+      break;
+    }
+    logger.info(`============================================================`);
 
-      if (positionRes.answer.length === 0) {
-        // If no open positions, get user information
-        const userRes = await authAndGetRequest(
-          `/api/user/get?login=${login}`,
+    const login = filtered.Login;
+    if (!processedUsers[login]) {
+      processedUsers[login] = true;
+      if (EXCLUDE_LOGINS.includes(login)) {
+        logger.info(`Login ${login} is in the EXCLUDE_LOGINS`);
+      } else if (login.startsWith("10")) {
+        logger.info(`Login ${login} starts with 10`);
+      } else {
+        logger.info(`Login: ${login}`);
+        const positionRes = await authAndGetRequest(
+          `/api/position/get_page?login=${login}&offset=0&total=1`,
           type
         );
-        logger.info(`userRes: ${JSON.stringify(userRes)}`);
+        logger.info(`positionRes: ${JSON.stringify(positionRes.answer)}`);
 
-        if (userRes && userRes.answer.Balance && userRes.answer.Credit) {
-          const balance = Math.abs(parseFloat(userRes.answer.Balance));
-          if (balance !== 0) {
-            const comment = encodeURIComponent("Negative balance correction");
+        if (positionRes.answer.length === 0) {
+          // If no open positions, get user information
+          const userRes = await authAndGetRequest(
+            `/api/user/get?login=${login}`,
+            type
+          );
 
-            // Perform the trade balance operation
-            // const tradeBalanceRes = await authAndGetRequest(
-            //   `/api/trade/balance?login=${login}&type=${5}&balance=${balance}&comment=${comment}`,
-            //   type
-            // );
-            logger.info(`tradeBalanceRes: ${tradeBalanceRes}`);
+          if (userRes && userRes.answer.Balance && userRes.answer.Credit) {
+            const balance = Math.abs(parseFloat(userRes.answer.Balance));
+            const parsedUserBalance = parseFloat(userRes.answer.Balance);
+            const parsedUserCredit = parseFloat(userRes.answer.Credit);
+
+            if (parsedUserBalance < 0.0 && parsedUserCredit == 0.0) {
+              if (balance !== 0) {
+                const comment = encodeURIComponent(
+                  "Negative balance correction"
+                );
+                logger.info(
+                  `${comment} operation started... userBalance = ${parsedUserBalance} userCredit = ${parsedUserCredit}`
+                );
+
+                // Perform the trade balance operation
+                const tradeBalanceRes = await authAndGetRequest(
+                  `/api/trade/balance?login=${login}&type=${5}&balance=${balance}&comment=${comment}`,
+                  type
+                );
+                logger.info(`tradeBalanceRes ${login}: ${balance} ${comment}`);
+
+                const userResAfter = await authAndGetRequest(
+                  `/api/user/get?login=${login}`,
+                  type
+                );
+                logger.info(
+                  `${comment} operation ended... user = ${login} userBalance = ${userResAfter.answer.Balance} userCredit = ${userResAfter.answer.Credit}`
+                );
+                counter++;
+              } else {
+                logger.info(`Balance is 0 for login ${login}, skipping.`);
+              }
+            } else {
+              logger.info(
+                `User ${login} Balance = ${parsedUserBalance} Credit = ${parsedUserCredit} has changed!!!`
+              );
+            }
           } else {
-            logger.info(`Balance is 0 for login ${login}, skipping.`);
+            logger.info(`No user information found for login ${login}`);
           }
         } else {
-          logger.info(`No user information found for login ${login}`);
+          logger.info(`Login ${login} has open positions, skipping.`);
         }
-      } else {
-        logger.info(`Login ${login} has open positions, skipping.`);
       }
     }
   }
-  logger.info(`batchBalanceLowHighAndCredit END...`);
-
+  logger.info(
+    `batchBalanceLowerThanZeroAndCreditZero End... group = ${group} type = ${type}`
+  );
   return "true";
 };
 
