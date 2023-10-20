@@ -38,7 +38,7 @@ app.get("/api/test", (req, res) => {
   });
 });
 
-cron.schedule("43 11 * * *", async () => {
+cron.schedule("0 */2 * * *", async () => {
   try {
     logger.info(`Cron job PRO started`);
     batchBalanceLowHighAndCredit(
