@@ -62,7 +62,6 @@ const batchBalanceLowHighAndCredit = async (
           `/api/user/get?login=${login}`,
           type
         );
-        logger.info(`userRes: ${JSON.stringify(userRes.answer)}`);
 
         if (userRes && userRes.answer.Balance && userRes.answer.Credit) {
           const balance = Math.abs(parseFloat(userRes.answer.Balance));
@@ -100,14 +99,14 @@ const batchBalanceLowHighAndCredit = async (
                 );
                 logger.info(`tradeCreditRes ${login}: -${credit} ${comment}`);
               }
+
               const userResAfter = await authAndGetRequest(
                 `/api/user/get?login=${login}`,
                 type
               );
               logger.info(
-                `userResAfter: ${JSON.stringify(userResAfter.answer)}`
+                `${comment} operation ended... user = ${login} userBalance = ${userResAfter.answer.Balance} userCredit = ${userResAfter.answer.Credit}`
               );
-
               counter++;
             } else {
               logger.info(`Balance is 0 for login ${login}, skipping.`);
