@@ -100,6 +100,14 @@ const batchBalanceLowHighAndCredit = async (
                 );
                 logger.info(`tradeCreditRes ${login}: -${credit} ${comment}`);
               }
+              const userResAfter = await authAndGetRequest(
+                `/api/user/get?login=${login}`,
+                type
+              );
+              logger.info(
+                `userResAfter: ${JSON.stringify(userResAfter.answer)}`
+              );
+
               counter++;
             } else {
               logger.info(`Balance is 0 for login ${login}, skipping.`);
