@@ -13,10 +13,11 @@ const customFormat = printf(({ level, message, label, timestamp }) => {
 
 const options = {
   dailyRotate: {
-    filename: `${LOG_PATH}/app.log`,
+    filename: `${LOG_PATH}/app-%DATE%.log`,
     datePattern: "YYYY-MM-DD",
     zippedArchive: true,
     maxFiles: "30d", // Retain logs for 30 days
+    colorize: true,
   },
   file: {
     filename: `${LOG_PATH}/app.log`,
@@ -39,6 +40,7 @@ const logger = winston.createLogger({
     new winston.transports.Console(options.console),
     //new winston.transports.DailyRotateFile(options.dailyRotate),
     new winston.transports.File(options.file),
+    new winston.transports.DailyRotateFile(options.dailyRotate),
   ],
 });
 

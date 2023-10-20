@@ -11,7 +11,9 @@ const batchBalanceLowHighAndCredit = async (
   balanceHigh,
   type
 ) => {
-  logger.info(`batchBalanceLowHighAndCredit Started...`);
+  logger.info(
+    `batchBalanceLowHighAndCredit Started... group = ${group} credit = ${credit} balanceLow = ${balanceLow} balanceHigh = ${balanceHigh} type = ${type}`
+  );
   const processedUsers = {};
 
   const res = await authAndGetRequest(
@@ -29,14 +31,24 @@ const batchBalanceLowHighAndCredit = async (
       parsedCredit == credit
     );
   });
+
   logger.info(`filteredDatas length: ${filteredDatas.length}`);
 
+  let counter = 0;
   for (const filtered of filteredDatas) {
+    if (counter >= 100) {
+      logger.info(
+        `============================================================`
+      );
+      logger.info(`Counter Reached 100 times`);
+      break;
+    }
     logger.info(`============================================================`);
     const login = filtered.Login;
     if (!processedUsers[login]) {
       processedUsers[login] = true;
       logger.info(`Login: ${login}`);
+
       // Check if the user has an open position
       const positionRes = await authAndGetRequest(
         `/api/position/get_page?login=${login}&offset=0&total=1`,
@@ -54,40 +66,48 @@ const batchBalanceLowHighAndCredit = async (
 
         if (userRes && userRes.answer.Balance && userRes.answer.Credit) {
           const balance = Math.abs(parseFloat(userRes.answer.Balance));
-          if (balance !== 0) {
-            const comment = encodeURIComponent("Negative balance correction");
+          const parsedUserBalance = parseFloat(userRes.answer.Balance);
+          const parsedUserCredit = parseFloat(userRes.answer.Credit);
 
-            // Perform the trade balance operation
-            const tradeBalanceRes = await authAndGetRequest(
-              `/api/trade/balance?login=${login}&type=${5}&balance=${balance}&comment=${comment}`,
-              type
-            );
-            logger.info(`tradeBalanceRes ${login}: ${tradeBalanceRes}`);
+          if (
+            parsedUserBalance > balanceLow &&
+            parsedUserBalance < balanceHigh &&
+            parsedUserCredit == credit
+          ) {
+            if (balance !== 0) {
+              const comment = encodeURIComponent("Negative balance correction");
+              logger.info(
+                `${comment} operation started... userBalance = ${parsedUserBalance} userCredit = ${parsedUserCredit}`
+              );
 
-            if (balance < credit) {
-              const tradeCreditRes = await authAndGetRequest(
-                `/api/trade/balance?login=${login}&type=${3}&balance=-${balance}&comment=${comment}`,
+              // Perform the trade balance operation
+              const tradeBalanceRes = await authAndGetRequest(
+                `/api/trade/balance?login=${login}&type=${5}&balance=${balance}&comment=${comment}`,
                 type
               );
-              logger.info(`tradeCreditRes ${login}: ${tradeCreditRes}`);
-            } else {
-              const tradeCreditRes = await authAndGetRequest(
-                `/api/trade/balance?login=${login}&type=${3}&balance=-${credit}&comment=${comment}`,
-                type
-              );
-              logger.info(`tradeCreditRes ${login}: ${tradeCreditRes}`);
-            }
-            fs.appendFile(
-              "file/duplicatedLogins.txt",
-              `Login: ${login}\n`,
-              (err) => {
-                if (err) {
-                  logger.error(`Error appending to file: ${err}`);
-                }
+              logger.info(`tradeBalanceRes ${login}: ${balance} ${comment}`);
+
+              if (balance < credit) {
+                const tradeCreditRes = await authAndGetRequest(
+                  `/api/trade/balance?login=${login}&type=${3}&balance=-${balance}&comment=${comment}`,
+                  type
+                );
+                logger.info(`tradeCreditRes ${login}: -${balance} ${comment}`);
+              } else {
+                const tradeCreditRes = await authAndGetRequest(
+                  `/api/trade/balance?login=${login}&type=${3}&balance=-${credit}&comment=${comment}`,
+                  type
+                );
+                logger.info(`tradeCreditRes ${login}: -${credit} ${comment}`);
               }
-            );
+              counter++;
+            } else {
+              logger.info(`Balance is 0 for login ${login}, skipping.`);
+            }
           } else {
-            logger.info(`Balance is 0 for login ${login}, skipping.`);
+            logger.info(
+              `User ${login} Balance = ${parsedUserBalance} Credit = ${parsedUserCredit} has changed!!!`
+            );
           }
         } else {
           logger.info(`No user information found for login ${login}`);
@@ -97,7 +117,9 @@ const batchBalanceLowHighAndCredit = async (
       }
     }
   }
-  logger.info(`batchBalanceLowHighAndCredit END...`);
+  logger.info(
+    `batchBalanceLowHighAndCredit END... group = ${group} credit = ${credit} balanceLow = ${balanceLow} balanceHigh = ${balanceHigh} type = ${type}`
+  );
   return "true";
 };
 
@@ -144,10 +166,10 @@ const batchBalanceLowerThanZeroAndCreditZero = async (group, type) => {
             const comment = encodeURIComponent("Negative balance correction");
 
             // Perform the trade balance operation
-            const tradeBalanceRes = await authAndGetRequest(
-              `/api/trade/balance?login=${login}&type=${5}&balance=${balance}&comment=${comment}`,
-              type
-            );
+            // const tradeBalanceRes = await authAndGetRequest(
+            //   `/api/trade/balance?login=${login}&type=${5}&balance=${balance}&comment=${comment}`,
+            //   type
+            // );
             logger.info(`tradeBalanceRes: ${tradeBalanceRes}`);
           } else {
             logger.info(`Balance is 0 for login ${login}, skipping.`);

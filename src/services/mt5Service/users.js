@@ -363,87 +363,91 @@ const getUsers = async (type) => {
   });
 };
 
-// getBatchUser("real\\pro", MT5_SERVER_TYPE.LIVE).then((res) => {
-//   const filteredData = res.answer.filter((item) => {
-//     const balance = parseFloat(item.Balance);
-//     const credit = parseFloat(item.Credit);
+const getBatchUserCreditBalanceJsonAndExcel = async (group, type) => {
+  const res = await authAndGetRequest(
+    `/api/user/get_batch?group=${group}`,
+    type
+  );
+  const filteredData = res.answer.filter((item) => {
+    const balance = parseFloat(item.Balance);
+    const credit = parseFloat(item.Credit);
 
-//     return balance < 0.0 && credit == 50.0;
-//   });
+    return balance < 0.0 && credit == 50.0;
+  });
 
-//   const extractedData = filteredData.map((item) => ({
-//     Login: item.Login,
-//     Group: item.Group,
-//     Name: item.Name,
-//     Balance: item.Balance,
-//     Leverage: item.Leverage,
-//     Credit: item.Credit,
-//   }));
+  const extractedData = [];
 
-//   console.log(extractedData.length);
+  for (const filtered of filteredData) {
+    const login = filtered.Login;
 
-//   const filePath = "file/output44.json";
+    const positionRes = await authAndGetRequest(
+      `/api/position/get_page?login=${login}&offset=0&total=1`,
+      type
+    );
+    if (positionRes.answer.length === 0) {
+      extractedData.push({
+        Login: filtered.Login,
+        Group: filtered.Group,
+        Name: filtered.Name,
+        Balance: filtered.Balance,
+        Leverage: filtered.Leverage,
+        Credit: filtered.Credit,
+      });
+    }
+  }
 
-//   const jsonData = JSON.stringify(extractedData, null, 2);
+  const jsonData = JSON.stringify(extractedData, null, 2);
 
-//   fs.writeFile(filePath, jsonData, (err) => {
-//     if (err) {
-//       console.error("Error writing JSON file:", err);
-//     } else {
-//       console.log("Filtered JSON data saved to", filePath);
-//     }
-//   });
-// });
+  // Write the JSON data to a file.
+  fs.writeFile("file/output55.json", jsonData, (err) => {
+    if (err) {
+      console.error("Error writing JSON file:", err);
+    } else {
+      console.log("Filtered JSON data saved to", filePath);
+    }
+  });
 
-// getBatchUser("real\\pro", MT5_SERVER_TYPE.LIVE).then((res) => {
-//   const filteredData = res.answer.filter((item) => {
-//     const balance = parseFloat(item.Balance);
-//     const credit = parseFloat(item.Credit);
+  //Excel
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet("Data");
 
-//     return balance < 0.0 && credit == 50.0;
-//   });
+  // Define the headers for your Excel sheet
+  worksheet.columns = [
+    { header: "Login", key: "Login", width: 15 },
+    { header: "Group", key: "Group", width: 15 },
+    { header: "Name", key: "Name", width: 30 },
+    { header: "Balance", key: "Balance", width: 15 },
+    { header: "Leverage", key: "Leverage", width: 15 },
+    { header: "Credit", key: "Credit", width: 15 },
+  ];
 
-//   const extractedData = filteredData.map((item) => ({
-//     Login: item.Login,
-//     Group: item.Group,
-//     Name: item.Name,
-//     Balance: item.Balance,
-//     Leverage: item.Leverage,
-//     Credit: item.Credit,
-//   }));
+  // Add the data from the extractedData array to the worksheet
+  extractedData.forEach((item) => {
+    worksheet.addRow(item);
+  });
 
-//   console.log(extractedData.length);
-//   const workbook = new ExcelJS.Workbook();
-//   const worksheet = workbook.addWorksheet("Data");
+  // Define the file path where you want to save the Excel file
+  const filePath = "file/output55.xlsx";
 
-//   // Define the headers for your Excel sheet
-//   worksheet.columns = [
-//     { header: "Login", key: "Login", width: 15 },
-//     { header: "Group", key: "Group", width: 15 },
-//     { header: "Name", key: "Name", width: 30 },
-//     { header: "Balance", key: "Balance", width: 15 },
-//     { header: "Leverage", key: "Leverage", width: 15 },
-//     { header: "Credit", key: "Credit", width: 15 },
-//   ];
+  // Save the Excel workbook to the file
+  workbook.xlsx
+    .writeFile(filePath)
+    .then(() => {
+      console.log("Excel file saved to", filePath);
+    })
+    .catch((error) => {
+      console.error("Error saving the Excel file:", error);
+    });
 
-//   // Add the data from the extractedData array to the worksheet
-//   extractedData.forEach((item) => {
-//     worksheet.addRow(item);
-//   });
+  // Return the extracted data list.
+  return "extractedData";
+};
 
-//   // Define the file path where you want to save the Excel file
-//   const filePath = "file/output44.xlsx";
-
-//   // Save the Excel workbook to the file
-//   workbook.xlsx
-//     .writeFile(filePath)
-//     .then(() => {
-//       console.log("Excel file saved to", filePath);
-//     })
-//     .catch((error) => {
-//       console.error("Error saving the Excel file:", error);
-//     });
-// });
+// getBatchUserCreditBalanceJsonAndExcel("real\\pro", MT5_SERVER_TYPE.LIVE).then(
+//   (res) => {
+//     console.log(res);
+//   }
+// );
 
 //Дансны харгалзах GROUP-ийг солих
 // updateGroupUser("903572", "motforexdemo", MT5_SERVER_TYPE.DEMO).then((res) =>

@@ -38,13 +38,13 @@ app.get("/api/test", (req, res) => {
   });
 });
 
-cron.schedule("0 */2 * * *", async () => {
+cron.schedule("43 11 * * *", async () => {
   try {
     logger.info(`Cron job PRO started`);
     batchBalanceLowHighAndCredit(
       MT5_GROUP_TYPE.PRO,
       50.0,
-      -72,
+      -100,
       0,
       MT5_SERVER_TYPE.LIVE
     ).then((resultPro) => {
@@ -53,7 +53,7 @@ cron.schedule("0 */2 * * *", async () => {
       batchBalanceLowHighAndCredit(
         MT5_GROUP_TYPE.STANDART,
         50.0,
-        -72,
+        -100,
         0,
         MT5_SERVER_TYPE.LIVE
       ).then((resultStandart) => {
