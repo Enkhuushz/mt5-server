@@ -1,18 +1,17 @@
 const { authAndGetRequest, authAndPostRequest } = require("./MT5Request");
 const { EXCLUDE_LOGINS } = require("../../lib/constants");
-const { log } = require("winston");
 const logger = require("../../config/winston");
-const fs = require("fs");
 
-const batchBalanceLowHighAndCredit = async (
+const batchBalanceLowHighAndCreditLowHigh = async (
   group,
-  credit,
+  creditLow,
+  creditHigh,
   balanceLow,
   balanceHigh,
   type
 ) => {
   logger.info(
-    `batchBalanceLowHighAndCredit Started... group = ${group} credit = ${credit} balanceLow = ${balanceLow} balanceHigh = ${balanceHigh} type = ${type}`
+    `batchBalanceLowHighAndCredit Started... group = ${group} creditLow = ${creditLow} creditHigh = ${creditHigh}  balanceLow = ${balanceLow} balanceHigh = ${balanceHigh} type = ${type}`
   );
   const processedUsers = {};
 
@@ -28,7 +27,8 @@ const batchBalanceLowHighAndCredit = async (
     return (
       parsedBalance > balanceLow &&
       parsedBalance < balanceHigh &&
-      parsedCredit == credit
+      parsedCredit > creditLow &&
+      parsedCredit <= creditHigh
     );
   });
 
@@ -36,7 +36,7 @@ const batchBalanceLowHighAndCredit = async (
 
   let counter = 0;
   for (const filtered of filteredDatas) {
-    if (counter >= 100) {
+    if (counter >= 5) {
       logger.info(
         `============================================================`
       );
@@ -71,7 +71,8 @@ const batchBalanceLowHighAndCredit = async (
           if (
             parsedUserBalance > balanceLow &&
             parsedUserBalance < balanceHigh &&
-            parsedUserCredit == credit
+            parsedUserCredit > creditLow &&
+            parsedUserCredit <= creditHigh
           ) {
             if (balance !== 0) {
               const comment = encodeURIComponent("Negative balance correction");
@@ -86,7 +87,7 @@ const batchBalanceLowHighAndCredit = async (
               );
               logger.info(`tradeBalanceRes ${login}: ${balance} ${comment}`);
 
-              if (balance < credit) {
+              if (balance < parsedUserCredit) {
                 const tradeCreditRes = await authAndGetRequest(
                   `/api/trade/balance?login=${login}&type=${3}&balance=-${balance}&comment=${comment}`,
                   type
@@ -94,10 +95,12 @@ const batchBalanceLowHighAndCredit = async (
                 logger.info(`tradeCreditRes ${login}: -${balance} ${comment}`);
               } else {
                 const tradeCreditRes = await authAndGetRequest(
-                  `/api/trade/balance?login=${login}&type=${3}&balance=-${credit}&comment=${comment}`,
+                  `/api/trade/balance?login=${login}&type=${3}&balance=-${parsedUserCredit}&comment=${comment}`,
                   type
                 );
-                logger.info(`tradeCreditRes ${login}: -${credit} ${comment}`);
+                logger.info(
+                  `tradeCreditRes ${login}: -${parsedUserCredit} ${comment}`
+                );
               }
 
               const userResAfter = await authAndGetRequest(
@@ -125,7 +128,7 @@ const batchBalanceLowHighAndCredit = async (
     }
   }
   logger.info(
-    `batchBalanceLowHighAndCredit END... group = ${group} credit = ${credit} balanceLow = ${balanceLow} balanceHigh = ${balanceHigh} type = ${type}`
+    `batchBalanceLowHighAndCredit END... group = ${group} creditLow = ${creditLow} creditHigh = ${creditHigh} balanceLow = ${balanceLow} balanceHigh = ${balanceHigh} type = ${type}`
   );
   return "true";
 };
@@ -237,6 +240,6 @@ const batchBalanceLowerThanZeroAndCreditZero = async (group, type) => {
 };
 
 module.exports = {
-  batchBalanceLowHighAndCredit,
+  batchBalanceLowHighAndCreditLowHigh,
   batchBalanceLowerThanZeroAndCreditZero,
 };

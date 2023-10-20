@@ -4,7 +4,7 @@ const http = require("http");
 const errorHandler = require("./middlewares/errorHandler");
 const cron = require("node-cron");
 const {
-  batchBalanceLowHighAndCredit,
+  batchBalanceLowHighAndCreditLowHigh,
   batchBalanceLowerThanZeroAndCreditZero,
 } = require("../src/services/mt5Service/batchBalanceCredit");
 const { MT5_GROUP_TYPE, MT5_SERVER_TYPE } = require("../src/lib/constants");
@@ -45,13 +45,15 @@ cron.schedule("0 * * * *", async () => {
 
 const runCronJobs = async () => {
   try {
+    logger.info(`============================================================`);
     logger.info(`Cron job batchBalanceLowerThanZeroAndCreditZero PRO started`);
     await batchBalanceLowerThanZeroAndCreditZero(
       MT5_GROUP_TYPE.PRO,
       MT5_SERVER_TYPE.LIVE
     );
-    logger.info(`Cron job batchBalanceLowerThanZeroAndCreditZero PRO started`);
+    logger.info(`Cron job batchBalanceLowerThanZeroAndCreditZero PRO ended`);
 
+    logger.info(`============================================================`);
     logger.info(
       `Cron job batchBalanceLowerThanZeroAndCreditZero STANDART started`
     );
@@ -60,28 +62,35 @@ const runCronJobs = async () => {
       MT5_SERVER_TYPE.LIVE
     );
     logger.info(
-      `Cron job batchBalanceLowerThanZeroAndCreditZero STANDART started`
+      `Cron job batchBalanceLowerThanZeroAndCreditZero STANDART ended`
     );
 
-    logger.info(`Cron job batchBalanceLowHighAndCredit PRO started`);
-    await batchBalanceLowHighAndCredit(
+    logger.info(`============================================================`);
+    logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh PRO started`);
+    await batchBalanceLowHighAndCreditLowHigh(
       MT5_GROUP_TYPE.PRO,
+      0,
       50.0,
       -100,
       0,
       MT5_SERVER_TYPE.LIVE
     );
-    logger.info(`Cron job batchBalanceLowHighAndCredit PRO ended`);
+    logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh PRO ended`);
 
-    logger.info(`Cron job batchBalanceLowHighAndCredit STANDART started`);
-    await batchBalanceLowHighAndCredit(
+    logger.info(`============================================================`);
+    logger.info(
+      `Cron job batchBalanceLowHighAndCreditLowHigh STANDART started`
+    );
+    await batchBalanceLowHighAndCreditLowHigh(
       MT5_GROUP_TYPE.STANDART,
+      0,
       50.0,
       -100,
       0,
       MT5_SERVER_TYPE.LIVE
     );
-    logger.info(`Cron job batchBalanceLowHighAndCredit STANDART started`);
+    logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh STANDART ended`);
+    logger.info(`============================================================`);
   } catch (error) {
     logger.error(`Cron job encountered an error: ${error}`);
   }
