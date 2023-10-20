@@ -36,7 +36,7 @@ const batchBalanceLowHighAndCreditLowHigh = async (
 
   let counter = 0;
   for (const filtered of filteredDatas) {
-    if (counter >= 5) {
+    if (counter >= 100) {
       logger.info(
         `============================================================`
       );

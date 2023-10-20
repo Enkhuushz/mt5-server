@@ -476,11 +476,11 @@ const getBatchUserCreditBalanceJsonAndExcel = async (group, type) => {
   return "extractedData";
 };
 
-getBatchUserCreditBalanceJsonAndExcel("real\\pro", MT5_SERVER_TYPE.LIVE).then(
-  (res) => {
-    console.log(res);
-  }
-);
+// getBatchUserCreditBalanceJsonAndExcel("real\\pro", MT5_SERVER_TYPE.LIVE).then(
+//   (res) => {
+//     console.log(res);
+//   }
+// );
 
 //Дансны харгалзах GROUP-ийг солих
 // updateGroupUser("903572", "motforexdemo", MT5_SERVER_TYPE.DEMO).then((res) =>
