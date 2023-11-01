@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const http = require("http");
+const mongoose = require("mongoose");
 const errorHandler = require("./middlewares/errorHandler");
 const cron = require("node-cron");
 const {
@@ -8,8 +9,19 @@ const {
   batchBalanceLowerThanZeroAndCreditZero,
 } = require("../src/services/mt5Service/batchBalanceCredit");
 const { MT5_GROUP_TYPE, MT5_SERVER_TYPE } = require("../src/lib/constants");
+
 // Here import the routes
 const logger = require("../src/config/winston");
+
+const {
+  dealRoute,
+  groupRoute,
+  ordersRoute,
+  positionsRoute,
+  tradeRequestRoute,
+  usersRoute,
+  ebarimtRoute,
+} = require("./routes/index");
 
 require("dotenv").config();
 
@@ -32,12 +44,25 @@ const loggingMiddleware = (req, res, next) => {
 
 app.use(loggingMiddleware);
 
+app.get("/", (req, res) => {
+  return res.send("<h1>Hello world</h1>");
+});
+
 app.get("/api/test", (req, res) => {
   res.status(200).json({
     success: true,
     data: "working...",
   });
 });
+
+//Routes
+app.use("/ebarimt", ebarimtRoute);
+app.use("/deal", dealRoute);
+app.use("/group", groupRoute);
+app.use("/order", ordersRoute);
+app.use("/position", positionsRoute);
+app.use("/user", usersRoute);
+app.use("/trade-request", tradeRequestRoute);
 
 cron.schedule("0 * * * *", async () => {
   await runCronJobs();
@@ -98,5 +123,16 @@ const runCronJobs = async () => {
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 8000;
-server.listen(PORT, logger.info(`server started on port ${PORT}`));
+mongoose.set("strictQuery", false);
+
+mongoose
+  .connect(process.env.MONGO_DB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(async () => {
+    logger.info("MongoDb is connecting");
+
+    const PORT = process.env.PORT || 8000;
+    server.listen(PORT, logger.info(`server started on port ${PORT}`));
+  });

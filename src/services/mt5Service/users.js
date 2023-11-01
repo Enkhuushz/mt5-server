@@ -1,6 +1,5 @@
 const { authAndGetRequest, authAndPostRequest } = require("./MT5Request");
 const { MT5_SERVER_TYPE } = require("../../lib/constants");
-const { log } = require("winston");
 const fs = require("fs");
 const ExcelJS = require("exceljs");
 const logger = require("../../config/winston");
@@ -28,7 +27,7 @@ const getBatchUser = async (group, type) => {
 
 const getTotalPositionPage = async (login, type) => {
   const res = await authAndGetRequest(
-    `/api/position/get_page?login=${login}&offset=0&total=3`,
+    `/api/position/get_page?login=${login}&offset=0&total=10`,
     type
   );
   return res;
@@ -328,23 +327,36 @@ const getUsersTextFile = async (type) => {
 
 const getDeal = async (login, type) => {
   const res = await authAndGetRequest(
-    `/api/deal/get_page?login=${login}&offset=0&total=50`,
+    `/api/deal/get_page?login=${login}&offset=0&total=100`,
     type
   );
   return res;
 };
+// getTotalPosition("511203", MT5_SERVER_TYPE.LIVE).then((res) => {
+//   console.log(res);
+// });
 
-// getDeal("515653", MT5_SERVER_TYPE.LIVE).then((res) => {
-//   const timestamp = 1697724741884;
-//   const date = new Date(timestamp);
+// getDeal("511203", MT5_SERVER_TYPE.LIVE).then((res) => {
+//   //   const timestamp = 1697724741884;
+//   //   const date = new Date(timestamp);
 
-//   const gmt8Offset = 8 * 60 * 60 * 1000; // in milliseconds
-//   // date.setHours(date.getHours() + gmt8Offset);
+//   //   const gmt8Offset = 8 * 60 * 60 * 1000; // in milliseconds
+//   //   // date.setHours(date.getHours() + gmt8Offset);
 
-//   const formattedDate = date.toLocaleDateString("en-US");
+//   //   const formattedDate = date.toLocaleDateString("en-US");
+//   const jsonData = JSON.stringify(res, null, 2);
+
+//   // Write the JSON data to a file.
+//   fs.writeFile("file/output61.json", jsonData, (err) => {
+//     if (err) {
+//       console.error("Error writing JSON file:", err);
+//     } else {
+//       console.log("Filtered JSON data saved to", "file/output61.json");
+//     }
+//   });
 
 //   console.log(res);
-//   console.log(date);
+//   //   console.log(date);
 // });
 
 // getUser("515653", MT5_SERVER_TYPE.LIVE).then((res) => {

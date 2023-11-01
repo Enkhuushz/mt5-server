@@ -170,8 +170,6 @@ const batchBalanceLowerThanZeroAndCreditZero = async (group, type) => {
       processedUsers[login] = true;
       if (EXCLUDE_LOGINS.includes(login)) {
         logger.info(`Login ${login} is in the EXCLUDE_LOGINS`);
-      } else if (login.startsWith("10")) {
-        logger.info(`Login ${login} starts with 10`);
       } else {
         logger.info(`Login: ${login}`);
         const positionRes = await authAndGetRequest(

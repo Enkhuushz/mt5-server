@@ -151,4 +151,4 @@ const batchBalanceCreditZero = async (type) => {
 };
 // getUser("510085", MT5_SERVER_TYPE.LIVE).then((res) => console.log(res));
 
-batchBalanceCreditZero(MT5_SERVER_TYPE.LIVE).then((res) => console.log(res));
+// batchBalanceCreditZero(MT5_SERVER_TYPE.LIVE).then((res) => console.log(res));
