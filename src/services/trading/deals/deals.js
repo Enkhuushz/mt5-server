@@ -220,6 +220,7 @@ const getMultipleDealGroup = async (groups, fromDate, toDate, type) => {
     `/api/deal/get_batch?group=${groups}&from=${timestampFrom}&to=${timestampTo}`,
     type
   );
+  console.log(res.answer.length);
   return res;
 };
 

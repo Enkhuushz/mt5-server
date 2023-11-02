@@ -98,6 +98,9 @@ const getMultipleUserGroups = async (groups, type) => {
   return res;
 };
 // getMultipleUserGroups("real\\pro", MT5_SERVER_TYPE.LIVE).then((res) => {
+//   console.log("res");
+// });
+// getMultipleUserGroups("real\\pro", MT5_SERVER_TYPE.LIVE).then((res) => {
 //   const jsonData = JSON.stringify(res, null, 2);
 
 //   // Write the JSON data to a file.

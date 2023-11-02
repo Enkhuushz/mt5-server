@@ -5,6 +5,7 @@ const {
   getDealByTicketController,
   getTotalDealController,
   getDealByPageController,
+  getMultipleDealGroupController,
   getDealByPageNoDateController,
   getMultipleDealController,
   getMultipleDealGroupDateForSkipLoginController,
@@ -20,7 +21,9 @@ router
   .get(getDealByTicketController);
 router.route("/:envtype/getTotalDeal").post(getTotalDealController);
 router.route("/:envtype/getDealByPage").post(getDealByPageController);
-
+router
+  .route("/:envtype/getMultipleDealGroupController")
+  .post(getMultipleDealGroupController);
 router
   .route("/:envtype/getDealByPageNoDate")
   .get(getDealByPageNoDateController);

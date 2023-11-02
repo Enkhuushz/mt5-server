@@ -17,6 +17,7 @@ const {
 } = require("../services/trading/deals/deals");
 
 const logger = require("../config/winston");
+const { MT5_SERVER_TYPE } = require("../lib/constants");
 
 const getDealByTicketController = async (req, res) => {
   try {
