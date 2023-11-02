@@ -31,8 +31,8 @@ const getEndOfDay = async (groups, type) => {
       list = list.concat(finance);
     }
 
-    generateExcell(list, `endOfDayBalances9MonthRealStandart`);
-    generateJson(list, `endOfDayBalances9MonthRealStandart`);
+    generateExcell(list, `endOfDayBalances9MonthRealPro`);
+    generateJson(list, `endOfDayBalances9MonthRealPro`);
   } catch (error) {
     console.log(error);
   }
@@ -246,6 +246,6 @@ function generateExcell(endOfDayBalances, path) {
   return "resTotal";
 }
 
-getEndOfDay("real\\standart", MT5_SERVER_TYPE.LIVE).then((res) => {
+getEndOfDay("real\\pro", MT5_SERVER_TYPE.LIVE).then((res) => {
   console.log("res");
 });
