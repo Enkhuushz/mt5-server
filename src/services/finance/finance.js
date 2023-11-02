@@ -232,7 +232,7 @@ function generateExcell(endOfDayBalances, path) {
   });
 
   // Define the file path where you want to save the Excel file
-  const filePath = `filev3/${path}.xlsx`;
+  const filePath = `file/${path}.xlsx`;
 
   // Save the Excel workbook to the file
   workbook.xlsx

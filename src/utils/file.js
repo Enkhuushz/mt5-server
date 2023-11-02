@@ -5,7 +5,7 @@ const generateJson = (data, path) => {
   const jsonData = JSON.stringify(data, null, 2);
 
   // Write the JSON data to a file.
-  fs.writeFile(`filev3/${path}.json`, jsonData, (err) => {
+  fs.writeFile(`file/${path}.json`, jsonData, (err) => {
     if (err) {
       console.error("Error writing JSON file:", err);
     } else {
