@@ -22,8 +22,8 @@ const getEndOfDay = async (groups, type) => {
       console.log(login);
       const finance = await getFinancial(
         login,
-        "2023-08-01 00:00:00",
-        "2023-08-31 23:59:59",
+        "2023-09-01 00:00:00",
+        "2023-09-30 23:59:59",
         100,
         MT5_SERVER_TYPE.LIVE
       );
@@ -31,8 +31,8 @@ const getEndOfDay = async (groups, type) => {
       list = list.concat(finance);
     }
 
-    generateExcell(list, `endOfDayBalances8MonthRealStandart`);
-    generateJson(list, `endOfDayBalances8MonthRealStandart`);
+    generateExcell(list, `endOfDayBalances9MonthRealStandart`);
+    generateJson(list, `endOfDayBalances9MonthRealStandart`);
   } catch (error) {
     console.log(error);
   }
