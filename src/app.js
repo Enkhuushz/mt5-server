@@ -64,62 +64,62 @@ app.use("/position", positionsRoute);
 app.use("/user", usersRoute);
 app.use("/trade-request", tradeRequestRoute);
 
-cron.schedule("0 * * * *", async () => {
-  await runCronJobs();
-});
+// cron.schedule("0 * * * *", async () => {
+//   await runCronJobs();
+// });
 
-const runCronJobs = async () => {
-  try {
-    logger.info(`============================================================`);
-    logger.info(`Cron job batchBalanceLowerThanZeroAndCreditZero PRO started`);
-    await batchBalanceLowerThanZeroAndCreditZero(
-      MT5_GROUP_TYPE.PRO,
-      MT5_SERVER_TYPE.LIVE
-    );
-    logger.info(`Cron job batchBalanceLowerThanZeroAndCreditZero PRO ended`);
+// const runCronJobs = async () => {
+//   try {
+//     logger.info(`============================================================`);
+//     logger.info(`Cron job batchBalanceLowerThanZeroAndCreditZero PRO started`);
+//     await batchBalanceLowerThanZeroAndCreditZero(
+//       MT5_GROUP_TYPE.PRO,
+//       MT5_SERVER_TYPE.LIVE
+//     );
+//     logger.info(`Cron job batchBalanceLowerThanZeroAndCreditZero PRO ended`);
 
-    logger.info(`============================================================`);
-    logger.info(
-      `Cron job batchBalanceLowerThanZeroAndCreditZero STANDART started`
-    );
-    await batchBalanceLowerThanZeroAndCreditZero(
-      MT5_GROUP_TYPE.STANDART,
-      MT5_SERVER_TYPE.LIVE
-    );
-    logger.info(
-      `Cron job batchBalanceLowerThanZeroAndCreditZero STANDART ended`
-    );
+//     logger.info(`============================================================`);
+//     logger.info(
+//       `Cron job batchBalanceLowerThanZeroAndCreditZero STANDART started`
+//     );
+//     await batchBalanceLowerThanZeroAndCreditZero(
+//       MT5_GROUP_TYPE.STANDART,
+//       MT5_SERVER_TYPE.LIVE
+//     );
+//     logger.info(
+//       `Cron job batchBalanceLowerThanZeroAndCreditZero STANDART ended`
+//     );
 
-    logger.info(`============================================================`);
-    logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh PRO started`);
-    await batchBalanceLowHighAndCreditLowHigh(
-      MT5_GROUP_TYPE.PRO,
-      0,
-      50.0,
-      -100,
-      0,
-      MT5_SERVER_TYPE.LIVE
-    );
-    logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh PRO ended`);
+//     logger.info(`============================================================`);
+//     logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh PRO started`);
+//     await batchBalanceLowHighAndCreditLowHigh(
+//       MT5_GROUP_TYPE.PRO,
+//       0,
+//       50.0,
+//       -100,
+//       0,
+//       MT5_SERVER_TYPE.LIVE
+//     );
+//     logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh PRO ended`);
 
-    logger.info(`============================================================`);
-    logger.info(
-      `Cron job batchBalanceLowHighAndCreditLowHigh STANDART started`
-    );
-    await batchBalanceLowHighAndCreditLowHigh(
-      MT5_GROUP_TYPE.STANDART,
-      0,
-      50.0,
-      -100,
-      0,
-      MT5_SERVER_TYPE.LIVE
-    );
-    logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh STANDART ended`);
-    logger.info(`============================================================`);
-  } catch (error) {
-    logger.error(`Cron job encountered an error: ${error}`);
-  }
-};
+//     logger.info(`============================================================`);
+//     logger.info(
+//       `Cron job batchBalanceLowHighAndCreditLowHigh STANDART started`
+//     );
+//     await batchBalanceLowHighAndCreditLowHigh(
+//       MT5_GROUP_TYPE.STANDART,
+//       0,
+//       50.0,
+//       -100,
+//       0,
+//       MT5_SERVER_TYPE.LIVE
+//     );
+//     logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh STANDART ended`);
+//     logger.info(`============================================================`);
+//   } catch (error) {
+//     logger.error(`Cron job encountered an error: ${error}`);
+//   }
+// };
 
 app.use(errorHandler);
 
