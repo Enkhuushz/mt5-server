@@ -1,9 +1,5 @@
 const {
   depositWithdraw,
-  checkMargin,
-  calculateProfitForPosition,
-  sendRequest,
-  getRequestResult,
 } = require("../services/trading/tradeRequests/tradeRequests");
 const logger = require("../config/winston");
 const { MT5_SERVER_TYPE } = require("../lib/constants");
