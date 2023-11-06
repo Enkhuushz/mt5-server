@@ -21,6 +21,7 @@ const {
   tradeRequestRoute,
   usersRoute,
   ebarimtRoute,
+  bridgeRoute,
 } = require("./routes/index");
 
 require("dotenv").config();
@@ -63,6 +64,7 @@ app.use("/order", ordersRoute);
 app.use("/position", positionsRoute);
 app.use("/user", usersRoute);
 app.use("/trade-request", tradeRequestRoute);
+app.use("/bridge", bridgeRoute);
 
 cron.schedule("0 * * * *", async () => {
   await runCronJobs();

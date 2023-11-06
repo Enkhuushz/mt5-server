@@ -5,6 +5,7 @@ const positionsRoute = require("./positions");
 const tradeRequestRoute = require("./tradeRequest");
 const usersRoute = require("./users");
 const ebarimtRoute = require("./ebarimt");
+const bridgeRoute = require("./bridge");
 
 module.exports = {
   dealRoute,
@@ -14,4 +15,5 @@ module.exports = {
   tradeRequestRoute,
   usersRoute,
   ebarimtRoute,
+  bridgeRoute,
 };
