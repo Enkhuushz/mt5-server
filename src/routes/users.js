@@ -3,60 +3,40 @@ let router = express.Router();
 
 const {
   addUserController,
-  updateUserGroupController,
   deleteUserController,
   getUserController,
-  getUserByExternalAccountController,
+  updateUserGroupController,
+  updateUserLeverageController,
   getMultipleUserGroupsController,
-  getMultipleUserLoginsController,
-  checkUserPasswordController,
   changeUserPasswordController,
-  getTradeStatusController,
   getMultipleTradeStatesByLoginsController,
-  getMultipleTradeStatesByGroupsController,
-  getLoginListController,
-  getTotalUserController,
-  getUserGroupController,
-  checkBlanceController,
-  moveUserArchiveController,
-  getUserArchiveController,
-  getMultipleUserArchiveByLoginController,
-  getMultipleUserArchiveByGroupsController,
 } = require("../controller/users");
+// 0 Get User
+router.route("/:envtype/getUser").post(getUserController);
 
-router.route("/:envtype/addUser").get(addUserController);
-router.route("/:envtype/updateUserGroup").get(updateUserGroupController);
-router.route("/:envtype/deleteUser").get(deleteUserController);
-router.route("/:envtype/getUser").get(getUserController);
-router
-  .route("/:envtype/getUserByExternalAccount")
-  .get(getUserByExternalAccountController);
-router
-  .route("/:envtype/getMultipleUserGroups")
-  .get(getMultipleUserGroupsController);
-router
-  .route("/:envtype/getMultipleUserLogins")
-  .get(getMultipleUserLoginsController);
-router.route("/:envtype/checkUserPassword").get(checkUserPasswordController);
-router.route("/:envtype/changeUserPassword").get(changeUserPasswordController);
-router.route("/:envtype/getTradeStatus").get(getTradeStatusController);
+// 1) Add USer
+router.route("/:envtype/addUser").post(addUserController);
+
+// 2) Delete User
+router.route("/:envtype/deleteUser").post(deleteUserController);
+
+// 4) USer Info -> /BALANCE, EQUITY, CREDIT, LEVERAGE, USED MARGIN, FREE MARGIN/
 router
   .route("/:envtype/getMultipleTradeStatesByLogins")
-  .get(getMultipleTradeStatesByLoginsController);
+  .post(getMultipleTradeStatesByLoginsController);
+
+// 5) USer CHange Group
+router.route("/:envtype/updateUserGroup").post(updateUserGroupController);
+
+// 8) Change Password
+router.route("/:envtype/changeUserPassword").post(changeUserPasswordController);
+
+// 9) User Change Leverage
+router.route("/:envtype/updateUserLeverage").post(updateUserLeverageController);
+
+// 12) Trading account group-д байгаа арилжааны дансны мэдээллүүдийг татах, шалгах
 router
-  .route("/:envtype/getMultipleTradeStatesByGroups")
-  .get(getMultipleTradeStatesByGroupsController);
-router.route("/:envtype/getLoginList").get(getLoginListController);
-router.route("/:envtype/getTotalUser").get(getTotalUserController);
-router.route("/:envtype/getUserGroup").get(getUserGroupController);
-router.route("/:envtype/checkBlance").get(checkBlanceController);
-router.route("/:envtype/moveUserArchive").get(moveUserArchiveController);
-router.route("/:envtype/getUserArchive").get(getUserArchiveController);
-router
-  .route("/:envtype/getMultipleUserArchiveByLogin")
-  .get(getMultipleUserArchiveByLoginController);
-router
-  .route("/:envtype/getMultipleUserArchiveByGroups")
-  .get(getMultipleUserArchiveByGroupsController);
+  .route("/:envtype/getMultipleUserGroups")
+  .post(getMultipleUserGroupsController);
 
 module.exports = router;

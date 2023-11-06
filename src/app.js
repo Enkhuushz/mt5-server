@@ -70,7 +70,9 @@ cron.schedule("0 * * * *", async () => {
 
 const runCronJobs = async () => {
   try {
-    logger.info(`============================================================`);
+    logger.info(
+      `============================================================+`
+    );
     logger.info(`Cron job batchBalanceLowerThanZeroAndCreditZero PRO started`);
     await batchBalanceLowerThanZeroAndCreditZero(
       MT5_GROUP_TYPE.PRO,
@@ -131,7 +133,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(async () => {
-    logger.info("MongoDb is connecting");
+    logger.info("MongoDb is connecting...");
 
     const PORT = process.env.PORT || 8000;
     server.listen(PORT, logger.info(`server started on port ${PORT}`));

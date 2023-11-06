@@ -2,31 +2,32 @@ const express = require("express");
 let router = express.Router();
 
 const {
+  getMultiplePositionGroupController,
   getPositionBySymbolController,
   getTotalPositionController,
   getPositionByPageController,
-  getMultiplePositionController,
-  getMultiplePositionGroupController,
   updatePositionController,
   deletePositionController,
-  checkPositionController,
-  fixPositionController,
 } = require("../controller/positions");
+
+// 16) Get Position
+// 16) Delete Position
+// 16) Update Position
+
+router
+  .route("/:envtype/getMultiplePositionGroup")
+  .post(getMultiplePositionGroupController);
 
 router
   .route("/:envtype/getPositionBySymbol")
-  .get(getPositionBySymbolController);
-router.route("/:envtype/getTotalPosition").get(getTotalPositionController);
-router.route("/:envtype/getPositionByPage").get(getPositionByPageController);
-router
-  .route("/:envtype/getMultiplePosition")
-  .get(getMultiplePositionController);
-router
-  .route("/:envtype/getMultiplePositionGroup")
-  .get(getMultiplePositionGroupController);
-router.route("/:envtype/updatePosition").get(updatePositionController);
-router.route("/:envtype/deletePosition").get(deletePositionController);
-router.route("/:envtype/checkPosition").get(checkPositionController);
-router.route("/:envtype/fixPosition").get(fixPositionController);
+  .post(getPositionBySymbolController);
+
+router.route("/:envtype/getTotalPosition").post(getTotalPositionController);
+
+router.route("/:envtype/getPositionByPage").post(getPositionByPageController);
+
+router.route("/:envtype/updatePosition").post(updatePositionController);
+
+router.route("/:envtype/deletePosition").post(deletePositionController);
 
 module.exports = router;

@@ -6,6 +6,14 @@ const { MT5_SERVER_TYPE } = require("../../../lib/constants");
 const logger = require("../../../config/winston");
 const fs = require("fs");
 
+const getMultiplePositionGroup = async (groups, type) => {
+  const res = await authAndGetRequest(
+    `/api/position/get_batch?group=${groups}`,
+    type
+  );
+  return res;
+};
+
 const getPositionBySymbol = async (login, symbol, type) => {
   const res = await authAndGetRequest(
     `/api/position/get?${login}=login&symbol=${symbol}`,
@@ -21,6 +29,7 @@ const getTotalPosition = async (login, type) => {
   );
   return res;
 };
+
 // 16 Нээлттэй арилжаануудын мэдээлэл татах
 const getPositionByPage = async (login, index, number, type) => {
   const res = await authAndGetRequest(
@@ -33,36 +42,6 @@ const getPositionByPage = async (login, index, number, type) => {
 // getPositionByPage("903572", 0, 100, MT5_SERVER_TYPE.DEMO).then((res) => {
 //   console.log(res);
 // });
-
-const getMultiplePosition = async (logins, groups, tickets, symbols, type) => {
-  const res = await authAndGetRequest(
-    `/api/position/get_batch?login=${logins}&group=${groups}&ticket=${tickets}&symbol=${symbols}`,
-    type
-  );
-  return res;
-};
-
-const getMultiplePositionGroup = async (groups, type) => {
-  const res = await authAndGetRequest(
-    `/api/position/get_batch?group=${groups}`,
-    type
-  );
-
-  res.answer.sort((a, b) => b.Profit - a.Profit);
-
-  // const json = JSON.stringify(res.answer, null, 2);
-
-  // // Write the JSON data to a file.
-  // fs.writeFile("filev2/positition.json", json, (err) => {
-  //   if (err) {
-  //     console.error("Error writing JSON file:", err);
-  //   } else {
-  //     console.log("Filtered JSON data saved to", "file/positition.json");
-  //   }
-  // });
-
-  return res;
-};
 
 // getMultiplePositionGroup("real\\pro", MT5_SERVER_TYPE.LIVE).then((res) => {
 //   console.log("res");
@@ -82,6 +61,15 @@ const updatePosition = async (position, externalId, login, priceTp, type) => {
   );
   return res;
 };
+
+// 16 Нээлттэй арилжаануудын мэдээлэл устгах
+const deletePosition = async (tickets, type) => {
+  const res = await authAndGetRequest(
+    `/api/position/delete?ticket=${tickets}`,
+    type
+  );
+  return res;
+};
 // updatePosition(
 //   "190380",
 //   "D546B5D5EBBADC39",
@@ -92,17 +80,17 @@ const updatePosition = async (position, externalId, login, priceTp, type) => {
 //   console.log(res);
 // });
 
-// 16 Нээлттэй арилжаануудын мэдээлэл устгах
-const deletePosition = async (tickets, type) => {
+// deletePosition("190380", MT5_SERVER_TYPE.DEMO).then((res) => {
+//   console.log(res);
+// });
+
+const getMultiplePosition = async (logins, groups, tickets, symbols, type) => {
   const res = await authAndGetRequest(
-    `/api/position/delete?ticket=${tickets}`,
+    `/api/position/get_batch?login=${logins}&group=${groups}&ticket=${tickets}&symbol=${symbols}`,
     type
   );
   return res;
 };
-// deletePosition("190380", MT5_SERVER_TYPE.DEMO).then((res) => {
-//   console.log(res);
-// });
 
 const checkPosition = async (login, type) => {
   const res = await authAndGetRequest(
@@ -118,13 +106,14 @@ const fixPosition = async (login, type) => {
 };
 
 module.exports = {
+  getMultiplePositionGroup,
   getPositionBySymbol,
   getTotalPosition,
   getPositionByPage,
-  getMultiplePosition,
-  getMultiplePositionGroup,
   updatePosition,
   deletePosition,
+
+  getMultiplePosition,
   checkPosition,
   fixPosition,
 };

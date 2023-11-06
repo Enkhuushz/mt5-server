@@ -9,6 +9,8 @@ const {
   getRequestResultController,
 } = require("../controller/tradeRequest");
 
+// 10) Deposit, Withraw
+
 router.route("/:envtype/depositWithdraw").get(depositWithdrawController);
 router.route("/:envtype/checkMargin").get(checkMarginController);
 router

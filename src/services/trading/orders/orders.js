@@ -17,26 +17,6 @@ const getTotalOpenOrder = async (login, type) => {
   );
   return res;
 };
-//17 Pending order мэдээлэл татах /ORDER/
-const getOpenOrderByPage = async (login, index, number, type) => {
-  const res = await authAndGetRequest(
-    `/api/order/get_page?login=${login}&offset=${index}&total=${number}`,
-    type
-  );
-  return res;
-};
-
-// getOpenOrderByPage("903572", 0, 100, MT5_SERVER_TYPE.DEMO).then((res) => {
-//   console.log(res);
-// });
-
-const getMultipleOpenOrder = async (logins, groups, tickets, symbol, type) => {
-  const res = await authAndGetRequest(
-    `/api/order/get_batch?login=${logins}&group=${groups}&ticket=${tickets}&symbol=${symbol}`,
-    type
-  );
-  return res;
-};
 
 const getMultipleOpenOrderGroup = async (groups, type) => {
   const res = await authAndGetRequest(
@@ -46,9 +26,14 @@ const getMultipleOpenOrderGroup = async (groups, type) => {
   return res;
 };
 
-// getMultipleOpenOrderGroup("real\\pro", MT5_SERVER_TYPE.LIVE).then((res) => {
-//   console.log(res);
-// });
+//17 Pending order мэдээлэл татах /ORDER/
+const getOpenOrderByPage = async (login, index, number, type) => {
+  const res = await authAndGetRequest(
+    `/api/order/get_page?login=${login}&offset=${index}&total=${number}`,
+    type
+  );
+  return res;
+};
 
 //17 Pending order мэдээлэл засах /ORDER/
 const updateOpenOrder = async (order, login, priceTp, type) => {
@@ -78,6 +63,21 @@ const deleteOpenOrder = async (tickets, type) => {
   );
   return res;
 };
+
+// getOpenOrderByPage("903572", 0, 100, MT5_SERVER_TYPE.DEMO).then((res) => {
+//   console.log(res);
+// });
+
+const getMultipleOpenOrder = async (logins, groups, tickets, symbol, type) => {
+  const res = await authAndGetRequest(
+    `/api/order/get_batch?login=${logins}&group=${groups}&ticket=${tickets}&symbol=${symbol}`,
+    type
+  );
+  return res;
+};
+// getMultipleOpenOrderGroup("real\\pro", MT5_SERVER_TYPE.LIVE).then((res) => {
+//   console.log(res);
+// });
 
 // deleteOpenOrder("190656", MT5_SERVER_TYPE.DEMO).then((res) => {
 //   console.log(res);
@@ -168,11 +168,11 @@ const deleteClosedOrder = async (tickets, type) => {
 module.exports = {
   getOpenOrderByTicket,
   getTotalOpenOrder,
-  getOpenOrderByPage,
-  getMultipleOpenOrder,
   getMultipleOpenOrderGroup,
+  getOpenOrderByPage,
   updateOpenOrder,
   deleteOpenOrder,
+  getMultipleOpenOrder,
   moveOpenOrderToHistory,
   getClosedOrderByTicket,
   getClosedTotalOrder,

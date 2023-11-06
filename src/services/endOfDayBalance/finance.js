@@ -246,6 +246,6 @@ function generateExcell(endOfDayBalances, path) {
   return "resTotal";
 }
 
-getEndOfDay("real\\pro", MT5_SERVER_TYPE.LIVE).then((res) => {
-  console.log("res");
-});
+// getEndOfDay("real\\pro", MT5_SERVER_TYPE.LIVE).then((res) => {
+//   console.log("res");
+// });

@@ -12,11 +12,6 @@ const { sendReceipt } = require("../../ebarimt");
 const { sendEmail } = require("../../emailService");
 const { generateJson } = require("../../../utils/file");
 
-const getDealByTicket = async (ticket, type) => {
-  const res = await authAndGetRequest(`/api/deal/get?ticket=${ticket}`, type);
-  return res;
-};
-
 const getTotalDeal = async (login, fromDate, toDate, type) => {
   const timestampFrom = toTimestamp(fromDate);
   const timestampTo = toTimestamp(toDate);
@@ -28,13 +23,7 @@ const getTotalDeal = async (login, fromDate, toDate, type) => {
   return res;
 };
 
-// getTotalDeal("516892", "2023-10-01", "2023-10-30", MT5_SERVER_TYPE.LIVE).then(
-//   (res) => {
-//     console.log(res);
-//   }
-// );
-
-// 19 Арилжааны түүх татах /DEAL/ commission of day
+// 13 Get Deal by login date and index
 const getDealByPage = async (login, fromDate, toDate, index, number, type) => {
   const timestampFrom = toTimestamp(fromDate);
   const timestampTo = toTimestamp(toDate);
@@ -46,6 +35,7 @@ const getDealByPage = async (login, fromDate, toDate, index, number, type) => {
   return res;
 };
 
+// 13 Get Deal by login only Date
 const getDealByPageOnlyDate = async (login, fromDate, toDate, type) => {
   const timestampFrom = toTimestamp(fromDate);
   const timestampTo = toTimestamp(toDate);
@@ -56,6 +46,61 @@ const getDealByPageOnlyDate = async (login, fromDate, toDate, type) => {
   );
   return res;
 };
+
+// 13 Get Deal by login only index
+const getDealByPageNoDate = async (login, index, number, type) => {
+  const res = await authAndGetRequest(
+    `/api/deal/get_page?login=${login}&offset=${index}&total=${number}`,
+    type
+  );
+  return res;
+};
+
+// 13 Get Deal by group
+const getMultipleDealGroup = async (groups, fromDate, toDate, type) => {
+  const timestampFrom = toTimestamp(fromDate);
+  const timestampTo = toTimestamp(toDate);
+
+  const res = await authAndGetRequest(
+    `/api/deal/get_batch?group=${groups}&from=${timestampFrom}&to=${timestampTo}`,
+    type
+  );
+  return res;
+};
+
+// 14 Арилжааны түүх засах
+const updateDeal = async (deal, externalId, login, priceTp, type) => {
+  const res = await authAndPostRequest(
+    `/api/deal/update`,
+    {
+      Deal: deal,
+      ExternalID: externalId,
+      Login: login,
+      PriceTP: priceTp,
+    },
+    type
+  );
+  return res;
+};
+
+// 15 Арилжааны түүх устгах
+const deleteDeal = async (tickets, type) => {
+  const res = await authAndGetRequest(
+    `/api/deal/delete?ticket=${tickets}`,
+    type
+  );
+  return res;
+};
+
+const getDealByTicket = async (ticket, type) => {
+  const res = await authAndGetRequest(`/api/deal/get?ticket=${ticket}`, type);
+  return res;
+};
+// getTotalDeal("516892", "2023-10-01", "2023-10-30", MT5_SERVER_TYPE.LIVE).then(
+//   (res) => {
+//     console.log(res);
+//   }
+// );
 
 // getDealByPageOnlyDate(
 //   "516892",
@@ -101,15 +146,6 @@ const getDealByPageOnlyDate = async (login, fromDate, toDate, type) => {
 //     }
 //   });
 // });
-
-// 13 Арилжааны түүх татах /DEAL/
-const getDealByPageNoDate = async (login, index, number, type) => {
-  const res = await authAndGetRequest(
-    `/api/deal/get_page?login=${login}&offset=${index}&total=${number}`,
-    type
-  );
-  return res;
-};
 
 // getDealByPageNoDate("516892", 0, 100, MT5_SERVER_TYPE.LIVE).then((res) => {
 //   console.log(res);
@@ -209,18 +245,6 @@ const getMultipleDeal = async (
     `/api/deal/get_batch?login=${logins}&group=${groups}&ticket=${tickets}&from=${fromDate}&to=${toDate}&symbol=${symbol}`,
     type
   );
-  return res;
-};
-
-const getMultipleDealGroup = async (groups, fromDate, toDate, type) => {
-  const timestampFrom = toTimestamp(fromDate);
-  const timestampTo = toTimestamp(toDate);
-
-  const res = await authAndGetRequest(
-    `/api/deal/get_batch?group=${groups}&from=${timestampFrom}&to=${timestampTo}`,
-    type
-  );
-  console.log(res.answer.length);
   return res;
 };
 
@@ -732,21 +756,6 @@ const getMultipleDealGroupDate = async (groups, fromDate, toDate, type) => {
 //   console.log(res);
 // });
 
-// 15 Арилжааны түүх засах
-const updateDeal = async (deal, externalId, login, priceTp, type) => {
-  const res = await authAndPostRequest(
-    `/api/deal/update`,
-    {
-      Deal: deal,
-      ExternalID: externalId,
-      Login: login,
-      PriceTP: priceTp,
-    },
-    type
-  );
-  return res;
-};
-
 // updateDeal(
 //   "189203",
 //   "194F94F659A817A1",
@@ -757,30 +766,22 @@ const updateDeal = async (deal, externalId, login, priceTp, type) => {
 //   console.log(res);
 // });
 
-// 14 Арилжааны түүх устгах
-const deleteDeal = async (tickets, type) => {
-  const res = await authAndGetRequest(
-    `/api/deal/delete?ticket=${tickets}`,
-    type
-  );
-  return res;
-};
 // deleteDeal("189202", MT5_SERVER_TYPE.DEMO).then((res) => {
 //   console.log(res);
 // });
 
 module.exports = {
-  getDealByTicket,
   getTotalDeal,
   getDealByPage,
   getDealByPageOnlyDate,
   getDealByPageNoDate,
-  getMultipleDeal,
   getMultipleDealGroup,
+  updateDeal,
+  deleteDeal,
+  getMultipleDeal,
   getMultipleDealGroupDateForSkipLogin,
   getMultipleDealGroupDateV2,
   getMultipleDealGroupDateV2Test,
   getMultipleDealGroupDate,
-  updateDeal,
-  deleteDeal,
+  getDealByTicket,
 };
