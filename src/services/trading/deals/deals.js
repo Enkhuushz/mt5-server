@@ -373,6 +373,9 @@ const getMultipleDealGroupDateV2Test = async (
       `/api/deal/get_total?login=${logins}&from=${timestampFrom}&to=${timestampTo}`,
       type
     );
+
+    console.log(resTotal);
+
     const totalRecords = resTotal.answer.total;
 
     generateJson(resTotal.answer, "outPutResTotal");

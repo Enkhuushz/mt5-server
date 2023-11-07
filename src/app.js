@@ -67,7 +67,9 @@ app.use("/trade-request", tradeRequestRoute);
 app.use("/bridge", bridgeRoute);
 
 cron.schedule("0 * * * *", async () => {
-  await runCronJobs();
+  if (!process.env.BASE_URL.includes("localhost")) {
+    await runCronJobs();
+  }
 });
 
 const runCronJobs = async () => {

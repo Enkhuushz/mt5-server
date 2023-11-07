@@ -119,9 +119,9 @@ router.get("/deals/v2/test", async (req, res) => {
   try {
     const response = await getMultipleDealGroupDateV2Test(
       "real\\pro",
-      "511636",
-      "2023-10-01 00:00:00",
-      "2023-10-31 23:59:59",
+      "515563",
+      "2023-08-01 00:00:00",
+      "2023-11-31 23:59:59",
       MT5_SERVER_TYPE.LIVE
     );
     console.log("response");
