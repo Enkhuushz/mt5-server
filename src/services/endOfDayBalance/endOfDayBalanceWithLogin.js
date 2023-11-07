@@ -14,7 +14,7 @@ function readNumbersFromFile(callback) {
       console.error("Error reading text file:", err);
       callback(err, null);
     } else {
-      const numbers = data.split("\n");
+      const numbers = data.trim().split("\n");
       callback(null, numbers);
     }
   });
@@ -29,15 +29,17 @@ const getEndOfDay = async (groups, type) => {
 
       for (const login of jsonData) {
         console.log(login);
-        const finance = await getFinancial(
-          login,
-          "2023-08-25 00:00:00",
-          "2023-11-01 23:59:59",
-          100,
-          MT5_SERVER_TYPE.LIVE
-        );
-        index++;
-        list = list.concat(finance);
+        if (login.length > 4) {
+          const finance = await getFinancial(
+            login,
+            "2023-08-25 00:00:00",
+            "2023-11-01 23:59:59",
+            100,
+            MT5_SERVER_TYPE.LIVE
+          );
+          index++;
+          list = list.concat(finance);
+        }
       }
 
       generateExcell(list, `endOfDayBalancess`);
@@ -63,24 +65,22 @@ const getFinancial = async (login, fromDate, toDate, number, type) => {
   console.log(login);
   console.log(resLogin.answer);
 
-  if (resLogin !== undefined) {
-    const email = resLogin.answer.Email;
+  const email = resLogin.answer.Email;
 
-    const totalRecords = resTotal.answer.total;
+  const totalRecords = resTotal.answer.total;
 
-    let results = [];
+  let results = [];
 
-    for (let offset = 0; offset < totalRecords; offset += 100) {
-      const resDeal = await authAndGetRequest(
-        `/api/deal/get_page?login=${login}&from=${timestampFrom}&to=${timestampTo}&offset=${offset}&total=${number}`,
-        type
-      );
-      results = results.concat(resDeal.answer);
-    }
-
-    const endOfDayBalances = calculateEndOfDayBalances(results, login, email);
-    return endOfDayBalances;
+  for (let offset = 0; offset < totalRecords; offset += 100) {
+    const resDeal = await authAndGetRequest(
+      `/api/deal/get_page?login=${login}&from=${timestampFrom}&to=${timestampTo}&offset=${offset}&total=${number}`,
+      type
+    );
+    results = results.concat(resDeal.answer);
   }
+
+  const endOfDayBalances = calculateEndOfDayBalances(results, login, email);
+  return endOfDayBalances;
 };
 
 function calculateEndOfDayBalances(resDeal, login, email) {
