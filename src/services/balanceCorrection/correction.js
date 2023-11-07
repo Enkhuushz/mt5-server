@@ -27,7 +27,7 @@ const first = async (fromDate, toDate, type) => {
     readNumbersFromFile(async (err, jsonData) => {
       let index = 0;
       for (const login of jsonData) {
-        if (index == 1) {
+        if (index == 800) {
           break;
         } else {
           if (login.length > 3) {
