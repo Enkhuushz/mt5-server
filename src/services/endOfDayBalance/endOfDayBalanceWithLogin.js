@@ -60,25 +60,27 @@ const getFinancial = async (login, fromDate, toDate, number, type) => {
     `/api/user/get?login=${login}`,
     type
   );
-
+  console.log(login);
   console.log(resLogin.answer);
 
-  const email = resLogin.answer.Email;
+  if (resLogin !== undefined) {
+    const email = resLogin.answer.Email;
 
-  const totalRecords = resTotal.answer.total;
+    const totalRecords = resTotal.answer.total;
 
-  let results = [];
+    let results = [];
 
-  for (let offset = 0; offset < totalRecords; offset += 100) {
-    const resDeal = await authAndGetRequest(
-      `/api/deal/get_page?login=${login}&from=${timestampFrom}&to=${timestampTo}&offset=${offset}&total=${number}`,
-      type
-    );
-    results = results.concat(resDeal.answer);
+    for (let offset = 0; offset < totalRecords; offset += 100) {
+      const resDeal = await authAndGetRequest(
+        `/api/deal/get_page?login=${login}&from=${timestampFrom}&to=${timestampTo}&offset=${offset}&total=${number}`,
+        type
+      );
+      results = results.concat(resDeal.answer);
+    }
+
+    const endOfDayBalances = calculateEndOfDayBalances(results, login, email);
+    return endOfDayBalances;
   }
-
-  const endOfDayBalances = calculateEndOfDayBalances(results, login, email);
-  return endOfDayBalances;
 };
 
 function calculateEndOfDayBalances(resDeal, login, email) {
