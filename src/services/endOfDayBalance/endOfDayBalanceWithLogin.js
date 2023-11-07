@@ -41,7 +41,6 @@ const getEndOfDay = async (groups, type) => {
           list = list.concat(finance);
         }
       }
-
       generateExcell(list, `endOfDayBalancess`);
       generateJson(list, `endOfDayBalancess`);
     });
