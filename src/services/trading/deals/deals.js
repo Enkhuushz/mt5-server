@@ -96,141 +96,6 @@ const getDealByTicket = async (ticket, type) => {
   const res = await authAndGetRequest(`/api/deal/get?ticket=${ticket}`, type);
   return res;
 };
-// getTotalDeal("516892", "2023-10-01", "2023-10-30", MT5_SERVER_TYPE.LIVE).then(
-//   (res) => {
-//     console.log(res);
-//   }
-// );
-
-// getDealByPageOnlyDate(
-//   "516892",
-//   "2023-10-24 00:00:00",
-//   "2023-10-24 23:59:59",
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   console.log(res);
-// });
-
-// getDealByPage(
-//   "519049",
-//   "2023-10-24 00:00:00",
-//   "2023-10-24 23:59:59",
-//   0,
-//   100,
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   let sum = 0;
-
-//   console.log(res.answer.length);
-
-//   const filteredDatas = res.answer.filter((item) => {
-//     const parsedCommission = parseFloat(item.Commission);
-
-//     if (parsedCommission != 0.0) {
-//       sum = sum + parsedCommission;
-//     }
-
-//     return parsedCommission != 0.0;
-//   });
-
-//   console.log(`sum: ${sum}`);
-
-//   const jsonData = JSON.stringify(filteredDatas, null, 2);
-
-//   // Write the JSON data to a file.
-//   fs.writeFile("file/output190.json", jsonData, (err) => {
-//     if (err) {
-//       console.error("Error writing JSON file:", err);
-//     } else {
-//       console.log("Filtered JSON data saved to", "file/output62.json");
-//     }
-//   });
-// });
-
-// getDealByPageNoDate("516892", 0, 100, MT5_SERVER_TYPE.LIVE).then((res) => {
-//   console.log(res);
-// });
-
-// getDealByPageNoDate("100099", 0, 100, MT5_SERVER_TYPE.LIVE).then((res) => {
-//   console.log("res");
-// });
-
-// getDealByPageNoDate("519049", 0, 100, MT5_SERVER_TYPE.LIVE).then((res) => {
-//   res.answer.map((item) => {
-//     console.log(item.TimeMsc);
-//     const dateObj = new Date(parseInt(item.TimeMsc));
-//     console.log(dateObj);
-//   });
-
-//   const jsonData = JSON.stringify(res, null, 2);
-
-//   // Write the JSON data to a file.
-//   fs.writeFile("file/output1888.json", jsonData, (err) => {
-//     if (err) {
-//       console.error("Error writing JSON file:", err);
-//     } else {
-//       console.log("Filtered JSON data saved to", "file/output62.json");
-//     }
-//   });
-// });
-
-// getDealByPageNoDate("511222", 0, 100, MT5_SERVER_TYPE.LIVE).then((res) => {
-//   const timestamp = 1697816349694;
-//   const date = new Date(timestamp);
-
-//   const gmt8Offset = 8 * 60 * 60 * 1000; // in milliseconds
-//   console.log(date);
-//   date.setHours(date.getHours() + gmt8Offset);
-
-//   const formattedDate = date.toLocaleDateString("en-US");
-//   console.log(date);
-//   console.log(formattedDate);
-
-//   const jsonData = JSON.stringify(res, null, 2);
-
-//   // Write the JSON data to a file.
-//   fs.writeFile("file/output67.json", jsonData, (err) => {
-//     if (err) {
-//       console.error("Error writing JSON file:", err);
-//     } else {
-//       console.log("Filtered JSON data saved to", "file/output62.json");
-//     }
-//   });
-// });
-
-// getDealByPageNoDate("903572", 0, 100, MT5_SERVER_TYPE.DEMO).then((res) => {
-//   const timestamp = 1698074813328;
-//   const date = new Date(timestamp);
-//   console.log(date);
-
-//   const timestampStart = 1697990400000;
-//   const eneTimeStamp = 1698076799999;
-
-//   const sdate = new Date(timestampStart);
-//   const edate = new Date(eneTimeStamp);
-//   console.log(sdate);
-//   console.log(edate);
-
-//   // const startDate = moment().startOf("day");
-//   // const endDate = moment().endOf("day");
-
-//   // const startTimestamp = startDate.valueOf();
-//   // const endTimestamp = endDate.valueOf();
-
-//   // console.log(startTimestamp); // 1698074813328
-//   // console.log(endTimestamp);
-
-//   const jsonData = JSON.stringify(res, null, 2);
-
-//   // Write the JSON data to a file.
-//   fs.writeFile("file/output68.json", jsonData, (err) => {
-//     if (err) {
-//       console.error("Error writing JSON file:", err);
-//     } else {
-//       console.log("Filtered JSON data saved to", "file/output62.json");
-//     }
-//   });
-// });
 
 const getMultipleDeal = async (
   logins,
@@ -247,15 +112,6 @@ const getMultipleDeal = async (
   );
   return res;
 };
-
-// getMultipleDealGroup(
-//   "real\\pro",
-//   "2023-10-10 00:00:00",
-//   "2023-10-10 23:59:59",
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   console.log(res);
-// });
 
 const getMultipleDealGroupDateForSkipLogin = async (
   groups,
@@ -301,16 +157,6 @@ const getMultipleDealGroupDateForSkipLogin = async (
     }
   }
 };
-
-// getMultipleDealGroupDateForSkipLogin(
-//   "real\\pro",
-//   "2023-10-26 00:00:00",
-//   "2023-10-26 23:59:59",
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   console.log(res);
-// });
-
 const getMultipleDealGroupDateV2 = async (groups, fromDate, toDate, type) => {
   const foundSkipLogins = await SkipLogin.find();
 
@@ -575,7 +421,7 @@ const getMultipleDealGroupDateV2Test = async (
         const body = {
           login,
           commission: commissionByLogin[login].toFixed(2),
-          email,
+          email: "e.enkhbayat@gmail.com",
         };
         console.log(body);
 
@@ -600,7 +446,7 @@ const getMultipleDealGroupDateV2Test = async (
           receipt.qrData,
           receipt.date,
           login,
-          email,
+          "e.enkhbayat@gmail.com",
           fromDate.split(" ")[0],
           toDate.split(" ")[0]
         );
@@ -616,15 +462,6 @@ const getMultipleDealGroupDateV2Test = async (
     console.log(error);
   }
 };
-
-// getMultipleDealGroupDateV2(
-//   "real\\pro",
-//   "2023-10-24 00:00:00",
-//   "2023-10-24 23:59:59",
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   console.log(res);
-// });
 
 const getMultipleDealGroupDate = async (groups, fromDate, toDate, type) => {
   const foundSkipLogins = await SkipLogin.find();
@@ -746,29 +583,6 @@ const getMultipleDealGroupDate = async (groups, fromDate, toDate, type) => {
   // });
   return "res";
 };
-
-// getMultipleDealGroupDate(
-//   "real\\pro",
-//   "2023-10-24 00:00:00",
-//   "2023-10-24 23:59:59",
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   console.log(res);
-// });
-
-// updateDeal(
-//   "189203",
-//   "194F94F659A817A1",
-//   "903572",
-//   "149.850",
-//   MT5_SERVER_TYPE.DEMO
-// ).then((res) => {
-//   console.log(res);
-// });
-
-// deleteDeal("189202", MT5_SERVER_TYPE.DEMO).then((res) => {
-//   console.log(res);
-// });
 
 module.exports = {
   getTotalDeal,
