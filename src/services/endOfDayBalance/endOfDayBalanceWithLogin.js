@@ -61,6 +61,8 @@ const getFinancial = async (login, fromDate, toDate, number, type) => {
     type
   );
 
+  console.log(resLogin.answer);
+
   const email = resLogin.answer.Email;
 
   const totalRecords = resTotal.answer.total;
