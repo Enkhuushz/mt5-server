@@ -61,7 +61,6 @@ const getFinancial = async (login, fromDate, toDate, number, type) => {
     type
   );
 
-  const group = resLogin.answer.Group;
   const email = resLogin.answer.Email;
 
   const totalRecords = resTotal.answer.total;
@@ -76,16 +75,11 @@ const getFinancial = async (login, fromDate, toDate, number, type) => {
     results = results.concat(resDeal.answer);
   }
 
-  const endOfDayBalances = calculateEndOfDayBalances(
-    results,
-    group,
-    login,
-    email
-  );
+  const endOfDayBalances = calculateEndOfDayBalances(results, login, email);
   return endOfDayBalances;
 };
 
-function calculateEndOfDayBalances(resDeal, group, login, email) {
+function calculateEndOfDayBalances(resDeal, login, email) {
   const endOfDayBalances = {};
 
   let eodBalance = new Decimal(0);
@@ -102,7 +96,6 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
       endOfDayBalances[dayKey] = {
         date: dayKeyDate,
         login: login,
-        group: group,
         email: email,
         profit: new Decimal(0),
         commission: new Decimal(0),
@@ -201,7 +194,7 @@ function generateExcell(endOfDayBalances, path) {
   worksheet.columns = [
     { header: "date", key: "date", width: 15 },
     { header: "login", key: "login", width: 15 },
-    { header: "group", key: "group", width: 15 },
+    // { header: "group", key: "group", width: 15 },
     { header: "email", key: "email", width: 15 },
     // { header: "profit", key: "profit", width: 15 },
     { header: "commission", key: "commission", width: 15 },
