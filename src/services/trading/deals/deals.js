@@ -438,7 +438,7 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
 
             for (const record of res.answer) {
               const profit = parseFloat(record.Profit);
-              const comment = record.Comment;
+              const comment = record.Comment.toLowerCase();
               const dealer = record.Dealer;
               const action = record.Action;
               const time = record.TimeMsc;
