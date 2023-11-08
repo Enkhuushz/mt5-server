@@ -442,7 +442,6 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
               const comment = record.Comment.toLowerCase();
               const dealer = record.Dealer;
               const action = record.Action;
-              let time = record.TimeMsc;
 
               if (profit == 50.0 && dealer == "1007" && action == "3") {
                 console.log(
@@ -461,10 +460,10 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
                 comment.includes("withdraw")
               ) {
                 console.log(
-                  `profit: ${profit}, dealer: ${dealer}, action: ${action} comment: ${comment}`
+                  `profit: ${profit}, dealer: ${dealer}, action: ${action}, comment: ${comment}, time: ${record.TimeMsc}`
                 );
                 is50withdraw = true;
-                is50withdrawTime = time;
+                is50withdrawTime = record.TimeMsc;
               }
 
               if (
@@ -476,10 +475,10 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
                 comment.includes("deposit")
               ) {
                 console.log(
-                  `profit: ${profit}, dealer: ${dealer}, action: ${action} comment: ${comment}`
+                  `profit: ${profit}, dealer: ${dealer}, action: ${action}, comment: ${comment}, time: ${record.TimeMsc}`
                 );
                 is50deposit = true;
-                is50depositTime = time;
+                is50depositTime = record.TimeMsc;
               }
             }
           }
@@ -493,12 +492,12 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
               console.log(
                 `is50bonus && is50deposit: ${{
                   login: login,
-                  time: toDatee(is50depositTime),
+                  time: is50depositTime,
                 }}`
               );
               skippLoginDeposit.push({
                 login: login,
-                time: toDatee(is50depositTime),
+                time: is50depositTime,
               });
             }
           }
@@ -512,12 +511,12 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
               console.log(
                 `is50bonus && is50withdraw: ${{
                   login: login,
-                  time: toDatee(is50withdrawTime),
+                  time: is50withdrawTime,
                 }}`
               );
               skippLoginWithdraw.push({
                 login: login,
-                time: toDatee(is50withdrawTime),
+                time: is50withdrawTime,
               });
             }
           }
