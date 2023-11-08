@@ -436,8 +436,6 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
               type
             );
 
-            list = list.concat(res.answer);
-
             for (const record of res.answer) {
               const profit = parseFloat(record.Profit);
               const comment = record.Comment;
@@ -490,6 +488,12 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
             );
 
             if (!exists) {
+              console.log(
+                `is50bonus && is50deposit: ${{
+                  login: login,
+                  time: toDatee(is50depositTime),
+                }}`
+              );
               skippLoginDeposit.push({
                 login: login,
                 time: toDatee(is50depositTime),
@@ -498,6 +502,8 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
           }
 
           if (is50bonus && is50withdraw) {
+            console.log(`is50bonus && is50withdraw ${login}`);
+
             if (!skippLoginWithdraw.includes(login)) {
               skippLoginWithdraw.push(login);
             }
@@ -506,7 +512,6 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
       }
 
       console.log(`===============`);
-      console.log(`list: ${list}`);
 
       console.log(`skippLoginWithdraw: ${skippLoginWithdraw}`);
       console.log(`skippLoginDeposit: ${skippLoginDeposit}`);
