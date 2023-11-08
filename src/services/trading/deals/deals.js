@@ -157,6 +157,7 @@ const getMultipleDealGroupDateForSkipLogin = async (
     }
   }
 };
+
 const getMultipleDealGroupDateV2 = async (groups, fromDate, toDate, type) => {
   const foundSkipLogins = await SkipLogin.find();
 
@@ -357,6 +358,174 @@ const getMultipleDealGroupDateV2 = async (groups, fromDate, toDate, type) => {
   // });
   return "res";
 };
+
+const getCommissionLogins = async (groups, fromDate, toDate, type) => {
+  try {
+    const timestampFrom = toTimestamp(fromDate);
+    const timestampTo = toTimestamp(toDate);
+
+    const res = await authAndGetRequest(
+      `/api/deal/get_batch?group=${groups}&from=${timestampFrom}&to=${timestampTo}`,
+      type
+    );
+    const skippLogin = [];
+
+    for (const record of res.answer) {
+      const login = record.Login;
+
+      console.log(login);
+
+      if (!skippLogin.includes(login)) {
+        skippLogin.push(login);
+      }
+    }
+    console.log(skippLogin);
+    generateJson(skippLogin, "skipLoginForCommission");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+function readNumbersFromFile(callback) {
+  const filePath = "file/login.txt";
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading text file:", err);
+      callback(err, null);
+    } else {
+      const numbers = data.trim().split("\n");
+      callback(null, numbers);
+    }
+  });
+}
+
+const getCommissionSkipLogin = async (fromDate, toDate, type) => {
+  try {
+    readNumbersFromFile(async (err, jsonData) => {
+      const timestampFrom = toTimestamp(fromDate);
+      const timestampTo = toTimestamp(toDate);
+
+      const skippLoginWithdraw = [];
+      const skippLoginDeposit = [];
+
+      let index = 0;
+      let list = [];
+
+      for (const login of jsonData) {
+        if (index == 3000) {
+          break;
+        } else {
+          console.log(login);
+
+          const resTotal = await authAndGetRequest(
+            `/api/deal/get_total?login=${login}&from=${timestampFrom}&to=${timestampTo}`,
+            type
+          );
+          const totalRecords = resTotal.answer.total;
+          console.log(`totalRecords: ${totalRecords}`);
+
+          let is50bonus = false;
+          let is50withdraw = false;
+          let is50deposit = false;
+          let is50depositTime = 0;
+
+          for (let offset = 0; offset < totalRecords; offset += 100) {
+            const res = await authAndGetRequest(
+              `/api/deal/get_page?login=${login}&from=${timestampFrom}&to=${timestampTo}&offset=${offset}&total=100`,
+              type
+            );
+
+            list = list.concat(res.answer);
+
+            for (const record of res.answer) {
+              const profit = parseFloat(record.Profit);
+              const comment = record.Comment;
+              const dealer = record.Dealer;
+              const action = record.Action;
+              const time = record.TimeMsc;
+
+              if (profit == 50.0 && dealer == "1007" && action == "3") {
+                console.log(
+                  `profit: ${profit}, dealer: ${dealer}, action: ${action} comment: ${comment}`
+                );
+
+                is50bonus = true;
+              }
+
+              if (
+                profit <= -50.0 &&
+                dealer == "1007" &&
+                action == "2" &&
+                comment.includes("->") &&
+                comment.includes(login) &&
+                comment.includes("withdraw")
+              ) {
+                console.log(
+                  `profit: ${profit}, dealer: ${dealer}, action: ${action} comment: ${comment}`
+                );
+                is50withdraw = true;
+              }
+
+              if (
+                profit >= 50.0 &&
+                dealer == "1007" &&
+                action == "2" &&
+                comment.includes("->") &&
+                comment.includes(login) &&
+                comment.includes("deposit")
+              ) {
+                console.log(
+                  `profit: ${profit}, dealer: ${dealer}, action: ${action} comment: ${comment}`
+                );
+                is50deposit = true;
+                is50depositTime = time;
+              }
+            }
+          }
+
+          if (is50bonus && is50deposit) {
+            const exists = skippLoginDeposit.some(
+              (item) => item.login === targetLogin
+            );
+
+            if (!exists) {
+              skippLoginDeposit.push({
+                login: login,
+                time: toDatee(is50depositTime),
+              });
+            }
+          }
+
+          if (is50bonus && is50withdraw) {
+            if (!skippLoginWithdraw.includes(login)) {
+              skippLoginWithdraw.push(login);
+            }
+          }
+        }
+      }
+
+      console.log(`===============`);
+      console.log(`list: ${list}`);
+
+      console.log(`skippLoginWithdraw: ${skippLoginWithdraw}`);
+      console.log(`skippLoginDeposit: ${skippLoginDeposit}`);
+
+      generateJson(skippLoginWithdraw, "skipLoginWhoGot50Withdraw");
+      generateJson(skippLoginDeposit, "skipLoginWhoGot50Deposit");
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getCommissionSkipLogin(
+  "2023-08-15 00:00:00",
+  "2023-10-31 23:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
+  console.log("res");
+});
 
 const getMultipleDealGroupDateV2Test = async (
   groups,
