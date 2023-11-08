@@ -43,6 +43,17 @@ const EXCLUDE_LOGINS = [
   "1044",
 ];
 
+const EXCLUDE_LOGINS_CREDIT_ZERO = [
+  "511217",
+  "517826",
+  "517827",
+  "511223",
+  "511222",
+  "511221",
+  "511220",
+  "511219",
+];
+
 module.exports = {
   PAYMENT_STATUSES,
   PAYMENT_RESPONSE_CODES,
@@ -51,4 +62,5 @@ module.exports = {
   MT5_SERVER_TYPE,
   MT5_GROUP_TYPE,
   EXCLUDE_LOGINS,
+  EXCLUDE_LOGINS_CREDIT_ZERO,
 };
