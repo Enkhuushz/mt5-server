@@ -74,7 +74,7 @@ const first = async (fromDate, toDate, type) => {
                 type
               );
               console.log(
-                `Credit: ${resUserInfoAfter.answer[0].Credit}, Equity: ${resUserInfoAfter.answer[0].Equity}`
+                `Credit: ${resUserInfoAfter.answer[0].Credit}, Equity: ${resUserInfoAfter.answer[0].Equity} Balance: ${resUserInfoAfter.answer[0].Balance}`
               );
               index++;
             }
@@ -150,7 +150,7 @@ const second = async (fromDate, toDate, type) => {
                   type
                 );
                 console.log(
-                  `Credit: ${resUserInfoAfter.answer[0].Credit}, Equity: ${resUserInfoAfter.answer[0].Equity}`
+                  `Credit: ${resUserInfoAfter.answer[0].Credit}, Equity: ${resUserInfoAfter.answer[0].Equity}, Balance: ${resUserInfoAfter.answer[0].Balance}`
                 );
                 index++;
               }
@@ -164,7 +164,7 @@ const second = async (fromDate, toDate, type) => {
   }
 };
 
-first("2023-08-01 00:00:00", "2023-11-07 23:00:00", MT5_SERVER_TYPE.LIVE).then(
+second("2023-08-01 00:00:00", "2023-11-07 23:00:00", MT5_SERVER_TYPE.LIVE).then(
   (res) => {
     console.log("res");
   }
