@@ -11,6 +11,7 @@ const { SkipLogin, CurrencyRate, Receipt } = require("../../../model/index");
 const { sendReceipt } = require("../../ebarimt");
 const { sendEmail } = require("../../emailService");
 const { generateJson } = require("../../../utils/file");
+const Decimal = require("decimal.js");
 
 const getTotalDeal = async (login, fromDate, toDate, type) => {
   const timestampFrom = toTimestamp(fromDate);
@@ -443,13 +444,14 @@ const calculateCommissionDoLogin = async (fromDate, toDate, type) => {
             const comment = record.Comment.toLowerCase();
             const dealer = record.Dealer;
             const action = record.Action;
-            const commission = parseFloat(record.Commission);
+            const commission = new Decimal(deal.Commission);
 
             if (time < record.TimeMsc) {
               if (commissionByLogin[login] == undefined) {
-                commissionByLogin[login] = 0;
+                commissionByLogin[login] = new Decimal(0);
               }
-              commissionByLogin[login] += commission;
+              commissionByLogin[login] =
+                commissionByLogin[login].add(commission);
             }
           }
         }
