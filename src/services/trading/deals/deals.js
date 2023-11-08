@@ -428,7 +428,7 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
           let is50bonus = false;
           let is50withdraw = false;
           let is50deposit = false;
-          let is50depositTime = 0;
+          let is50depositTime = "";
 
           for (let offset = 0; offset < totalRecords; offset += 100) {
             const res = await authAndGetRequest(
@@ -441,7 +441,7 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
               const comment = record.Comment.toLowerCase();
               const dealer = record.Dealer;
               const action = record.Action;
-              const time = record.TimeMsc;
+              let time = record.TimeMsc;
 
               if (profit == 50.0 && dealer == "1007" && action == "3") {
                 console.log(
