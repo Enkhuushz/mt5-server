@@ -428,8 +428,10 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
 
           let is50bonus = false;
           let is50deposit = false;
+
           let is50depositTime = "";
           let is50Time = "";
+          let is50Profit = 0;
 
           for (let offset = 0; offset < totalRecords; offset += 100) {
             const res = await authAndGetRequest(
@@ -443,13 +445,19 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
               const dealer = record.Dealer;
               const action = record.Action;
 
-              if (profit == 50.0 && dealer == "1007" && action == "3") {
+              if (
+                profit == 50.0 &&
+                dealer == "1007" &&
+                action == "3" &&
+                !is50bonus
+              ) {
                 console.log(
                   `profit: ${profit}, dealer: ${dealer}, action: ${action} comment: ${comment}`
                 );
 
                 is50bonus = true;
                 is50Time = record.TimeMsc;
+                is50Profit = profit;
               }
 
               if (
@@ -458,13 +466,16 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
                 action == "2" &&
                 comment.includes("->") &&
                 comment.includes(login) &&
-                comment.includes("deposit")
+                comment.includes("deposit") &&
+                !is50deposit
               ) {
                 console.log(
                   `profit: ${profit}, dealer: ${dealer}, action: ${action}, comment: ${comment}, time: ${record.TimeMsc}`
                 );
+
                 is50deposit = true;
                 is50depositTime = record.TimeMsc;
+                is50Profit = profit;
               }
             }
           }
@@ -485,6 +496,7 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
                 login: login,
                 time: is50depositTime,
                 bonus50Time: is50Time,
+                profit: is50Profit,
               });
             }
           } else if (!is50bonus && is50deposit) {
@@ -503,6 +515,7 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
                 login: login,
                 time: is50depositTime,
                 bonus50Time: is50Time,
+                profit: is50Profit,
               });
             }
           }
@@ -512,10 +525,10 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
       console.log(`===============`);
 
       console.log(`skippLoginDeposit: ${skippLoginDeposit}`);
-      generateJson(skippLoginDeposit, "skipLoginWhoGot50Deposit");
+      generateJson(skippLoginDeposit, "skipLoginWhoGot50Depositv2");
 
       console.log(`skippLoginJustDeposit: ${skippLoginJustDeposit}`);
-      generateJson(skippLoginJustDeposit, "skipLoginWhoGotJustDeposit");
+      generateJson(skippLoginJustDeposit, "skipLoginWhoGotJustDepositv2");
     });
   } catch (error) {
     console.log(error);
