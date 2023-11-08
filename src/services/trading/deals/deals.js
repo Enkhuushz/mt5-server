@@ -515,7 +515,7 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
                   time: toDatee(is50withdrawTime),
                 }}`
               );
-              skippLoginDeposit.push({
+              skippLoginWithdraw.push({
                 login: login,
                 time: toDatee(is50withdrawTime),
               });
