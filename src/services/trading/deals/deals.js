@@ -400,7 +400,77 @@ function readNumbersFromFile(callback) {
   });
 }
 
-const getCommissionSkipLogin = async (fromDate, toDate, type) => {
+function readNumbersFromFileJson(callback) {
+  const filePath = "file/skipLoginWhoGot50Depositv2.json";
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading text file:", err);
+      callback(err, null);
+    } else {
+      callback(null, JSON.parse(data));
+    }
+  });
+}
+
+const calculateCommissionDoLogin = async (fromDate, toDate, type) => {
+  try {
+    readNumbersFromFileJson(async (err, jsonData) => {
+      const commissionByLogin = {};
+      const timestampFrom = toTimestamp(fromDate);
+      const timestampTo = toTimestamp(toDate);
+
+      for (const data of jsonData) {
+        const login = data.login;
+        const time = data.bonus50Time;
+
+        const resTotal = await authAndGetRequest(
+          `/api/deal/get_total?login=${login}&from=${timestampFrom}&to=${timestampTo}`,
+          type
+        );
+
+        const totalRecords = resTotal.answer.total;
+        console.log(`totalRecords: ${totalRecords}`);
+
+        for (let offset = 0; offset < totalRecords; offset += 100) {
+          const res = await authAndGetRequest(
+            `/api/deal/get_page?login=${login}&from=${timestampFrom}&to=${timestampTo}&offset=${offset}&total=100`,
+            type
+          );
+
+          for (const record of res.answer) {
+            const profit = parseFloat(record.Profit);
+            const comment = record.Comment.toLowerCase();
+            const dealer = record.Dealer;
+            const action = record.Action;
+            const commission = parseFloat(record.Commission);
+
+            if (time < record.TimeMsc) {
+              if (commissionByLogin[login] == undefined) {
+                commissionByLogin[login] = 0;
+              }
+              commissionByLogin[login] += commission;
+            }
+          }
+        }
+      }
+      generateJson(commissionByLogin, "commissionByLogin");
+      console.log(commissionByLogin);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+calculateCommissionDoLogin(
+  "2023-08-15 00:00:00",
+  "2023-10-31 23:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
+  console.log("res");
+});
+
+const getCommissionDoLogin = async (fromDate, toDate, type) => {
   try {
     readNumbersFromFile(async (err, jsonData) => {
       const timestampFrom = toTimestamp(fromDate);
@@ -410,7 +480,6 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
       const skippLoginDeposit = [];
 
       let index = 0;
-      let list = [];
 
       for (const login of jsonData) {
         if (index == 3000) {
@@ -534,14 +603,6 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
     console.log(error);
   }
 };
-
-getCommissionSkipLogin(
-  "2023-08-15 00:00:00",
-  "2023-10-31 23:59:59",
-  MT5_SERVER_TYPE.LIVE
-).then((res) => {
-  console.log("res");
-});
 
 const getMultipleDealGroupDateV2Test = async (
   groups,
