@@ -164,8 +164,8 @@ const second = async (fromDate, toDate, type) => {
   }
 };
 
-second("2023-08-01 00:00:00", "2023-11-07 23:00:00", MT5_SERVER_TYPE.LIVE).then(
-  (res) => {
-    console.log("res");
-  }
-);
+// second("2023-08-01 00:00:00", "2023-11-07 23:00:00", MT5_SERVER_TYPE.LIVE).then(
+//   (res) => {
+//     console.log("res");
+//   }
+// );

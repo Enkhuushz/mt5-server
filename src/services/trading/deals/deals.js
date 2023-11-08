@@ -429,6 +429,7 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
           let is50withdraw = false;
           let is50deposit = false;
           let is50depositTime = "";
+          let is50withdrawTime = "";
 
           for (let offset = 0; offset < totalRecords; offset += 100) {
             const res = await authAndGetRequest(
@@ -463,6 +464,7 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
                   `profit: ${profit}, dealer: ${dealer}, action: ${action} comment: ${comment}`
                 );
                 is50withdraw = true;
+                is50withdrawTime = time;
               }
 
               if (
@@ -502,10 +504,21 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
           }
 
           if (is50bonus && is50withdraw) {
-            console.log(`is50bonus && is50withdraw ${login}`);
+            const exists = skippLoginWithdraw.some(
+              (item) => item.login === login
+            );
 
-            if (!skippLoginWithdraw.includes(login)) {
-              skippLoginWithdraw.push(login);
+            if (!exists) {
+              console.log(
+                `is50bonus && is50withdraw: ${{
+                  login: login,
+                  time: toDatee(is50withdrawTime),
+                }}`
+              );
+              skippLoginDeposit.push({
+                login: login,
+                time: toDatee(is50withdrawTime),
+              });
             }
           }
         }
