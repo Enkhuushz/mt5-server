@@ -26,7 +26,7 @@ const creditZeroCorrection = async (group, type) => {
 
   let counter = 0;
   for (const filtered of filteredDatas) {
-    if (counter >= 2) {
+    if (counter >= 100) {
       logger.info(
         `============================================================`
       );
@@ -107,7 +107,7 @@ const creditZeroCorrection = async (group, type) => {
   return "true";
 };
 
-creditZeroCorrection("real\\standart", MT5_SERVER_TYPE.LIVE).then((res) => {
+creditZeroCorrection("real\\pro", MT5_SERVER_TYPE.LIVE).then((res) => {
   console.log("res");
 });
 
