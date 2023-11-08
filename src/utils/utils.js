@@ -1,6 +1,10 @@
 function toTimestamp(dateStr) {
   const dateObj = new Date(dateStr);
+
+  dateObj.setTime(dateObj.getTime() + 8 * 60 * 60 * 1000);
+
   const timestamp = dateObj.getTime();
+
   return timestamp / 1000;
 }
 
