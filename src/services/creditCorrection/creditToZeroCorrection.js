@@ -107,7 +107,7 @@ const creditZeroCorrection = async (group, type) => {
   return "true";
 };
 
-creditZeroCorrection("real\\pro", MT5_SERVER_TYPE.LIVE).then((res) => {
+creditZeroCorrection("real\\standart", MT5_SERVER_TYPE.LIVE).then((res) => {
   console.log("res");
 });
 
