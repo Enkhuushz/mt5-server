@@ -484,7 +484,7 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
 
           if (is50bonus && is50deposit) {
             const exists = skippLoginDeposit.some(
-              (item) => item.login === targetLogin
+              (item) => item.login === login
             );
 
             if (!exists) {
