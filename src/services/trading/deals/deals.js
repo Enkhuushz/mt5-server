@@ -460,12 +460,10 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
                 comment.includes("withdraw")
               ) {
                 console.log(
-                  `profit: ${profit}, dealer: ${dealer}, action: ${action}, comment: ${comment}, time: ${toDatee(
-                    record.Time
-                  )}`
+                  `profit: ${profit}, dealer: ${dealer}, action: ${action}, comment: ${comment}, time: ${record.TimeMsc}`
                 );
                 is50withdraw = true;
-                is50withdrawTime = toDatee(record.Time);
+                is50withdrawTime = record.TimeMsc;
               }
 
               if (
@@ -477,12 +475,10 @@ const getCommissionSkipLogin = async (fromDate, toDate, type) => {
                 comment.includes("deposit")
               ) {
                 console.log(
-                  `profit: ${profit}, dealer: ${dealer}, action: ${action}, comment: ${comment}, time: ${toDatee(
-                    record.Time
-                  )}`
+                  `profit: ${profit}, dealer: ${dealer}, action: ${action}, comment: ${comment}, time: ${record.TimeMsc}`
                 );
                 is50deposit = true;
-                is50depositTime = toDatee(record.Time);
+                is50depositTime = record.TimeMsc;
               }
             }
           }
