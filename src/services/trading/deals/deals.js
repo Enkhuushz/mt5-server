@@ -444,7 +444,7 @@ const calculateCommissionDoLogin = async (fromDate, toDate, type) => {
             const comment = record.Comment.toLowerCase();
             const dealer = record.Dealer;
             const action = record.Action;
-            const commission = new Decimal(deal.Commission);
+            const commission = new Decimal(record.Commission);
 
             if (time < record.TimeMsc) {
               if (commissionByLogin[login] == undefined) {
