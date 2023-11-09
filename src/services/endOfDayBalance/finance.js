@@ -18,7 +18,14 @@ const getEndOfDay = async (groups, from, to, type) => {
 
     let index = 0;
 
-    for (const login of resLoginList.answer) {
+    for (let i = 0; i < resLoginList.answer.length; i++) {
+      // if (i < 3500) {
+      //   continue;
+      // }
+      if (i >= 2300) {
+        break;
+      }
+      const login = resLoginList.answer[i];
       console.log(login);
       const finance = await getFinancial(
         login,
@@ -31,8 +38,7 @@ const getEndOfDay = async (groups, from, to, type) => {
       list = list.concat(finance);
     }
 
-    generateExcell(list, `endOfDayBalancesAllPro`);
-    // generateJson(list, `endOfDayBalances8MonthPro`);
+    generateExcell(list, `endOfDayBalancesAllProFirst2300`);
   } catch (error) {
     console.log(error);
   }
