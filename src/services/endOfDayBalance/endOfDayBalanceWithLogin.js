@@ -32,7 +32,7 @@ const getEndOfDay = async (groups, type) => {
         if (login.length > 4) {
           const finance = await getFinancial(
             login,
-            "2023-08-25 00:00:00",
+            "2023-09-25 00:00:00",
             "2023-11-01 23:59:59",
             100,
             MT5_SERVER_TYPE.LIVE
