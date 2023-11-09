@@ -402,7 +402,7 @@ function readNumbersFromFile(callback) {
 }
 
 function readNumbersFromFileJson(callback) {
-  const filePath = "file/skipLoginWhoGot50Depositv2.json";
+  const filePath = "file/commissionByLogin.json";
 
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
@@ -413,6 +413,58 @@ function readNumbersFromFileJson(callback) {
     }
   });
 }
+
+const calculateCommissionDoLoginGetEmail = async (type) => {
+  try {
+    readNumbersFromFileJson(async (err, jsonData) => {
+      const dataArray = [];
+      for (const key in jsonData) {
+        const res = await authAndGetRequest(`/api/user/get?login=${key}`, type);
+
+        const body = {
+          id: key,
+          value: parseFloat(jsonData[key]),
+          email: res.answer.Email,
+        };
+
+        console.log(body);
+
+        dataArray.push(body);
+      }
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet("Data");
+
+      // Define the headers for your Excel sheet
+      worksheet.columns = [
+        { header: "id", key: "id", width: 15 },
+        { header: "value", key: "value", width: 15 },
+        { header: "email", key: "email", width: 15 },
+      ];
+
+      // Add the data from the extractedData array to the worksheet
+      dataArray.forEach((item) => {
+        worksheet.addRow(item);
+      });
+
+      const path = "ebarimtCommissions";
+
+      // Define the file path where you want to save the Excel file
+      const filePath = `file/${path}.xlsx`;
+
+      // Save the Excel workbook to the file
+      workbook.xlsx
+        .writeFile(filePath)
+        .then(() => {
+          console.log("Excel file saved to", filePath);
+        })
+        .catch((error) => {
+          console.error("Error saving the Excel file:", error);
+        });
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const calculateCommissionDoLogin = async (fromDate, toDate, type) => {
   try {
@@ -464,11 +516,7 @@ const calculateCommissionDoLogin = async (fromDate, toDate, type) => {
   }
 };
 
-calculateCommissionDoLogin(
-  "2023-10-24 00:00:00",
-  "2023-10-31 23:59:59",
-  MT5_SERVER_TYPE.LIVE
-).then((res) => {
+calculateCommissionDoLoginGetEmail(MT5_SERVER_TYPE.LIVE).then((res) => {
   console.log("res");
 });
 
