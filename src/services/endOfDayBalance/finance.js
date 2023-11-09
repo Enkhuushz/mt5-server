@@ -20,7 +20,7 @@ const getEndOfDay = async (groups, from, to, type) => {
 
     const length = resLoginList.answer.length;
 
-    for (let i = 1000; i < length; i += 1000) {
+    for (let i = 0; i < length; i += 1000) {
       const loginList = resLoginList.answer.slice(i, i + 1000);
       console.log(loginList);
       for (let j = 0; j < loginList.length; j++) {
@@ -37,7 +37,7 @@ const getEndOfDay = async (groups, from, to, type) => {
         console.log(index);
         list = list.concat(finance);
       }
-      generateExcell(list, `endOfDayBalancesAllProFirst${i + 1000}`);
+      generateExcell(list, `endOfDayBalancesAllStandartFirst${i + 1000}`);
 
       setTimeout(() => {
         console.log("Slept for 5 seconds");
@@ -276,7 +276,7 @@ function generateExcell(endOfDayBalances, path) {
 }
 
 getEndOfDay(
-  "real\\pro",
+  "real\\standart",
   "2023-07-01 00:00:00",
   "2023-11-09 23:59:59",
   MT5_SERVER_TYPE.LIVE
