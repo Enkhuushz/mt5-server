@@ -18,28 +18,33 @@ const getEndOfDay = async (groups, from, to, type) => {
 
     let index = 0;
 
-    for (let i = 0; i < resLoginList.answer.length; i++) {
-      // if (i < 3500) {
-      //   continue;
-      // }
-      if (i >= 1000) {
-        break;
-      }
-      const login = resLoginList.answer[i];
-      console.log(login);
-      const finance = await getFinancial(
-        login,
-        from,
-        to,
-        100,
-        MT5_SERVER_TYPE.LIVE
-      );
-      index++;
-      console.log(index);
-      list = list.concat(finance);
-    }
+    const length = resLoginList.length;
 
-    generateExcell(list, `endOfDayBalancesAllProFirst2300`);
+    for (let i = 1000; i < length; i += 1000) {
+      const loginList = resLoginList.answer.slice(i, i + 1000);
+      console.log(loginList);
+      for (let j = 0; j < loginList.length; j++) {
+        const login = loginList[j];
+        console.log(login);
+        const finance = await getFinancial(
+          login,
+          from,
+          to,
+          100,
+          MT5_SERVER_TYPE.LIVE
+        );
+        index++;
+        console.log(index);
+        list = list.concat(finance);
+      }
+      generateExcell(list, `endOfDayBalancesAllProFirst${i + 1000}`);
+
+      setTimeout(() => {
+        console.log("Slept for 5 seconds");
+      }, 5000);
+
+      list = [];
+    }
   } catch (error) {
     console.log(error);
   }
