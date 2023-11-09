@@ -29,6 +29,7 @@ const MT5_SERVER_TYPE = {
 const MT5_GROUP_TYPE = {
   PRO: "real\\pro",
   STANDART: "real\\standart",
+  GOLD: "real\\xauusd",
 };
 const EXCLUDE_LOGINS = [
   "511217",

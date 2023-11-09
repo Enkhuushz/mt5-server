@@ -8,6 +8,10 @@ const {
   batchBalanceLowHighAndCreditLowHigh,
   batchBalanceLowerThanZeroAndCreditZero,
 } = require("../src/services/mt5Service/batchBalanceCredit");
+const {
+  creditZeroCorrection,
+} = require("../src/services/creditCorrection/creditToZeroCorrection");
+
 const { MT5_GROUP_TYPE, MT5_SERVER_TYPE } = require("../src/lib/constants");
 
 // Here import the routes
@@ -85,6 +89,7 @@ const runCronJobs = async () => {
     logger.info(`Cron job batchBalanceLowerThanZeroAndCreditZero PRO ended`);
 
     logger.info(`============================================================`);
+
     logger.info(
       `Cron job batchBalanceLowerThanZeroAndCreditZero STANDART started`
     );
@@ -97,6 +102,7 @@ const runCronJobs = async () => {
     );
 
     logger.info(`============================================================`);
+
     logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh PRO started`);
     await batchBalanceLowHighAndCreditLowHigh(
       MT5_GROUP_TYPE.PRO,
@@ -109,6 +115,7 @@ const runCronJobs = async () => {
     logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh PRO ended`);
 
     logger.info(`============================================================`);
+
     logger.info(
       `Cron job batchBalanceLowHighAndCreditLowHigh STANDART started`
     );
@@ -121,6 +128,25 @@ const runCronJobs = async () => {
       MT5_SERVER_TYPE.LIVE
     );
     logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh STANDART ended`);
+
+    logger.info(`============================================================`);
+
+    logger.info(`Cron job creditZeroCorrection PRO started`);
+    await creditZeroCorrection(MT5_GROUP_TYPE.PRO, MT5_SERVER_TYPE.LIVE);
+    logger.info(`Cron job creditZeroCorrection PRO ended`);
+
+    logger.info(`============================================================`);
+
+    logger.info(`Cron job creditZeroCorrection STANDART started`);
+    await creditZeroCorrection(MT5_GROUP_TYPE.STANDART, MT5_SERVER_TYPE.LIVE);
+    logger.info(`Cron job creditZeroCorrection STANDART ended`);
+
+    logger.info(`============================================================`);
+
+    logger.info(`Cron job creditZeroCorrection GOLD started`);
+    await creditZeroCorrection(MT5_GROUP_TYPE.GOLD, MT5_SERVER_TYPE.LIVE);
+    logger.info(`Cron job creditZeroCorrection GOLD ended`);
+
     logger.info(`============================================================`);
   } catch (error) {
     logger.error(`Cron job encountered an error: ${error}`);

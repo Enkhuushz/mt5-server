@@ -107,10 +107,6 @@ const creditZeroCorrection = async (group, type) => {
   return "true";
 };
 
-creditZeroCorrection("real\\xauusd", MT5_SERVER_TYPE.LIVE).then((res) => {
-  console.log("res");
-});
-
 module.exports = {
   creditZeroCorrection,
 };
