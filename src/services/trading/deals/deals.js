@@ -402,7 +402,7 @@ function readNumbersFromFile(callback) {
 }
 
 function readNumbersFromFileJson(callback) {
-  const filePath = "file/skipLoginWhoGotJustDepositv2.json";
+  const filePath = "file/commissionByLoginWithoutBonus.json";
 
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
@@ -414,7 +414,7 @@ function readNumbersFromFileJson(callback) {
   });
 }
 
-const calculateCommissionDoLoginGetEmail = async (type) => {
+const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
   try {
     readNumbersFromFileJson(async (err, jsonData) => {
       const dataArray = [];
@@ -446,7 +446,7 @@ const calculateCommissionDoLoginGetEmail = async (type) => {
         worksheet.addRow(item);
       });
 
-      const path = "ebarimtCommissions";
+      const path = "ebarimtCommissionsWihtoutBonus";
 
       // Define the file path where you want to save the Excel file
       const filePath = `file/${path}.xlsx`;
@@ -516,7 +516,7 @@ const calculateCommissionDoLogin = async (fromDate, toDate, type) => {
   }
 };
 
-calculateCommissionDoLogin(
+calculateCommissionDoLoginGetEmail(
   "2023-10-24 00:00:00",
   "2023-10-31 23:59:59",
   MT5_SERVER_TYPE.LIVE
