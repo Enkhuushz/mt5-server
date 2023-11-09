@@ -31,7 +31,7 @@ const getEndOfDay = async (groups, from, to, type) => {
       list = list.concat(finance);
     }
 
-    generateExcell(list, `endOfDayBalances9MonthPro`);
+    generateExcell(list, `endOfDayBalances9MonthStandart`);
     // generateJson(list, `endOfDayBalances8MonthPro`);
   } catch (error) {
     console.log(error);
@@ -246,7 +246,7 @@ function generateExcell(endOfDayBalances, path) {
 }
 
 getEndOfDay(
-  "real\\pro",
+  "real\\standart",
   "2023-09-01 00:00:00",
   "2023-09-31 23:59:59",
   MT5_SERVER_TYPE.LIVE
