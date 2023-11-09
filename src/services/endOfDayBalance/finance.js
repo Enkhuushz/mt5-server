@@ -35,6 +35,7 @@ const getEndOfDay = async (groups, from, to, type) => {
         MT5_SERVER_TYPE.LIVE
       );
       index++;
+      console.log(index);
       list = list.concat(finance);
     }
 
