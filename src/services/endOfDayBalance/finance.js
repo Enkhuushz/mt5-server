@@ -22,7 +22,7 @@ const getEndOfDay = async (groups, from, to, type) => {
       // if (i < 3500) {
       //   continue;
       // }
-      if (i >= 2300) {
+      if (i >= 1000) {
         break;
       }
       const login = resLoginList.answer[i];
@@ -231,6 +231,8 @@ function generateExcell(endOfDayBalances, path) {
       },
       { header: "amount", key: "amount", width: 15 },
     ];
+
+    console.log(`endOfDayBalances.length: ${endOfDayBalances.length}`);
 
     // Add the data from the extractedData array to the worksheet
     endOfDayBalances.forEach((item) => {
