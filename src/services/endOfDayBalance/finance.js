@@ -20,8 +20,8 @@ const getEndOfDay = async (groups, from, to, type) => {
 
     const length = resLoginList.answer.length;
 
-    for (let i = 0; i < length; i += 1000) {
-      const loginList = resLoginList.answer.slice(i, i + 1000);
+    for (let i = 0; i < length; i += 500) {
+      const loginList = resLoginList.answer.slice(i, i + 500);
       console.log(loginList);
       for (let j = 0; j < loginList.length; j++) {
         const login = loginList[j];
@@ -37,7 +37,7 @@ const getEndOfDay = async (groups, from, to, type) => {
         console.log(index);
         list = list.concat(finance);
       }
-      generateExcell(list, `endOfDayBalancesAllStandartFirst${i + 1000}`);
+      generateExcell(list, `endOfDayBalancesAllStandartFirst${i + 500}`);
 
       setTimeout(() => {
         console.log("Slept for 5 seconds");
