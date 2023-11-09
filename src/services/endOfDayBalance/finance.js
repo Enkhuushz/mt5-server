@@ -246,7 +246,7 @@ function generateExcell(endOfDayBalances, path) {
 }
 
 getEndOfDay(
-  "real\\standart",
+  "real\\pro",
   "2023-07-01 00:00:00",
   "2023-11-09 23:59:59",
   MT5_SERVER_TYPE.LIVE
