@@ -464,13 +464,13 @@ const calculateCommissionDoLogin = async (fromDate, toDate, type) => {
   }
 };
 
-// calculateCommissionDoLogin(
-//   "2023-10-24 00:00:00",
-//   "2023-10-31 23:59:59",
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   console.log("res");
-// });
+calculateCommissionDoLogin(
+  "2023-10-24 00:00:00",
+  "2023-10-31 23:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
+  console.log("res");
+});
 
 const getCommissionDoLogin = async (fromDate, toDate, type) => {
   try {
