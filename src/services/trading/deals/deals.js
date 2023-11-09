@@ -402,7 +402,7 @@ function readNumbersFromFile(callback) {
 }
 
 function readNumbersFromFileJson(callback) {
-  const filePath = "file/commissionByLogin.json";
+  const filePath = "file/skipLoginWhoGotJustDepositv2.json";
 
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
@@ -508,7 +508,7 @@ const calculateCommissionDoLogin = async (fromDate, toDate, type) => {
           }
         }
       }
-      generateJson(commissionByLogin, "commissionByLogin");
+      generateJson(commissionByLogin, "commissionByLoginWithoutBonus");
       console.log(commissionByLogin);
     });
   } catch (error) {
@@ -516,7 +516,11 @@ const calculateCommissionDoLogin = async (fromDate, toDate, type) => {
   }
 };
 
-calculateCommissionDoLoginGetEmail(MT5_SERVER_TYPE.LIVE).then((res) => {
+calculateCommissionDoLogin(
+  "2023-10-24 00:00:00",
+  "2023-10-31 23:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
   console.log("res");
 });
 
