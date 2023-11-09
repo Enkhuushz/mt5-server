@@ -18,7 +18,7 @@ const getEndOfDay = async (groups, from, to, type) => {
 
     let index = 0;
 
-    const length = resLoginList.length;
+    const length = resLoginList.answer.length;
 
     for (let i = 1000; i < length; i += 1000) {
       const loginList = resLoginList.answer.slice(i, i + 1000);
