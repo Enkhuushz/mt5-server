@@ -7,7 +7,7 @@ const {
   changeUserPassword,
   updateUserGroup,
   getMultipleUserGroups,
-} = require("../services/users/users");
+} = require("../services/mt5Service/users/users");
 const logger = require("../config/winston");
 const { MT5_SERVER_TYPE } = require("../lib/constants");
 const { sendSuccess, sendError } = require("../utils/response");

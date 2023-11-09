@@ -4,7 +4,7 @@ const {
   addGroup,
   getGroup,
   getGroupByName,
-} = require("../services/group/group");
+} = require("../services/mt5Service/group/group");
 
 const logger = require("../config/winston");
 const { MT5_SERVER_TYPE } = require("../lib/constants");

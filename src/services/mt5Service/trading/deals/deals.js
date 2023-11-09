@@ -1,6 +1,6 @@
 const { authAndGetRequest, authAndPostRequest } = require("../../MT5Request");
 
-const { toTimestamp } = require("../../../utils/utils");
+const { toTimestamp } = require("../../../../utils/utils");
 
 /**
  * Get total deal for a given login within a specified date range.

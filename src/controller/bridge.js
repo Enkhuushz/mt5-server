@@ -1,6 +1,5 @@
 const { sendSuccess, sendError } = require("../utils/response");
 const logger = require("../config/winston");
-const { MT5_SERVER_TYPE } = require("../lib/constants");
 const { get } = require("../services/bridge/deal");
 
 const getController = async (req, res) => {

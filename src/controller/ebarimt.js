@@ -6,12 +6,12 @@ const {
   sendData,
   getInfo,
   deleteReceipt,
-} = require("../services/ebarimt");
+} = require("../services/ebarimt/ebarimt");
 const {
   getMultipleDealGroupDateForSkipLogin,
   getMultipleDealGroupDateV2,
   getMultipleDealGroupDateV2Test,
-} = require("../services/trading/deals/deals");
+} = require("../services/ebarimt/ebarimtSend");
 
 const { getCurrencyRate } = require("../services/currencyRate");
 

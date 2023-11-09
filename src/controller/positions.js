@@ -5,7 +5,7 @@ const {
   getPositionByPage,
   updatePosition,
   deletePosition,
-} = require("../services/trading/positions/positions");
+} = require("../services/mt5Service/trading/positions/positions");
 const logger = require("../config/winston");
 const { sendSuccess, sendError } = require("../utils/response");
 const { MT5_SERVER_TYPE } = require("../lib/constants");

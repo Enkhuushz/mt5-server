@@ -1,6 +1,6 @@
 const {
   depositWithdraw,
-} = require("../services/trading/tradeRequests/tradeRequests");
+} = require("../services/mt5Service/trading/tradeRequests/tradeRequests");
 const logger = require("../config/winston");
 const { MT5_SERVER_TYPE } = require("../lib/constants");
 const { sendSuccess, sendError } = require("../utils/response");

@@ -9,7 +9,7 @@ const {
   updateDeal,
   deleteDeal,
   getDealByTicket,
-} = require("../services/trading/deals/deals");
+} = require("../services/mt5Service/trading/deals/deals");
 
 const logger = require("../config/winston");
 const { MT5_SERVER_TYPE } = require("../lib/constants");

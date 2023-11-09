@@ -5,7 +5,7 @@ const {
   getOpenOrderByPage,
   updateOpenOrder,
   deleteOpenOrder,
-} = require("../services/trading/orders/orders");
+} = require("../services/mt5Service/trading/orders/orders");
 
 const logger = require("../config/winston");
 const { sendSuccess, sendError } = require("../utils/response");
