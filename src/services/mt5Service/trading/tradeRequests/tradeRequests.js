@@ -1,16 +1,20 @@
-const {
-  authAndGetRequest,
-  authAndPostRequest,
-} = require("../../mt5Service/MT5Request");
-const { MT5_SERVER_TYPE } = require("../../../lib/constants");
-const logger = require("../../../config/winston");
+const { authAndGetRequest, authAndPostRequest } = require("../../MT5Request");
 
-// 2 — a balance operation.
-// 3 — a credit operation.
-// 4 — additional adding/withdrawing.
-// 5 — corrective operations.
-// 6 — adding bonuses.
-// 10 Данс цэнэглэх, зарлага гаргах /DEPOSIT, WITHDRAW REQ/
+/**
+ * Deposit or withdraw funds from a user's trading account.
+ * 2 — a balance operation.
+   3 — a credit operation.
+   4 — additional adding/withdrawing.
+   5 — corrective operations.
+   6 — adding bonuses.
+   10 Данс цэнэглэх, зарлага гаргах /DEPOSIT, WITHDRAW REQ/
+ * @param {number} login - The user's login ID.
+ * @param {string} operation - The type of operation to perform (either "deposit" or "withdraw").
+ * @param {number} sum - The amount of funds to deposit or withdraw.
+ * @param {string} comment - A comment to attach to the transaction.
+ * @param {string} type - The type of request to make (either "api" or "manager").
+ * @returns {Promise<Object>} - A Promise that resolves with the response data from the server.
+ */
 const depositWithdraw = async (login, operation, sum, comment, type) => {
   const res = await authAndGetRequest(
     `/api/trade/balance?login=${login}&type=${operation}&balance=${sum}&comment=${comment}`,
@@ -18,12 +22,6 @@ const depositWithdraw = async (login, operation, sum, comment, type) => {
   );
   return res;
 };
-
-// depositWithdraw("903847", "2", 10000.0, "balance", MT5_SERVER_TYPE.DEMO).then(
-//   (res) => {
-//     console.log(res);
-//   }
-// );
 
 const checkMargin = async (login, symbol, operation, volume, price, type) => {
   const res = await authAndGetRequest(

@@ -1,6 +1,6 @@
-const { authAndGetRequest } = require("../mt5Service/MT5Request");
-const { EXCLUDE_LOGINS_CREDIT_ZERO } = require("../../lib/constants");
-const logger = require("../../config/winston");
+const { authAndGetRequest } = require("../services/mt5Service/MT5Request");
+const { EXCLUDE_LOGINS_CREDIT_ZERO } = require("../lib/constants");
+const logger = require("../config/winston");
 
 const creditZeroCorrection = async (group, type) => {
   logger.info(

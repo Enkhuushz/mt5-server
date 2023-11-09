@@ -32,10 +32,8 @@ const generateExcel = (data, path, columns) => {
     worksheet.addRow(item);
   });
 
-  // Define the file path where you want to save the Excel file
   const filePath = `filev2/${path}.xlsx`;
 
-  // Save the Excel workbook to the file
   workbook.xlsx
     .writeFile(filePath)
     .then(() => {
@@ -46,7 +44,36 @@ const generateExcel = (data, path, columns) => {
     });
 };
 
+function readFromTextToList(callback, path) {
+  const filePath = `file/${path}.txt`;
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading text file:", err);
+      callback(err, null);
+    } else {
+      const list = data.trim().split("\n");
+      callback(null, list);
+    }
+  });
+}
+
+function readFromFileJson(callback, path) {
+  const filePath = `file/${path}.json`;
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading json file:", err);
+      callback(err, null);
+    } else {
+      callback(null, JSON.parse(data));
+    }
+  });
+}
+
 module.exports = {
   generateJson,
   generateExcel,
+  readFromTextToList,
+  readFromFileJson,
 };

@@ -1,6 +1,6 @@
-const { authAndGetRequest } = require("./MT5Request");
-const { EXCLUDE_LOGINS } = require("../../lib/constants");
-const logger = require("../../config/winston");
+const { authAndGetRequest } = require("../services/mt5Service/MT5Request");
+const { EXCLUDE_LOGINS } = require("../lib/constants");
+const logger = require("../config/winston");
 
 const batchBalanceLowHighAndCreditLowHigh = async (
   group,

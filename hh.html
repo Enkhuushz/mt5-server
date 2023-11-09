@@ -1,16 +1,4 @@
-const generate = async (
-  amount,
-  lottery,
-  receiptId,
-  qrCode,
-  date,
-  login,
-  dateFrom,
-  dateTo,
-  type,
-  tax
-) => {
-  const html = `<!DOCTYPE html>
+<!DOCTYPE html>
   <html
     lang="en"
     xmlns="http://www.w3.org/1999/xhtml"
@@ -603,7 +591,7 @@ const generate = async (
                             <td style="text-align: center; width: 50%"><span class="label" style="font-size: 12px" 
                             >${amount} </span></td>
                             <td style="text-align: center; width: 40%"> <span class="label" style="font-size: 12px" 
-                            >${tax}</span></td>
+                            >${noat}</span></td>
                             <td style="text-align: center; width: 30%"> <span class="label" style="font-size: 12px" 
                             >${amount}</span></td>
                     </tr>
@@ -804,10 +792,3 @@ const generate = async (
       </center>
     </body>
   </html>
-    `;
-  return html;
-};
-
-module.exports = {
-  generate,
-};

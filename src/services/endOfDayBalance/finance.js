@@ -5,7 +5,7 @@ const { authAndGetRequest } = require("../mt5Service/MT5Request");
 const Decimal = require("decimal.js");
 const ExcelJS = require("exceljs");
 
-const getEndOfDay = async (groups, type) => {
+const getEndOfDay = async (groups, from, to, type) => {
   try {
     const resLoginList = await authAndGetRequest(
       `/api/user/logins?group=${groups}`,
@@ -22,8 +22,8 @@ const getEndOfDay = async (groups, type) => {
       console.log(login);
       const finance = await getFinancial(
         login,
-        "2023-09-25 00:00:00",
-        "2023-10-01 23:59:59",
+        from,
+        to,
         100,
         MT5_SERVER_TYPE.LIVE
       );
@@ -31,8 +31,8 @@ const getEndOfDay = async (groups, type) => {
       list = list.concat(finance);
     }
 
-    generateExcell(list, `endOfDayBalances`);
-    generateJson(list, `endOfDayBalances`);
+    generateExcell(list, `endOfDayBalances8MonthPro`);
+    // generateJson(list, `endOfDayBalances8MonthPro`);
   } catch (error) {
     console.log(error);
   }
@@ -65,7 +65,6 @@ const getFinancial = async (login, fromDate, toDate, number, type) => {
     );
     results = results.concat(resDeal.answer);
   }
-  // generateJson(results, `zresults${login}`);
 
   const endOfDayBalances = calculateEndOfDayBalances(
     results,
@@ -246,6 +245,11 @@ function generateExcell(endOfDayBalances, path) {
   return "resTotal";
 }
 
-// getEndOfDay("real\\xauusd", MT5_SERVER_TYPE.LIVE).then((res) => {
-//   console.log("res");
-// });
+getEndOfDay(
+  "real\\pro",
+  "2023-08-01 00:00:00",
+  "2023-08-31 23:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
+  console.log("res");
+});

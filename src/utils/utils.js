@@ -1,3 +1,8 @@
+/**
+ * Converts a date string to a Unix timestamp.
+ * @param {string} dateStr - The date string to convert.
+ * @returns {number} The Unix timestamp in seconds.
+ */
 function toTimestamp(dateStr) {
   const dateObj = new Date(dateStr);
 
@@ -8,11 +13,24 @@ function toTimestamp(dateStr) {
   return timestamp / 1000;
 }
 
+/**
+ * Converts a timestamp to a Date object.
+ * @param {number} timestamp - The timestamp to convert.
+ * @returns {Date} The Date object representing the timestamp.
+ */
 function toDatee(timestamp) {
   const dateObj = new Date(timestamp);
   return dateObj;
 }
 
+/**
+ * Generates a random password with the specified length.
+ * The password will contain at least one lowercase letter, one uppercase letter,
+ * one number, and one special character.
+ *
+ * @param {number} length - The length of the password to generate.
+ * @returns {string} The generated password.
+ */
 function generate(length) {
   const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
   const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -35,8 +53,7 @@ function generate(length) {
     Math.floor(Math.random() * specialChars.length)
   );
 
-  // Generate the remaining characters
-  const remainingLength = length - 4; // Subtract 4 for the required characters
+  const remainingLength = length - 4;
   const allChars = lowercaseChars + uppercaseChars + numberChars + specialChars;
   for (let i = 0; i < remainingLength; i++) {
     const randomIndex = Math.floor(Math.random() * allChars.length);

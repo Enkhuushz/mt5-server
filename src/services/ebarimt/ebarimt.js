@@ -1,7 +1,7 @@
 const { EBARIMT_URL, EBARIMT_MERCHANT_TIN, EBARIMT_POS_ID } = process.env;
 const axios = require("axios");
-const logger = require("../config/winston");
-const { Receipt } = require("../model");
+const logger = require("../../config/winston");
+const { Receipt } = require("../../model");
 
 const sendReceipt = async (amountt, email) => {
   try {
@@ -17,20 +17,23 @@ const sendReceipt = async (amountt, email) => {
       posId: parseInt(process.env.EBARIMT_POS_ID),
       type: "B2C_RECEIPT",
       posNo: "001",
+      totalVAT: amount / 11,
       receipts: [
         {
           totalAmount: amount,
           taxType: "VAT_ABLE",
           merchantTin: process.env.EBARIMT_MERCHANT_TIN,
+          totalVAT: amount / 11,
           items: [
             {
               name: "шимтгэл эргэн төлөлт",
               barCode: "null",
               barCodeType: "UNDEFINED",
-              classificationCode: "2349010",
+              classificationCode: "7159",
               qty: 1,
               unitPrice: amount,
               totalAmount: amount,
+              totalVAT: amount / 11,
             },
           ],
         },

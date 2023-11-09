@@ -5,6 +5,12 @@ const { authAndGetRequest } = require("../mt5Service/MT5Request");
 const Decimal = require("decimal.js");
 const ExcelJS = require("exceljs");
 
+/**
+ * Retrieves end of day balance for a given group of users within a specified time range.
+ * @param {string} groups - The group of users to retrieve end of day balance for.
+ * @param {string} type - The type of authentication to use.
+ * @returns {Promise<void>} - A Promise that resolves when the end of day balance has been generated and saved to a file.
+ */
 const getEndOfDay = async (groups, type) => {
   try {
     const resLoginList = await authAndGetRequest(

@@ -7,14 +7,11 @@ const cron = require("node-cron");
 const {
   batchBalanceLowHighAndCreditLowHigh,
   batchBalanceLowerThanZeroAndCreditZero,
-} = require("../src/services/mt5Service/batchBalanceCredit");
-const {
-  creditZeroCorrection,
-} = require("../src/services/creditCorrection/creditToZeroCorrection");
+} = require("../src/scheduled/balanceCorrection");
+const { creditZeroCorrection } = require("../src/scheduled/creditCorrection");
 
 const { MT5_GROUP_TYPE, MT5_SERVER_TYPE } = require("../src/lib/constants");
 
-// Here import the routes
 const logger = require("../src/config/winston");
 
 const {

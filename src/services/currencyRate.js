@@ -36,6 +36,7 @@ const getCurrencyRate = async () => {
     logger.error(`SENT ERROR ${err}`);
   }
 };
+
 module.exports = {
   getCurrencyRate,
 };
