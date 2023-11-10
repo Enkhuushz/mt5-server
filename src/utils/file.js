@@ -59,7 +59,7 @@ function readFromTextToList(callback, path) {
 }
 
 function readFromFileJson(callback, path) {
-  const filePath = `file/commissionsByLoginNoBonus50Month10.json`;
+  const filePath = `file/loginsThatDidTradeMonth09.json`;
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
       console.error("Error reading json file:", err);
