@@ -34,7 +34,7 @@ const getCommissionLogins = async (groups, fromDate, toDate, type) => {
       }
     }
     console.log(skippLogin);
-    generateJson(skippLogin, "skipLoginForCommission");
+    generateJson(skippLogin, "skipLoginForCommissionMonth9");
   } catch (error) {
     console.log(error);
   }
@@ -166,10 +166,10 @@ const getCommissionDoLogin = async (fromDate, toDate, type) => {
       console.log(`===============`);
 
       console.log(`skippLoginDeposit: ${skippLoginDeposit}`);
-      generateJson(skippLoginDeposit, "skipLoginWhoGot50Deposit7Month");
+      generateJson(skippLoginDeposit, "skipLoginWhoGot50Deposit9Month");
 
       console.log(`skippLoginJustDeposit: ${skippLoginJustDeposit}`);
-      generateJson(skippLoginJustDeposit, "skipLoginWhoGotJustDeposit7Month");
+      generateJson(skippLoginJustDeposit, "skipLoginWhoGotJustDeposit9Month");
     });
   } catch (error) {
     console.log(error);
@@ -319,20 +319,20 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
 
 // getCommissionLogins(
 //   "real\\pro",
-//   "2023-08-01 00:00:00",
-//   "2023-11-31 23:59:59",
+//   "2023-09-01 00:00:00",
+//   "2023-09-31 23:59:59",
 //   MT5_SERVER_TYPE.LIVE
 // ).then((res) => {
 //   console.log("getCommissionLogins done");
 // });
 
-// getCommissionDoLogin(
-//   "2023-08-01 00:00:00",
-//   "2023-08-31 23:59:59",
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   console.log("getCommissionDoLogin done");
-// });
+getCommissionDoLogin(
+  "2023-09-01 00:00:00",
+  "2023-09-31 23:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
+  console.log("getCommissionDoLogin done");
+});
 
 // calculateCommissionDoLoginNoBonus50(
 //   "2023-08-01 00:00:00",
@@ -342,10 +342,10 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
 //   console.log("calculateCommissionDoLoginNoBonus50 done");
 // });
 
-calculateCommissionDoLoginGetEmail(
-  "2023-08-01 00:00:00",
-  "2023-08-31 23:59:59",
-  MT5_SERVER_TYPE.LIVE
-).then((res) => {
-  console.log("res");
-});
+// calculateCommissionDoLoginGetEmail(
+//   "2023-08-01 00:00:00",
+//   "2023-08-31 23:59:59",
+//   MT5_SERVER_TYPE.LIVE
+// ).then((res) => {
+//   console.log("res");
+// });
