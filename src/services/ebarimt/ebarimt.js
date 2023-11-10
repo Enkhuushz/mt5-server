@@ -64,6 +64,68 @@ const sendReceipt = async (amountt, email) => {
   }
 };
 
+const update = async (amountt, email, id) => {
+  try {
+    const url = `${process.env.EBARIMT_URL}/rest/receipt`;
+
+    const amount = parseFloat(amountt);
+
+    const body = {
+      id: id,
+      totalAmount: amount,
+      districtCode: "2501",
+      branchNo: "001",
+      merchantTin: process.env.EBARIMT_MERCHANT_TIN,
+      posId: parseInt(process.env.EBARIMT_POS_ID),
+      type: "B2C_RECEIPT",
+      posNo: "001",
+      totalVAT: amount / 11,
+      receipts: [
+        {
+          totalAmount: amount,
+          taxType: "VAT_ABLE",
+          merchantTin: process.env.EBARIMT_MERCHANT_TIN,
+          totalVAT: amount / 11,
+          items: [
+            {
+              name: "шимтгэл эргэн төлөлт",
+              barCode: "null",
+              barCodeType: "UNDEFINED",
+              classificationCode: "7159",
+              qty: 1,
+              unitPrice: amount,
+              totalAmount: amount,
+              totalVAT: amount / 11,
+            },
+          ],
+        },
+      ],
+      payments: [
+        {
+          code: "CASH",
+          status: "PAID",
+          paidAmount: amount,
+        },
+      ],
+    };
+
+    const headers = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await axios.post(url, body, headers);
+
+    const receipt = new Receipt(response.data);
+    receipt.email = email;
+    await receipt.save();
+
+    return receipt;
+  } catch (err) {
+    logger.error(`SENT ERROR ${err}`);
+  }
+};
+
 const sendData = async () => {
   try {
     const url = `${process.env.EBARIMT_URL}/rest/sendData`;
@@ -129,4 +191,5 @@ module.exports = {
   sendData,
   getInfo,
   deleteReceipt,
+  update,
 };

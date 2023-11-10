@@ -6,6 +6,7 @@ const {
   sendData,
   getInfo,
   deleteReceipt,
+  update,
 } = require("../services/ebarimt/ebarimt");
 const {
   getMultipleDealGroupDateForSkipLogin,
