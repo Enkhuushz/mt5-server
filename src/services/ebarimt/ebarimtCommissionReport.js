@@ -202,10 +202,6 @@ const calculateCommissionDoLogin = async (fromDate, toDate, type) => {
           );
 
           for (const record of res.answer) {
-            const profit = parseFloat(record.Profit);
-            const comment = record.Comment.toLowerCase();
-            const dealer = record.Dealer;
-            const action = record.Action;
             const commission = new Decimal(record.Commission);
 
             if (time < record.TimeMsc) {
@@ -219,6 +215,49 @@ const calculateCommissionDoLogin = async (fromDate, toDate, type) => {
         }
       }
       generateJson(commissionByLogin, "commissionByLoginWithoutBonus");
+      console.log(commissionByLogin);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const calculateCommissionDoLoginNoBonus50 = async (fromDate, toDate, type) => {
+  try {
+    readFromFileJson(async (err, jsonData) => {
+      const commissionByLogin = {};
+      const timestampFrom = toTimestamp(fromDate);
+      const timestampTo = toTimestamp(toDate);
+
+      for (const data of jsonData) {
+        const login = data.login;
+        const time = data.bonus50Time;
+
+        const resTotal = await authAndGetRequest(
+          `/api/deal/get_total?login=${login}&from=${timestampFrom}&to=${timestampTo}`,
+          type
+        );
+
+        const totalRecords = resTotal.answer.total;
+        console.log(`totalRecords: ${totalRecords}`);
+
+        for (let offset = 0; offset < totalRecords; offset += 100) {
+          const res = await authAndGetRequest(
+            `/api/deal/get_page?login=${login}&from=${timestampFrom}&to=${timestampTo}&offset=${offset}&total=100`,
+            type
+          );
+
+          for (const record of res.answer) {
+            const commission = new Decimal(record.Commission);
+
+            if (commissionByLogin[login] == undefined) {
+              commissionByLogin[login] = new Decimal(0);
+            }
+            commissionByLogin[login] = commissionByLogin[login].add(commission);
+          }
+        }
+      }
+      generateJson(commissionByLogin, "commissionByLoginNoBonus50Month8");
       console.log(commissionByLogin);
     });
   } catch (error) {
@@ -293,6 +332,14 @@ getCommissionDoLogin(
   MT5_SERVER_TYPE.LIVE
 ).then((res) => {
   console.log("getCommissionDoLogin done");
+});
+
+calculateCommissionDoLoginNoBonus50(
+  "2023-08-01 00:00:00",
+  "2023-08-31 23:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
+  console.log("calculateCommissionDoLoginNoBonus50 done");
 });
 
 // calculateCommissionDoLoginGetEmail(
