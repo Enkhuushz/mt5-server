@@ -320,7 +320,7 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
         worksheet.addRow(item);
       });
 
-      const path = "ebarimtCommissionsNoBonusMonth9";
+      const path = "ebarimtCommissionsBonusMonth10";
 
       // Define the file path where you want to save the Excel file
       const filePath = `file/${path}.xlsx`;
@@ -365,18 +365,18 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
 //   console.log("calculateCommissionDoLogin 10 month done");
 // });
 
-calculateCommissionDoLoginNoBonus50(
+// calculateCommissionDoLoginNoBonus50(
+//   "2023-10-01 00:00:00",
+//   "2023-10-31 23:59:59",
+//   MT5_SERVER_TYPE.LIVE
+// ).then((res) => {
+//   console.log("calculateCommissionDoLoginNoBonus50 9month done");
+// });
+
+calculateCommissionDoLoginGetEmail(
   "2023-10-01 00:00:00",
   "2023-10-31 23:59:59",
   MT5_SERVER_TYPE.LIVE
 ).then((res) => {
-  console.log("calculateCommissionDoLoginNoBonus50 9month done");
+  console.log("res");
 });
-
-// calculateCommissionDoLoginGetEmail(
-//   "2023-09-01 00:00:00",
-//   "2023-09-31 23:59:59",
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   console.log("res");
-// });
