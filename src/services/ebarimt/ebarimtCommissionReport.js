@@ -161,7 +161,7 @@ const getCommissionDoLogin = async (fromDate, toDate, type) => {
                 login: login,
                 time: is50depositTime,
                 bonus50Time: is50Time,
-                dateTime: new Date(is50depositTime)
+                dateTime: new Date(is50depositTime / 1000)
                   .toISOString()
                   .replace(/T/, " ")
                   .replace(/\..+/, ""),
