@@ -358,18 +358,18 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
 //   console.log("calculateCommissionDoLogin 10 month done");
 // });
 
-calculateCommissionDoLoginNoBonus(
-  "2023-09-01 00:00:00",
-  "2023-09-30 23:59:59",
-  MT5_SERVER_TYPE.LIVE
-).then((res) => {
-  console.log("calculateCommissionDoLoginNoBonus 9month done");
-});
-
-// calculateCommissionDoLoginGetEmail(
+// calculateCommissionDoLoginNoBonus(
 //   "2023-09-01 00:00:00",
 //   "2023-09-30 23:59:59",
 //   MT5_SERVER_TYPE.LIVE
 // ).then((res) => {
-//   console.log("res");
+//   console.log("calculateCommissionDoLoginNoBonus 9month done");
 // });
+
+calculateCommissionDoLoginGetEmail(
+  "2023-09-01 00:00:00",
+  "2023-09-30 23:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
+  console.log("res");
+});
