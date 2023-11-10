@@ -59,7 +59,7 @@ function readFromTextToList(callback, path) {
 }
 
 function readFromFileJson(callback, path) {
-  const filePath = `file/skipLoginWhoGotJustDeposit9Month.json`;
+  const filePath = `file/commissionByLoginNoBonus50Month8.json`;
 
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
