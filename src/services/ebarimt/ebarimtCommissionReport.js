@@ -50,9 +50,8 @@ const getCommissionLogins = async (groups, fromDate, toDate, type) => {
       for (const record of res.answer) {
         const login = record.Login;
 
-        console.log(login);
-
         if (!skippLogin.includes(login)) {
+          console.log(login);
           skippLogin.push(login);
         }
       }
@@ -190,10 +189,10 @@ const getCommissionDoLogin = async (fromDate, toDate, type) => {
       console.log(`===============`);
 
       console.log(`skippLoginDeposit: ${skippLoginDeposit}`);
-      generateJson(skippLoginDeposit, "skipLoginWhoGot50Deposit9Month");
+      generateJson(skippLoginDeposit, "loginsWhoGot50BonusMonth10");
 
       console.log(`skippLoginJustDeposit: ${skippLoginJustDeposit}`);
-      generateJson(skippLoginJustDeposit, "skipLoginWhoGotJustDeposit9Month");
+      generateJson(skippLoginJustDeposit, "loginsWhoJustDepositMonth10");
     });
   } catch (error) {
     console.log(error);
@@ -341,22 +340,22 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
   }
 };
 
-getCommissionLogins(
-  "real\\pro",
+// getCommissionLogins(
+//   "real\\pro",
+//   "2023-10-01 00:00:00",
+//   "2023-10-31 23:59:59",
+//   MT5_SERVER_TYPE.LIVE
+// ).then((res) => {
+//   console.log("getCommissionLogins done");
+// });
+
+getCommissionDoLogin(
   "2023-10-01 00:00:00",
   "2023-10-31 23:59:59",
   MT5_SERVER_TYPE.LIVE
 ).then((res) => {
-  console.log("getCommissionLogins done");
+  console.log("getCommissionDoLogin done");
 });
-
-// getCommissionDoLogin(
-//   "2023-09-01 00:00:00",
-//   "2023-09-31 23:59:59",
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   console.log("getCommissionDoLogin done");
-// });
 
 // calculateCommissionDoLoginNoBonus50(
 //   "2023-09-01 00:00:00",
