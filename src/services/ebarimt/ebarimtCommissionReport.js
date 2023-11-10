@@ -237,7 +237,7 @@ const calculateCommissionDoLogin = async (fromDate, toDate, type) => {
           }
         }
       }
-      generateJson(commissionByLogin, "commissionByLoginWithoutBonus");
+      generateJson(commissionByLogin, "commissionByLogin50BonusMonth10");
       console.log(commissionByLogin);
     });
   } catch (error) {
@@ -280,7 +280,7 @@ const calculateCommissionDoLoginNoBonus50 = async (fromDate, toDate, type) => {
           }
         }
       }
-      generateJson(commissionByLogin, "commissionByLoginNoBonus50Month8");
+      generateJson(commissionByLogin, "commissionsByLoginNoBonus50Month10");
       console.log(commissionByLogin);
     });
   } catch (error) {
@@ -349,17 +349,25 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
 //   console.log("getCommissionLogins done");
 // });
 
-getCommissionDoLogin(
+// getCommissionDoLogin(
+//   "2023-10-01 00:00:00",
+//   "2023-10-31 23:59:59",
+//   MT5_SERVER_TYPE.LIVE
+// ).then((res) => {
+//   console.log("getCommissionDoLogin done");
+// });
+
+calculateCommissionDoLogin(
   "2023-10-01 00:00:00",
   "2023-10-31 23:59:59",
   MT5_SERVER_TYPE.LIVE
 ).then((res) => {
-  console.log("getCommissionDoLogin done");
+  console.log("calculateCommissionDoLogin 10 month done");
 });
 
 // calculateCommissionDoLoginNoBonus50(
-//   "2023-09-01 00:00:00",
-//   "2023-09-31 23:59:59",
+//   "2023-10-01 00:00:00",
+//   "2023-10-31 23:59:59",
 //   MT5_SERVER_TYPE.LIVE
 // ).then((res) => {
 //   console.log("calculateCommissionDoLoginNoBonus50 9month done");
