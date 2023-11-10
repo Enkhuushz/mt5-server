@@ -320,7 +320,7 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
         worksheet.addRow(item);
       });
 
-      const path = "ebarimtCommissionsBonusMonth10";
+      const path = "ebarimtCommissionsNoBonusMonth10";
 
       // Define the file path where you want to save the Excel file
       const filePath = `file/${path}.xlsx`;
