@@ -275,22 +275,22 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
   }
 };
 
-// getCommissionLogins(
-//   "real\\pro",
+getCommissionLogins(
+  "real\\pro",
+  "2023-08-01 00:00:00",
+  "2023-11-31 23:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
+  console.log("getCommissionLogins done");
+});
+
+// getCommissionDoLogin(
 //   "2023-08-01 00:00:00",
 //   "2023-08-31 23:59:59",
 //   MT5_SERVER_TYPE.LIVE
 // ).then((res) => {
-//   console.log("getCommissionLogins done");
+//   console.log("getCommissionDoLogin done");
 // });
-
-getCommissionDoLogin(
-  "2023-08-01 00:00:00",
-  "2023-08-31 23:59:59",
-  MT5_SERVER_TYPE.LIVE
-).then((res) => {
-  console.log("getCommissionDoLogin done");
-});
 
 // calculateCommissionDoLoginGetEmail(
 //   "2023-07-01 00:00:00",
