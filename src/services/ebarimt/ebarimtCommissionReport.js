@@ -3,17 +3,9 @@ const { MT5_SERVER_TYPE } = require("../../lib/constants");
 const logger = require("../../config/winston");
 const fs = require("fs");
 const ExcelJS = require("exceljs");
-const {
-  toTimestamp,
-  toDatee,
-  toTimestampFromDate,
-} = require("../../utils/utils");
+const { toTimestamp, toTimestampFromDate } = require("../../utils/utils");
 
-const {
-  generateJson,
-  readFromTextToList,
-  readFromFileJson,
-} = require("../../utils/file");
+const { generateJson, readFromFileJson } = require("../../utils/file");
 const Decimal = require("decimal.js");
 
 // Group Logins List
@@ -56,7 +48,6 @@ const getCommissionLogins = async (groups, fromDate, toDate, type) => {
         }
       }
     }
-    console.log(skippLogin);
     generateJson(skippLogin, "loginsThatDidTradeMonth09");
   } catch (error) {
     console.log(error);
@@ -74,7 +65,7 @@ const getCommissionDoLogin = async (fromDate, toDate, type) => {
       let index = 0;
 
       for (const login of jsonData) {
-        if (index == 3000) {
+        if (index == 10000) {
           break;
         } else {
           console.log(login);
@@ -344,20 +335,20 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
 // getCommissionLogins(
 //   "real\\pro",
 //   "2023-09-01 00:00:00",
-//   "2023-09-31 23:59:59",
+//   "2023-09-30 23:59:59",
 //   MT5_SERVER_TYPE.LIVE
 // ).then((res) => {
 //   console.log("getCommissionLogins done");
 // });
 
 //2
-// getCommissionDoLogin(
-//   "2023-09-01 00:00:00",
-//   "2023-09-31 23:59:59",
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   console.log("getCommissionDoLogin done");
-// });
+getCommissionDoLogin(
+  "2023-09-01 00:00:00",
+  "2023-09-30 23:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
+  console.log("getCommissionDoLogin done");
+});
 
 // calculateCommission30BonusDoLogin(
 //   "2023-10-01 00:00:00",
@@ -369,16 +360,16 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
 
 // calculateCommissionDoLoginNoBonus(
 //   "2023-09-01 00:00:00",
-//   "2023-09-31 23:59:59",
+//   "2023-09-30 23:59:59",
 //   MT5_SERVER_TYPE.LIVE
 // ).then((res) => {
 //   console.log("calculateCommissionDoLoginNoBonus 9month done");
 // });
 
-calculateCommissionDoLoginGetEmail(
-  "2023-09-01 00:00:00",
-  "2023-09-31 23:59:59",
-  MT5_SERVER_TYPE.LIVE
-).then((res) => {
-  console.log("res");
-});
+// calculateCommissionDoLoginGetEmail(
+//   "2023-09-01 00:00:00",
+//   "2023-09-30 23:59:59",
+//   MT5_SERVER_TYPE.LIVE
+// ).then((res) => {
+//   console.log("res");
+// });
