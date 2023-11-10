@@ -243,9 +243,9 @@ const calculateCommissionDoLoginNoBonus = async (fromDate, toDate, type) => {
       const timestampFrom = toTimestamp(fromDate);
       const timestampTo = toTimestamp(toDate);
 
-      for (const data of jsonData) {
-        const login = data.login;
-        const time = data.bonus50Time;
+      for (const login of jsonData) {
+        // const login = data.login;
+        // const time = data.bonus50Time;
 
         const resTotal = await authAndGetRequest(
           `/api/deal/get_total?login=${login}&from=${timestampFrom}&to=${timestampTo}`,
@@ -342,13 +342,13 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
 // });
 
 //2
-getCommissionDoLogin(
-  "2023-09-01 00:00:00",
-  "2023-09-30 23:59:59",
-  MT5_SERVER_TYPE.LIVE
-).then((res) => {
-  console.log("getCommissionDoLogin done");
-});
+// getCommissionDoLogin(
+//   "2023-09-01 00:00:00",
+//   "2023-09-30 23:59:59",
+//   MT5_SERVER_TYPE.LIVE
+// ).then((res) => {
+//   console.log("getCommissionDoLogin done");
+// });
 
 // calculateCommission30BonusDoLogin(
 //   "2023-10-01 00:00:00",
@@ -358,13 +358,13 @@ getCommissionDoLogin(
 //   console.log("calculateCommissionDoLogin 10 month done");
 // });
 
-// calculateCommissionDoLoginNoBonus(
-//   "2023-09-01 00:00:00",
-//   "2023-09-30 23:59:59",
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   console.log("calculateCommissionDoLoginNoBonus 9month done");
-// });
+calculateCommissionDoLoginNoBonus(
+  "2023-09-01 00:00:00",
+  "2023-09-30 23:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
+  console.log("calculateCommissionDoLoginNoBonus 9month done");
+});
 
 // calculateCommissionDoLoginGetEmail(
 //   "2023-09-01 00:00:00",
