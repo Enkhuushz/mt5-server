@@ -4,9 +4,7 @@ const logger = require("../../config/winston");
 const fs = require("fs");
 const ExcelJS = require("exceljs");
 const { toTimestamp, toDatee } = require("../../utils/utils");
-const { SkipLogin, CurrencyRate, Receipt } = require("../../model/index");
-const { sendReceipt } = require("./ebarimt");
-const { sendEmail } = require("../emailService");
+
 const {
   generateJson,
   readFromTextToList,
@@ -41,10 +39,9 @@ const getCommissionLogins = async (groups, fromDate, toDate, type) => {
     console.log(error);
   }
 };
-
 const getCommissionDoLogin = async (fromDate, toDate, type) => {
   try {
-    readFromTextToList(async (err, jsonData) => {
+    readFromFileJson(async (err, jsonData) => {
       const timestampFrom = toTimestamp(fromDate);
       const timestampTo = toTimestamp(toDate);
 
@@ -166,10 +163,10 @@ const getCommissionDoLogin = async (fromDate, toDate, type) => {
       console.log(`===============`);
 
       console.log(`skippLoginDeposit: ${skippLoginDeposit}`);
-      generateJson(skippLoginDeposit, "skipLoginWhoGot50Depositv2");
+      generateJson(skippLoginDeposit, "skipLoginWhoGot50Deposit7Month");
 
       console.log(`skippLoginJustDeposit: ${skippLoginJustDeposit}`);
-      generateJson(skippLoginJustDeposit, "skipLoginWhoGotJustDepositv2");
+      generateJson(skippLoginJustDeposit, "skipLoginWhoGotJustDeposit7Month");
     });
   } catch (error) {
     console.log(error);
@@ -278,9 +275,18 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
   }
 };
 
+getCommissionLogins(
+  "real\\pro",
+  "2023-08-01 00:00:00",
+  "2023-08-31 23:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
+  console.log("getCommissionLogins done");
+});
+
 // calculateCommissionDoLoginGetEmail(
-//   "2023-10-24 00:00:00",
-//   "2023-10-31 23:59:59",
+//   "2023-07-01 00:00:00",
+//   "2023-07-31 23:59:59",
 //   MT5_SERVER_TYPE.LIVE
 // ).then((res) => {
 //   console.log("res");
