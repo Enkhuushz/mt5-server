@@ -134,6 +134,14 @@ const getCommissionDoLogin = async (fromDate, toDate, type) => {
                 login: login,
                 time: is50depositTime,
                 bonus50Time: is50Time,
+                dateTime: new Date(bonus50Time)
+                  .toISOString()
+                  .replace(/T/, " ")
+                  .replace(/\..+/, ""),
+                dateBonus50Time: new Date(bonus50Time)
+                  .toISOString()
+                  .replace(/T/, " ")
+                  .replace(/\..+/, ""),
                 profit: is50Profit,
               });
             }
@@ -153,6 +161,10 @@ const getCommissionDoLogin = async (fromDate, toDate, type) => {
                 login: login,
                 time: is50depositTime,
                 bonus50Time: is50Time,
+                dateTime: new Date(bonus50Time)
+                  .toISOString()
+                  .replace(/T/, " ")
+                  .replace(/\..+/, ""),
                 profit: is50Profit,
               });
             }
@@ -275,22 +287,22 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
   }
 };
 
-getCommissionLogins(
-  "real\\pro",
-  "2023-08-01 00:00:00",
-  "2023-11-31 23:59:59",
-  MT5_SERVER_TYPE.LIVE
-).then((res) => {
-  console.log("getCommissionLogins done");
-});
-
-// getCommissionDoLogin(
+// getCommissionLogins(
+//   "real\\pro",
 //   "2023-08-01 00:00:00",
-//   "2023-08-31 23:59:59",
+//   "2023-11-31 23:59:59",
 //   MT5_SERVER_TYPE.LIVE
 // ).then((res) => {
-//   console.log("getCommissionDoLogin done");
+//   console.log("getCommissionLogins done");
 // });
+
+getCommissionDoLogin(
+  "2023-08-01 00:00:00",
+  "2023-08-31 23:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
+  console.log("getCommissionDoLogin done");
+});
 
 // calculateCommissionDoLoginGetEmail(
 //   "2023-07-01 00:00:00",
