@@ -134,8 +134,8 @@ const getCommissionDoLogin = async (fromDate, toDate, type) => {
                 login: login,
                 time: is50depositTime,
                 bonus50Time: is50Time,
-                dateTime: toDatee(is50depositTime),
-                dateBonus50Time: toDatee(is50Time),
+                dateTime: toDatee(is50depositTime).toISOString(),
+                dateBonus50Time: toDatee(is50Time).toISOString(),
                 profit: is50Profit,
               });
             }
@@ -155,7 +155,7 @@ const getCommissionDoLogin = async (fromDate, toDate, type) => {
                 login: login,
                 time: is50depositTime,
                 bonus50Time: is50Time,
-                dateTime: toDatee(is50depositTime),
+                dateTime: toDatee(is50depositTime).toISOString(),
                 profit: is50Profit,
               });
             }

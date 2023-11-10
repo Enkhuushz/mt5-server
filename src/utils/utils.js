@@ -22,7 +22,7 @@ function toDatee(timestamp) {
   const dateObj = new Date(timestamp);
   return dateObj;
 }
-
+console.log(toDatee(1693516366581).toISOString());
 /**
  * Generates a random password with the specified length.
  * The password will contain at least one lowercase letter, one uppercase letter,
