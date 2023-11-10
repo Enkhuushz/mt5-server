@@ -14,6 +14,21 @@ function toTimestamp(dateStr) {
 }
 
 /**
+ * Converts a date object to a Unix timestamp.
+ * @param {Date} date - The date object to convert.
+ * @returns {number} The Unix timestamp in seconds.
+ */
+function toTimestampFromDate(date) {
+  const dateObj = date;
+
+  dateObj.setTime(dateObj.getTime() + 8 * 60 * 60 * 1000);
+
+  const timestamp = dateObj.getTime();
+
+  return timestamp / 1000;
+}
+
+/**
  * Converts a timestamp to a Date object.
  * @param {number} timestamp - The timestamp to convert.
  * @returns {Date} The Date object representing the timestamp.
@@ -79,4 +94,5 @@ module.exports = {
   toTimestamp,
   toDatee,
   generate,
+  toTimestampFromDate,
 };
