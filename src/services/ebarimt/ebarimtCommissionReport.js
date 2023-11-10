@@ -134,14 +134,8 @@ const getCommissionDoLogin = async (fromDate, toDate, type) => {
                 login: login,
                 time: is50depositTime,
                 bonus50Time: is50Time,
-                dateTime: new Date(is50depositTime)
-                  .toISOString()
-                  .replace(/T/, " ")
-                  .replace(/\..+/, ""),
-                dateBonus50Time: new Date(is50Time)
-                  .toISOString()
-                  .replace(/T/, " ")
-                  .replace(/\..+/, ""),
+                dateTime: toDatee(is50depositTime),
+                dateBonus50Time: toDatee(is50Time),
                 profit: is50Profit,
               });
             }
@@ -161,10 +155,7 @@ const getCommissionDoLogin = async (fromDate, toDate, type) => {
                 login: login,
                 time: is50depositTime,
                 bonus50Time: is50Time,
-                dateTime: new Date(is50depositTime / 1000)
-                  .toISOString()
-                  .replace(/T/, " ")
-                  .replace(/\..+/, ""),
+                dateTime: toDatee(is50depositTime),
                 profit: is50Profit,
               });
             }
