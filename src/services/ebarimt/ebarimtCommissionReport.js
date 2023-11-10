@@ -326,13 +326,13 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
 //   console.log("getCommissionLogins done");
 // });
 
-getCommissionDoLogin(
-  "2023-08-01 00:00:00",
-  "2023-08-31 23:59:59",
-  MT5_SERVER_TYPE.LIVE
-).then((res) => {
-  console.log("getCommissionDoLogin done");
-});
+// getCommissionDoLogin(
+//   "2023-08-01 00:00:00",
+//   "2023-08-31 23:59:59",
+//   MT5_SERVER_TYPE.LIVE
+// ).then((res) => {
+//   console.log("getCommissionDoLogin done");
+// });
 
 calculateCommissionDoLoginNoBonus50(
   "2023-08-01 00:00:00",
