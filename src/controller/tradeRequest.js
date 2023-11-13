@@ -33,7 +33,11 @@ const creditzeroController = async (req, res) => {
       login,
       envtype == "live" ? MT5_SERVER_TYPE.LIVE : MT5_SERVER_TYPE.DEMO
     );
-    sendSuccess(res, "success", 200, response);
+    if (response == "true") {
+      sendSuccess(res, "success", 200, response);
+    } else {
+      sendError(res, response, 400);
+    }
   } catch (error) {
     logger.error(`error ${error}`);
     sendError(res, error.message, 500);

@@ -47,22 +47,14 @@ const creditzero = async (login, type) => {
         `userRes = ${login} userBalance = ${userRes.answer.Balance} userCredit = ${userRes.answer.Credit}`
       );
 
-      if (parsedUserCredit != 0) {
+      if (parsedUserCredit > 0) {
         const comment = encodeURIComponent(
           "Deposit bonus-ийн дүрэм зөрчиж дотоод гүйлгээ хийсэн"
         );
-
-        if (parsedUserCredit > 0) {
-          const tradeCreditRes = await authAndGetRequest(
-            `/api/trade/balance?login=${login}&type=${3}&balance=-${credit}&comment=${comment}`,
-            type
-          );
-        } else if (parsedUserCredit < 0) {
-          const tradeCreditRes = await authAndGetRequest(
-            `/api/trade/balance?login=${login}&type=${3}&balance=${credit}&comment=${comment}`,
-            type
-          );
-        }
+        const tradeCreditRes = await authAndGetRequest(
+          `/api/trade/balance?login=${login}&type=${3}&balance=-${credit}&comment=${comment}`,
+          type
+        );
 
         logger.info(`tradeCreditRes ${login}: ${credit} ${comment}`);
 
@@ -73,13 +65,19 @@ const creditzero = async (login, type) => {
         logger.info(
           `${comment} operation ended... user = ${login} userBalance = ${userResAfter.answer.Balance} userCredit = ${userResAfter.answer.Credit}`
         );
+      } else {
+        logger.info(
+          `${login} userCredit = ${userRes.answer.Credit} is not greater than 0`
+        );
+        return `${login} userCredit = ${userRes.answer.Credit} is not greater than 0`;
       }
     } else {
-      return "false";
+      logger.info(`No User information`);
+      return "No User information";
     }
   } else {
     logger.info(`Login ${login} has open positions, skipping.`);
-    return "false";
+    return "Login ${login} has open positions, skipping.";
   }
   return "true";
 };
