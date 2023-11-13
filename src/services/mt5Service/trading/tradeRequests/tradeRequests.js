@@ -1,4 +1,5 @@
 const { authAndGetRequest, authAndPostRequest } = require("../../MT5Request");
+const logger = require("../../../../config/winston");
 
 /**
  * Deposit or withdraw funds from a user's trading account.
@@ -21,6 +22,66 @@ const depositWithdraw = async (login, operation, sum, comment, type) => {
     type
   );
   return res;
+};
+
+const creditzero = async (login, type) => {
+  console.log(login);
+
+  const positionRes = await authAndGetRequest(
+    `/api/position/get_page?login=${login}&offset=0&total=1`,
+    type
+  );
+  logger.info(`positionRes: ${JSON.stringify(positionRes.answer)}`);
+
+  if (positionRes.answer.length === 0) {
+    const userRes = await authAndGetRequest(
+      `/api/user/get?login=${login}`,
+      type
+    );
+
+    if (userRes && userRes.answer.Balance && userRes.answer.Credit) {
+      const credit = Math.abs(parseFloat(userRes.answer.Credit));
+      const parsedUserCredit = parseFloat(userRes.answer.Credit);
+
+      logger.info(
+        `userRes = ${login} userBalance = ${userRes.answer.Balance} userCredit = ${userRes.answer.Credit}`
+      );
+
+      if (parsedUserCredit != 0) {
+        const comment = encodeURIComponent(
+          "Deposit bonus-ийн дүрэм зөрчиж дотоод гүйлгээ хийсэн"
+        );
+
+        if (parsedUserCredit > 0) {
+          const tradeCreditRes = await authAndGetRequest(
+            `/api/trade/balance?login=${login}&type=${3}&balance=-${credit}&comment=${comment}`,
+            type
+          );
+        } else if (parsedUserCredit < 0) {
+          const tradeCreditRes = await authAndGetRequest(
+            `/api/trade/balance?login=${login}&type=${3}&balance=${credit}&comment=${comment}`,
+            type
+          );
+        }
+
+        logger.info(`tradeCreditRes ${login}: ${credit} ${comment}`);
+
+        const userResAfter = await authAndGetRequest(
+          `/api/user/get?login=${login}`,
+          type
+        );
+        logger.info(
+          `${comment} operation ended... user = ${login} userBalance = ${userResAfter.answer.Balance} userCredit = ${userResAfter.answer.Credit}`
+        );
+      }
+    } else {
+      return "false";
+    }
+  } else {
+    logger.info(`Login ${login} has open positions, skipping.`);
+    return "false";
+  }
+  return "true";
 };
 
 const checkMargin = async (login, symbol, operation, volume, price, type) => {
@@ -83,6 +144,7 @@ const getRequestResult = async (identifiers, type) => {
 
 module.exports = {
   depositWithdraw,
+  creditzero,
   checkMargin,
   calculateProfitForPosition,
   sendRequest,

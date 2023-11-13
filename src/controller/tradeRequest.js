@@ -1,5 +1,6 @@
 const {
   depositWithdraw,
+  creditzero,
 } = require("../services/mt5Service/trading/tradeRequests/tradeRequests");
 const logger = require("../config/winston");
 const { MT5_SERVER_TYPE } = require("../lib/constants");
@@ -23,6 +24,23 @@ const depositWithdrawController = async (req, res) => {
   }
 };
 
+const creditzeroController = async (req, res) => {
+  try {
+    const { envtype } = req.params;
+    const { login } = req.body;
+    console.log(login);
+    const response = await creditzero(
+      login,
+      envtype == "live" ? MT5_SERVER_TYPE.LIVE : MT5_SERVER_TYPE.DEMO
+    );
+    sendSuccess(res, "success", 200, response);
+  } catch (error) {
+    logger.error(`error ${error}`);
+    sendError(res, error.message, 500);
+  }
+};
+
 module.exports = {
   depositWithdrawController,
+  creditzeroController,
 };
