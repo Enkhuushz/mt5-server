@@ -2,8 +2,12 @@ const { authAndGetRequest, authAndPostRequest } = require("../MT5Request");
 const { generate } = require("../../../utils/utils");
 
 const getUser = async (login, type) => {
-  const res = await authAndGetRequest(`/api/user/get?login=${login}`, type);
-  return res;
+  try {
+    const res = await authAndGetRequest(`/api/user/get?login=${login}`, type);
+    return res;
+  } catch (error) {
+    logger.error(`error ${error}`);
+  }
 };
 
 /**
