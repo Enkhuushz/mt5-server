@@ -1,5 +1,6 @@
 const { authAndGetRequest, authAndPostRequest } = require("../MT5Request");
 const { generate } = require("../../../utils/utils");
+const logger = require("../../../config/winston");
 
 const getUser = async (login, type) => {
   try {
