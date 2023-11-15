@@ -5,6 +5,7 @@ const logger = require("../../../config/winston");
 const getUser = async (login, type) => {
   try {
     const res = await authAndGetRequest(`/api/user/get?login=${login}`, type);
+    logger.info(`res: ${res}`);
     return res;
   } catch (error) {
     logger.error(`error ${error}`);
