@@ -27,8 +27,8 @@ const sendEmail = async (
   recipient,
   dateFrom,
   dateTo,
-  type,
-  tax
+  tax,
+  totalAmount
 ) => {
   try {
     const htmlData = await emailHtmlGenerator.generate(
@@ -40,8 +40,8 @@ const sendEmail = async (
       login,
       dateFrom,
       dateTo,
-      type,
-      tax
+      tax,
+      totalAmount
     );
 
     const data = {

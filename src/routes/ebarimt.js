@@ -48,6 +48,34 @@ router.get("/sendData", async (req, res) => {
   }
 });
 
+router.post("/delete", async (req, res) => {
+  try {
+    const { id, date } = req.body;
+
+    const response = await deleteReceipt(id, date);
+    console.log(response);
+
+    return sendSuccess(res, "success", 200, "true");
+  } catch (error) {
+    logger.error(`/GET /ebarimt ERROR: ${error.message}`);
+    return sendError(res, error.message, 500);
+  }
+});
+
+router.post("/update", async (req, res) => {
+  try {
+    const { amount, email, id } = req.body;
+
+    const response = await update(amount, email, id);
+    console.log(response);
+
+    return sendSuccess(res, "success", 200, response);
+  } catch (error) {
+    logger.error(`/GET /ebarimt ERROR: ${error.message}`);
+    return sendError(res, error.message, 500);
+  }
+});
+
 router.get("/getInfo", async (req, res) => {
   try {
     const response = await getInfo();
@@ -120,7 +148,7 @@ router.get("/deals/v2/test", async (req, res) => {
   try {
     const response = await getMultipleDealGroupDateV2Test(
       "real\\pro",
-      "515563",
+      "514039",
       "2023-08-01 00:00:00",
       "2023-11-31 23:59:59",
       MT5_SERVER_TYPE.LIVE

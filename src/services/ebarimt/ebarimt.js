@@ -17,23 +17,24 @@ const sendReceipt = async (amountt, email) => {
       posId: parseInt(process.env.EBARIMT_POS_ID),
       type: "B2C_RECEIPT",
       posNo: "001",
-      totalVAT: amount / 11,
+      totalVAT: parseFloat((amount / 11).toFixed(2)),
       receipts: [
         {
           totalAmount: amount,
           taxType: "VAT_ABLE",
+          customerTin: null,
           merchantTin: process.env.EBARIMT_MERCHANT_TIN,
-          totalVAT: amount / 11,
+          totalVAT: parseFloat((amount / 11).toFixed(2)),
           items: [
             {
               name: "шимтгэл эргэн төлөлт",
               barCode: "null",
               barCodeType: "UNDEFINED",
-              classificationCode: "7159",
+              classificationCode: "7159900",
               qty: 1,
               unitPrice: amount,
               totalAmount: amount,
-              totalVAT: amount / 11,
+              totalVAT: parseFloat((amount / 11).toFixed(2)),
             },
           ],
         },
@@ -58,7 +59,7 @@ const sendReceipt = async (amountt, email) => {
     receipt.email = email;
     await receipt.save();
 
-    return receipt;
+    return response.data;
   } catch (err) {
     logger.error(`SENT ERROR ${err}`);
   }
@@ -66,12 +67,13 @@ const sendReceipt = async (amountt, email) => {
 
 const update = async (amountt, email, id) => {
   try {
+    console.log(`${amountt} ${email} ${id}`);
+
     const url = `${process.env.EBARIMT_URL}/rest/receipt`;
 
     const amount = parseFloat(amountt);
 
     const body = {
-      id: id,
       totalAmount: amount,
       districtCode: "2501",
       branchNo: "001",
@@ -79,23 +81,25 @@ const update = async (amountt, email, id) => {
       posId: parseInt(process.env.EBARIMT_POS_ID),
       type: "B2C_RECEIPT",
       posNo: "001",
-      totalVAT: amount / 11,
+      totalVAT: parseFloat((amount / 11).toFixed(2)),
+      inactiveId: id,
       receipts: [
         {
           totalAmount: amount,
           taxType: "VAT_ABLE",
+          customerTin: null,
           merchantTin: process.env.EBARIMT_MERCHANT_TIN,
-          totalVAT: amount / 11,
+          totalVAT: parseFloat((amount / 11).toFixed(2)),
           items: [
             {
               name: "шимтгэл эргэн төлөлт",
               barCode: "null",
               barCodeType: "UNDEFINED",
-              classificationCode: "7159",
+              classificationCode: "7159900",
               qty: 1,
               unitPrice: amount,
               totalAmount: amount,
-              totalVAT: amount / 11,
+              totalVAT: parseFloat((amount / 11).toFixed(2)),
             },
           ],
         },
@@ -109,6 +113,8 @@ const update = async (amountt, email, id) => {
       ],
     };
 
+    console.log(body);
+
     const headers = {
       headers: {
         "Content-Type": "application/json",
@@ -116,11 +122,13 @@ const update = async (amountt, email, id) => {
     };
     const response = await axios.post(url, body, headers);
 
+    console.log(response);
+
     const receipt = new Receipt(response.data);
     receipt.email = email;
     await receipt.save();
 
-    return receipt;
+    return response.data;
   } catch (err) {
     logger.error(`SENT ERROR ${err}`);
   }

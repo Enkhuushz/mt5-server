@@ -45,8 +45,6 @@ const ReceiptSchema = mongoose.Schema(
     ],
     posId: Number,
     status: String,
-    qrData: String,
-    lottery: String,
     date: String,
     email: String,
   },

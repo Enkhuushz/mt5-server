@@ -162,7 +162,7 @@ const getMultipleDealGroupDateV2 = async (groups, fromDate, toDate, type) => {
 
   let index = 0;
   for (const login of uniqueLogins) {
-    if (index == 1) {
+    if (index == 10) {
       break;
     }
     const response = await authAndGetRequest(
@@ -176,7 +176,7 @@ const getMultipleDealGroupDateV2 = async (groups, fromDate, toDate, type) => {
       const body = {
         login,
         commission: commissionByLogin[login].toFixed(2),
-        email,
+        email: "e.enkhbayat@gmail.com",
       };
       console.log(body);
 
@@ -191,10 +191,8 @@ const getMultipleDealGroupDateV2 = async (groups, fromDate, toDate, type) => {
 
       console.log(mntCommission.toFixed(2));
 
-      const receipt = await sendReceipt(
-        mntCommission.toFixed(2),
-        "enkhbayar.e@motforex.com"
-      );
+      const receipt = await sendReceipt(mntCommission.toFixed(2), email);
+
       console.log(receipt);
 
       await sendEmail(
@@ -204,9 +202,14 @@ const getMultipleDealGroupDateV2 = async (groups, fromDate, toDate, type) => {
         receipt.qrData,
         receipt.date,
         login,
-        "enkhbayar.e@motforex.com",
-        fromDate,
-        toDate
+        "e.enkhbayat@gmail.com",
+        fromDate.split(" ")[0].replace(/-/g, "/"),
+        toDate.split(" ")[0].replace(/-/g, "/"),
+        (mntCommission / 11).toFixed(2),
+        (
+          parseFloat(mntCommission.toFixed(2)) -
+          parseFloat(mntCommission / 11).toFixed(2)
+        ).toFixed(2)
       );
 
       filteredResults.push(body);
@@ -318,11 +321,10 @@ const getMultipleDealGroupDateV2Test = async (
 
       if (commissionByLogin[login] !== 0) {
         const email = response.answer.Email;
-        const commission = new Decimal(record.Commission);
 
         const body = {
           login,
-          commission: commission,
+          commission: commissionByLogin[login].toFixed(2),
           email: "e.enkhbayat@gmail.com",
         };
         console.log(body);
@@ -349,9 +351,13 @@ const getMultipleDealGroupDateV2Test = async (
           receipt.date,
           login,
           "e.enkhbayat@gmail.com",
-          fromDate.split(" ")[0],
-          toDate.split(" ")[0],
-          "арилжааны шимтгэл"
+          fromDate.split(" ")[0].replace(/-/g, "/"),
+          toDate.split(" ")[0].replace(/-/g, "/"),
+          (mntCommission / 11).toFixed(2),
+          (
+            parseFloat(mntCommission.toFixed(2)) -
+            parseFloat(mntCommission / 11).toFixed(2)
+          ).toFixed(2)
         );
 
         filteredResults.push(body);
