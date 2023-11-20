@@ -37,7 +37,19 @@ const config = require("./config/config")[env];
 const app = express();
 const server = http.createServer(app);
 
-app.use(cors());
+const allowedOrigins = ["http://localhost:3000"];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const loggingMiddleware = (req, res, next) => {
