@@ -37,7 +37,10 @@ const config = require("./config/config")[env];
 const app = express();
 const server = http.createServer(app);
 
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://frontend-excel-upload.vercel.app",
+];
 
 const corsOptions = {
   origin: (origin, callback) => {
