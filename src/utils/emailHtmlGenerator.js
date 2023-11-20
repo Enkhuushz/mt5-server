@@ -618,7 +618,7 @@ const generate = async (
                   <td style="text-align: center; width: 25%"> <span class="label" style="font-size: 14px" 
                       >1</span></td>
                       <td style="text-align: center; width: 60%"> <span class="label" style="font-size: 12px" 
-                      >Санхүүгийн зуучлалын бусад төрлийн туслах үйлчилгээ</span></td>
+                      >шимтгэл эргэн төлөлт</span></td>
                       <td style="text-align: center; width: 50%"><span class="label" style="font-size: 14px" 
                       >1 </span></td>
                       <td style="text-align: center; width: 40%"> <span class="label" style="font-size: 14px" 

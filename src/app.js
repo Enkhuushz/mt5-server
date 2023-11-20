@@ -26,6 +26,7 @@ const {
   usersRoute,
   ebarimtRoute,
   bridgeRoute,
+  fileRoute,
 } = require("./routes/index");
 
 require("dotenv").config();
@@ -69,6 +70,7 @@ app.use("/position", positionsRoute);
 app.use("/user", usersRoute);
 app.use("/trade-request", tradeRequestRoute);
 app.use("/bridge", bridgeRoute);
+app.use("/file", fileRoute);
 
 cron.schedule("0 * * * *", async () => {
   if (!process.env.BASE_URL.includes("localhost")) {

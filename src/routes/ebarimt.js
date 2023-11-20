@@ -14,6 +14,8 @@ const {
   getMultipleDealGroupDateV2Test,
 } = require("../services/ebarimt/ebarimtSend");
 
+const { send } = require("../services/ebarimt/ebarimtFromExcel");
+
 const { getCurrencyRate } = require("../services/currencyRate");
 
 const logger = require("../config/winston");
@@ -165,6 +167,17 @@ router.get("/deals/v2/test", async (req, res) => {
 router.get("/currency-rate", async (req, res) => {
   try {
     const response = await getCurrencyRate();
+
+    return sendSuccess(res, "success", 200, "true");
+  } catch (error) {
+    logger.error(`/GET /ebarimt ERROR: ${error.message}`);
+    return sendError(res, error.message, 500);
+  }
+});
+
+router.get("/send-ebarimt-excel", async (req, res) => {
+  try {
+    const response = await send("2023-10-10", "2023-11-10");
 
     return sendSuccess(res, "success", 200, "true");
   } catch (error) {
