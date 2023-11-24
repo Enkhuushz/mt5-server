@@ -17,6 +17,9 @@ const getUserController = async (req, res) => {
   try {
     const { envtype } = req.params;
     const { login } = req.body;
+
+    logger.info(`login: ${login}`);
+
     const response = await getUser(
       login,
       envtype == "live" ? MT5_SERVER_TYPE.LIVE : MT5_SERVER_TYPE.DEMO
