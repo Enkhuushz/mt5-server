@@ -3,9 +3,12 @@ let router = express.Router();
 const multer = require("multer");
 const xlsx = require("xlsx");
 const fs = require("fs-extra");
+const mime = require("mime-types");
+const path = require("path");
 
 const logger = require("../config/winston");
 const { sendSuccess, sendError } = require("../utils/response");
+const { doFiftyPercentCashBackController } = require("../controller/cashback");
 
 let upload = multer({ dest: "uploads/" });
 
@@ -27,6 +30,30 @@ router.post("/read", upload.single("file"), async (req, res) => {
 
       return sendSuccess(res, "success", 200, jsonData);
     }
+  } catch (error) {
+    logger.error(`/GET /ebarimt ERROR: ${error.message}`);
+    return sendError(res, error.message, 500);
+  }
+});
+
+router
+  .route("/:envtype/cashback")
+  .post(upload.single("file"), doFiftyPercentCashBackController);
+
+router.get("/download", async (req, res) => {
+  try {
+    const file = "file/ccc.xlsx";
+    const filename = path.basename(file);
+
+    console.log(filename);
+
+    const mimetype = mime.lookup(file);
+    res.setHeader("Content-Disposition", `attachment;filename=${filename}`);
+    res.setHeader("Content-Type", mimetype);
+
+    setTimeout(() => {
+      res.download(file);
+    }, 2000);
   } catch (error) {
     logger.error(`/GET /ebarimt ERROR: ${error.message}`);
     return sendError(res, error.message, 500);
