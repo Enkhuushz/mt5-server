@@ -122,6 +122,17 @@ const runCronJobsBalanceCorrection = async () => {
 
     logger.info(`============================================================`);
 
+    logger.info(`Cron job batchBalanceLowerThanZeroAndCreditZero GOLD started`);
+    await batchBalanceLowerThanZeroAndCreditZero(
+      MT5_GROUP_TYPE.GOLD,
+      MT5_SERVER_TYPE.LIVE
+    );
+    logger.info(`Cron job batchBalanceLowerThanZeroAndCreditZero GOLD ended`);
+
+    logger.info(`============================================================`);
+
+    //
+
     logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh PRO started`);
     await batchBalanceLowHighAndCreditLowHigh(
       MT5_GROUP_TYPE.PRO,
@@ -147,6 +158,19 @@ const runCronJobsBalanceCorrection = async () => {
       MT5_SERVER_TYPE.LIVE
     );
     logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh STANDART ended`);
+
+    logger.info(`============================================================`);
+
+    logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh GOLD started`);
+    await batchBalanceLowHighAndCreditLowHigh(
+      MT5_GROUP_TYPE.GOLD,
+      0,
+      50.0,
+      -100,
+      0,
+      MT5_SERVER_TYPE.LIVE
+    );
+    logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh GOLD ended`);
 
     logger.info(`============================================================`);
   } catch (error) {
