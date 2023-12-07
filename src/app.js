@@ -152,7 +152,7 @@ const runCronJobsBalanceCorrection = async () => {
     await batchBalanceLowHighAndCreditLowHigh(
       MT5_GROUP_TYPE.STANDART,
       0,
-      100.0,
+      1000.0,
       -1000,
       0,
       MT5_SERVER_TYPE.LIVE
