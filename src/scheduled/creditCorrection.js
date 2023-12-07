@@ -165,7 +165,7 @@ const creditZeroCorrectionWhenBalanceGreatherThanZero = async (group, type) => {
             const parsedUserBalance = parseFloat(userRes.answer.Balance);
             const parsedUserCredit = parseFloat(userRes.answer.Credit);
 
-            if (parsedUserBalance == 0.0 && parsedUserCredit < 0.0) {
+            if (parsedUserBalance > 0.0 && parsedUserCredit < 0.0) {
               if (credit !== 0) {
                 const comment = encodeURIComponent(
                   "Negative credit correction"
