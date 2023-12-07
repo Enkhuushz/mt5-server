@@ -30,6 +30,7 @@ const MT5_GROUP_TYPE = {
   PRO: "real\\pro",
   STANDART: "real\\standart",
   GOLD: "real\\xauusd",
+  SWING: "real\\SwingAccount",
 };
 const EXCLUDE_LOGINS = [
   "511217",

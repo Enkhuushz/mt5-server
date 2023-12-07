@@ -11,7 +11,10 @@ const {
 const {
   creditBalanceZeroCorrection,
 } = require("../src/scheduled/creditBalanceCorrection");
-const { creditZeroCorrection } = require("../src/scheduled/creditCorrection");
+const {
+  creditZeroCorrection,
+  creditZeroCorrectionWhenBalanceGreatherThanZero,
+} = require("../src/scheduled/creditCorrection");
 
 const { MT5_GROUP_TYPE, MT5_SERVER_TYPE } = require("../src/lib/constants");
 
@@ -92,6 +95,7 @@ cron.schedule("*/5 * * * *", async () => {
     await runCronJobsBalanceCorrection();
     await runCronJobsCreditCorrection();
     await runCronJobsCreditBalanceCorrection();
+    await runCronJobsCreditZeroCorrectionWhenBalanceGreatherThanZero();
   }
 });
 
@@ -171,6 +175,53 @@ const runCronJobsBalanceCorrection = async () => {
       MT5_SERVER_TYPE.LIVE
     );
     logger.info(`Cron job batchBalanceLowHighAndCreditLowHigh GOLD ended`);
+
+    logger.info(`============================================================`);
+  } catch (error) {
+    logger.error(`Cron job encountered an error: ${error}`);
+  }
+};
+
+const runCronJobsCreditZeroCorrectionWhenBalanceGreatherThanZero = async () => {
+  try {
+    logger.info(`============================================================`);
+
+    logger.info(
+      `Cron job creditZeroCorrectionWhenBalanceGreatherThanZero PRO started`
+    );
+    await creditZeroCorrectionWhenBalanceGreatherThanZero(
+      MT5_GROUP_TYPE.PRO,
+      MT5_SERVER_TYPE.LIVE
+    );
+    logger.info(
+      `Cron job creditZeroCorrectionWhenBalanceGreatherThanZero PRO ended`
+    );
+
+    logger.info(`============================================================`);
+
+    logger.info(
+      `Cron job creditZeroCorrectionWhenBalanceGreatherThanZero STANDART started`
+    );
+    await creditZeroCorrectionWhenBalanceGreatherThanZero(
+      MT5_GROUP_TYPE.STANDART,
+      MT5_SERVER_TYPE.LIVE
+    );
+    logger.info(
+      `Cron job creditZeroCorrectionWhenBalanceGreatherThanZero STANDART ended`
+    );
+
+    logger.info(`============================================================`);
+
+    logger.info(
+      `Cron job creditZeroCorrectionWhenBalanceGreatherThanZero GOLD started`
+    );
+    await creditZeroCorrectionWhenBalanceGreatherThanZero(
+      MT5_GROUP_TYPE.GOLD,
+      MT5_SERVER_TYPE.LIVE
+    );
+    logger.info(
+      `Cron job creditZeroCorrectionWhenBalanceGreatherThanZero GOLD ended`
+    );
 
     logger.info(`============================================================`);
   } catch (error) {
