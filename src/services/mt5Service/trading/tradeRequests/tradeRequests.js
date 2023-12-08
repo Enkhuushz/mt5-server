@@ -48,9 +48,7 @@ const creditzero = async (login, type) => {
       );
 
       if (parsedUserCredit > 0) {
-        const comment = encodeURIComponent(
-          "Deposit bonus-ийн дүрэм зөрчиж дотоод гүйлгээ хийсэн"
-        );
+        const comment = encodeURIComponent("BONUS OPERATION");
         const tradeCreditRes = await authAndGetRequest(
           `/api/trade/balance?login=${login}&type=${3}&balance=-${credit}&comment=${comment}`,
           type
