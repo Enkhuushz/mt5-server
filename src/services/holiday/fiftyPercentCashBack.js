@@ -9,14 +9,14 @@ const doFiftyPercentCashBack = async (jsonData, type) => {
     for (const data of jsonData) {
       console.log(data);
 
-      // if (count == 2) {
+      // if (count == 5) {
       //   break;
       // }
       // count++;
 
       const login = data.login;
       const parsedCashBackAmount = parseFloat(data.amount);
-      const comment = encodeURIComponent("MotForex Cashback 11/27-12/03");
+      const comment = encodeURIComponent("MotForex Cashback 12/04-12/10");
 
       const userRes = await authAndGetRequest(
         `/api/user/get?login=${login}`,
@@ -31,13 +31,13 @@ const doFiftyPercentCashBack = async (jsonData, type) => {
           `${comment} operation started... userBalance = ${parsedUserBalance} userCredit = ${parsedUserCredit} cashBackAmount = ${parsedCashBackAmount}`
         );
 
-        // const tradeBalanceRes = await authAndGetRequest(
-        //   `/api/trade/balance?login=${login}&type=${5}&balance=${parsedCashBackAmount}&comment=${comment}`,
-        //   type
-        // );
-        // logger.info(
-        //   `tradeBalanceRes ${login}: ${parsedCashBackAmount} ${comment}`
-        // );
+        const tradeBalanceRes = await authAndGetRequest(
+          `/api/trade/balance?login=${login}&type=${5}&balance=${parsedCashBackAmount}&comment=${comment}`,
+          type
+        );
+        logger.info(
+          `tradeBalanceRes ${login}: ${parsedCashBackAmount} ${comment}`
+        );
 
         const userResAfter = await authAndGetRequest(
           `/api/user/get?login=${login}`,
