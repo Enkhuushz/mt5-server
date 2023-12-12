@@ -275,11 +275,15 @@ function generateExcell(endOfDayBalances, path) {
   }
 }
 
-getEndOfDay(
-  "real\\standart",
-  "2023-07-01 00:00:00",
-  "2023-11-09 23:59:59",
-  MT5_SERVER_TYPE.LIVE
-).then((res) => {
-  console.log("res");
-});
+// getEndOfDay(
+//   "real\\standart",
+//   "2023-08-01 00:00:00",
+//   "2023-11-01 23:59:59",
+//   MT5_SERVER_TYPE.LIVE
+// ).then((res) => {
+//   console.log("res");
+// });
+
+module.exports = {
+  getEndOfDay,
+};
