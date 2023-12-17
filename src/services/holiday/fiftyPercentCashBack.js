@@ -9,10 +9,10 @@ const doFiftyPercentCashBack = async (jsonData, type) => {
     for (const data of jsonData) {
       console.log(data);
 
-      if (count == 5) {
-        break;
-      }
-      count++;
+      // if (count == 5) {
+      //   break;
+      // }
+      // count++;
 
       const login = data.login;
       const parsedCashBackAmount = parseFloat(data.amount);
