@@ -4,6 +4,7 @@ const { toTimestamp } = require("../../utils/utils");
 const { authAndGetRequest } = require("../mt5Service/MT5Request");
 const Decimal = require("decimal.js");
 const ExcelJS = require("exceljs");
+const fs = require("fs");
 
 function readNumbersFromFile(callback) {
   const filePath = "file/login.txt";
@@ -28,11 +29,11 @@ const getEndOfDay = async (groups, type) => {
 
       for (const login of jsonData) {
         console.log(login);
-        if (login.length > 4) {
+        if (login.length > 3) {
           const finance = await getFinancial(
             login,
-            "2023-08-01 00:00:00",
-            "2023-10-01 23:59:59",
+            "2023-11-09 00:00:00",
+            "2023-12-16 23:59:59",
             100,
             MT5_SERVER_TYPE.LIVE
           );
@@ -40,11 +41,9 @@ const getEndOfDay = async (groups, type) => {
           list = list.concat(finance);
         }
       }
-      generateExcell(list, `endOfDayBalancesGold4xPromo`);
-      //   generateJson(list, `endOfDayBalancesGold4xPromo`);
+      generateExcell(list, `endOfDayBalanceGold4xPromo`);
+      // generateJson(list, `endOfDayBalanceGold4xPromo`);
     });
-
-    // generateJson(list, `endOfDayBalancesGold4x`);
   } catch (error) {
     console.log(error);
   }
@@ -79,16 +78,11 @@ const getFinancial = async (login, fromDate, toDate, number, type) => {
     results = results.concat(resDeal.answer);
   }
 
-  const endOfDayBalances = calculateEndOfDayBalances(
-    results,
-    group,
-    login,
-    email
-  );
+  const endOfDayBalances = calculateEndOfDayBalances(results, login, email);
   return endOfDayBalances;
 };
 
-function calculateEndOfDayBalances(resDeal, group, login, email) {
+function calculateEndOfDayBalances(resDeal, login, email) {
   const endOfDayBalances = {};
 
   let eodBalance = new Decimal(0);
@@ -98,14 +92,13 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
   resDeal.forEach((deal) => {
     const timestamp = parseInt(deal.Time, 10) * 1000;
     const date = new Date(timestamp);
-    const dayKey = login;
-    const dayKeyDate = date.toISOString().split("T")[0];
+    const dayKey = date.toISOString().split("T")[0];
+    // const dayKeyDate = date.toISOString().split("T")[0];
 
     if (!endOfDayBalances[dayKey]) {
       endOfDayBalances[dayKey] = {
-        date: dayKey,
+        date: dayKeyDate,
         login: login,
-        group: group,
         email: email,
         profit: new Decimal(0),
         commission: new Decimal(0),
@@ -121,8 +114,7 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
         amount: new Decimal(0),
       };
     }
-
-    endOfDayBalances[dayKey].date = dayKeyDate;
+    // endOfDayBalances[dayKey].date = dayKeyDate;
 
     const action = parseInt(deal.Action, 10);
     const profit = new Decimal(deal.Profit);
@@ -261,6 +253,6 @@ function generateExcell(endOfDayBalances, path) {
   return "resTotal";
 }
 
-// getEndOfDay("real\\xauusd", MT5_SERVER_TYPE.LIVE).then((res) => {
-//   console.log("res");
-// });
+getEndOfDay("real\\xauusd", MT5_SERVER_TYPE.LIVE).then((res) => {
+  console.log("res");
+});
