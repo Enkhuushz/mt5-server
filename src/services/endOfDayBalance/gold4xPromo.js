@@ -161,14 +161,16 @@ function calculateEndOfDayBalances(resDeal, login, email) {
         comment.includes(login) &&
         profit.greaterThan(0)
       ) {
-        endOfDayBalances[dayKey].deposit.add(profit);
+        endOfDayBalances[dayKey].deposit =
+          endOfDayBalances[dayKey].deposit.add(profit);
       } else if (
         comment.includes("withdraw") &&
         comment.includes("->") &&
         comment.includes(login) &&
         !profit.greaterThan(0)
       ) {
-        endOfDayBalances[dayKey].withdraw.add(profit);
+        endOfDayBalances[dayKey].withdraw =
+          endOfDayBalances[dayKey].withdraw.add(profit);
       } else if (
         !comment.includes("wallet") &&
         comment.includes("->") &&
