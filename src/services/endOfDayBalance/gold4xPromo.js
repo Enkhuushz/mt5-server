@@ -156,6 +156,20 @@ function calculateEndOfDayBalances(resDeal, login, email) {
       endOfDayBalances[dayKey].pnl = endOfDayBalances[dayKey].profit;
     } else if (action === 2) {
       if (
+        comment.includes("Deposit") &&
+        comment.includes("->") &&
+        comment.includes(login) &&
+        profit.greaterThan(0)
+      ) {
+        endOfDayBalances[dayKey].deposit.add(profit);
+      } else if (
+        comment.includes("Withdraw") &&
+        comment.includes("->") &&
+        comment.includes(login) &&
+        !profit.greaterThan(0)
+      ) {
+        endOfDayBalances[dayKey].withdraw.add(profit);
+      } else if (
         !comment.includes("wallet") &&
         comment.includes("->") &&
         comment.includes(login)
@@ -166,14 +180,6 @@ function calculateEndOfDayBalances(resDeal, login, email) {
         } else {
           endOfDayBalances[dayKey].internalWithdraw =
             endOfDayBalances[dayKey].internalWithdraw.add(profit);
-        }
-      } else {
-        if (profit.lessThan(0)) {
-          endOfDayBalances[dayKey].withdraw =
-            endOfDayBalances[dayKey].withdraw.add(profit);
-        } else if (profit.greaterThan(0)) {
-          endOfDayBalances[dayKey].deposit =
-            endOfDayBalances[dayKey].deposit.add(profit);
         }
       }
     }
