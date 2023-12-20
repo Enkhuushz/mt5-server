@@ -156,14 +156,14 @@ function calculateEndOfDayBalances(resDeal, login, email) {
       endOfDayBalances[dayKey].pnl = endOfDayBalances[dayKey].profit;
     } else if (action === 2) {
       if (
-        comment.includes("Deposit") &&
+        comment.includes("deposit") &&
         comment.includes("->") &&
         comment.includes(login) &&
         profit.greaterThan(0)
       ) {
         endOfDayBalances[dayKey].deposit.add(profit);
       } else if (
-        comment.includes("Withdraw") &&
+        comment.includes("withdraw") &&
         comment.includes("->") &&
         comment.includes(login) &&
         !profit.greaterThan(0)
