@@ -32,7 +32,7 @@ const getEndOfDay = async (groups, type) => {
         if (login.length > 3) {
           const finance = await getFinancial(
             login,
-            "2023-11-08 00:00:00",
+            "2023-07-08 00:00:00",
             "2023-12-16 23:59:59",
             100,
             MT5_SERVER_TYPE.LIVE
@@ -41,7 +41,7 @@ const getEndOfDay = async (groups, type) => {
           list = list.concat(finance);
         }
       }
-      generateExcell(list, `endOfDayBalanceGold4xPromo`);
+      generateExcell(list, `endOfDayBalanceGold4xPromosss`);
     });
   } catch (error) {
     console.log(error);
@@ -92,11 +92,12 @@ function calculateEndOfDayBalances(resDeal, login, email) {
   resDeal.forEach((deal) => {
     const timestamp = parseInt(deal.Time, 10) * 1000;
     const date = new Date(timestamp);
-    const dayKey = date.toISOString().split("T")[0];
+    const dayKey = login;
+    const dayKeyDate = date.toISOString().split("T")[0];
 
     if (!endOfDayBalances[dayKey]) {
       endOfDayBalances[dayKey] = {
-        date: dayKey,
+        date: dayKeyDate,
         login: login,
         email: email,
         profit: new Decimal(0),
@@ -115,6 +116,8 @@ function calculateEndOfDayBalances(resDeal, login, email) {
         amount: new Decimal(0),
       };
     }
+
+    endOfDayBalances[dayKey].date = dayKeyDate;
 
     const action = parseInt(deal.Action, 10);
     const profit = new Decimal(deal.Profit);
