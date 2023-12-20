@@ -97,7 +97,7 @@ function calculateEndOfDayBalances(resDeal, login, email) {
 
     if (!endOfDayBalances[dayKey]) {
       endOfDayBalances[dayKey] = {
-        date: dayKeyDate,
+        date: dayKey,
         login: login,
         email: email,
         profit: new Decimal(0),
