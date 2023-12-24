@@ -16,7 +16,7 @@ const doFiftyPercentCashBack = async (jsonData, type) => {
 
       const login = data.login;
       const parsedCashBackAmount = parseFloat(data.amount);
-      const comment = encodeURIComponent("MotForex Cashback 12/11-12/17");
+      const comment = encodeURIComponent("MotForex Cashback 12/18-12/24");
 
       const userRes = await authAndGetRequest(
         `/api/user/get?login=${login}`,
