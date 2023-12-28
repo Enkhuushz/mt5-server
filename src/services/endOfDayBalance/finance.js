@@ -101,6 +101,7 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
     let eodBalance = new Decimal(0);
     let eodWalletBalance = new Decimal(0);
     let eodAccountBalance = new Decimal(0);
+    let eodCreditBalance = new Decimal(0);
 
     resDeal.forEach((deal) => {
       const timestamp = parseInt(deal.Time, 10) * 1000;
@@ -125,6 +126,7 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
           commission: new Decimal(0),
           deposit: new Decimal(0),
           withdraw: new Decimal(0),
+          credit: new Decimal(0),
           internalDeposit: new Decimal(0),
           internalWithdraw: new Decimal(0),
           pnl: new Decimal(0),
@@ -132,6 +134,7 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
           endOfDayAccountBalance: new Decimal(0),
           endOfDayWalletBalance: new Decimal(0),
           endOfDayBalanceTotal: new Decimal(0),
+          endOfDayCreditTotal: new Decimal(0),
           amount: new Decimal(0),
         };
       }
@@ -142,11 +145,21 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
       const storage = new Decimal(deal.Storage);
       const comment = deal.Comment.toLowerCase() || "";
 
-      if (!profit.isZero()) {
-        endOfDayBalances[dayKey].amount =
-          endOfDayBalances[dayKey].amount.add(profit);
+      eodAccountBalance = eodAccountBalance.add(profit);
 
-        eodBalance = eodBalance.add(profit).add(commission).add(storage);
+      endOfDayBalances[dayKey].amount =
+        endOfDayBalances[dayKey].amount.add(profit);
+
+      if (!profit.isZero()) {
+        if (action == 0 || action == 1 || action == 2 || action == 5) {
+          eodBalance = eodBalance.add(profit).add(commission).add(storage);
+        }
+        if (action == 3) {
+          endOfDayBalances[dayKey].credit =
+            endOfDayBalances[dayKey].credit.add(profit);
+
+          eodCreditBalance = eodCreditBalance.add(profit);
+        }
 
         if (comment.includes("wallet")) {
           if (profit.greaterThan(0)) {
@@ -156,8 +169,6 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
             eodAccountBalance = eodAccountBalance.add(profit);
             eodWalletBalance = eodWalletBalance.sub(profit);
           }
-        } else {
-          eodAccountBalance = eodAccountBalance.add(profit);
         }
       }
 
@@ -169,14 +180,25 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
         endOfDayBalances[dayKey].profit =
           endOfDayBalances[dayKey].profit.add(profit);
 
-        if (!commission.isZero()) {
-          endOfDayBalances[dayKey].commission =
-            endOfDayBalances[dayKey].commission.add(commission);
-        }
-
         endOfDayBalances[dayKey].pnl = endOfDayBalances[dayKey].profit;
       } else if (action === 2) {
         if (
+          comment.includes("deposit") &&
+          comment.includes("->") &&
+          comment.includes(login) &&
+          profit.greaterThan(0)
+        ) {
+          endOfDayBalances[dayKey].deposit =
+            endOfDayBalances[dayKey].deposit.add(profit);
+        } else if (
+          comment.includes("withdraw") &&
+          comment.includes("->") &&
+          comment.includes(login) &&
+          !profit.greaterThan(0)
+        ) {
+          endOfDayBalances[dayKey].withdraw =
+            endOfDayBalances[dayKey].withdraw.add(profit);
+        } else if (
           !comment.includes("wallet") &&
           comment.includes("->") &&
           comment.includes(login)
@@ -188,20 +210,11 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
             endOfDayBalances[dayKey].internalWithdraw =
               endOfDayBalances[dayKey].internalWithdraw.add(profit);
           }
-        } else {
-          if (profit.lessThan(0)) {
-            endOfDayBalances[dayKey].withdraw =
-              endOfDayBalances[dayKey].withdraw.add(profit);
-          } else if (profit.greaterThan(0)) {
-            endOfDayBalances[dayKey].deposit =
-              endOfDayBalances[dayKey].deposit.add(profit);
-          }
         }
       }
       endOfDayBalances[dayKey].endOfDayBalance = eodBalance;
       endOfDayBalances[dayKey].endOfDayAccountBalance = eodAccountBalance;
-      endOfDayBalances[dayKey].endOfDayWalletBalance = eodWalletBalance;
-      endOfDayBalances[dayKey].endOfDayBalanceTotal = eodBalance;
+      endOfDayBalances[dayKey].endOfDayCreditTotal = eodCreditBalance;
     });
 
     const endOfDayBalancesArray = Object.values(endOfDayBalances);
@@ -226,6 +239,7 @@ function generateExcell(endOfDayBalances, path) {
       { header: "email", key: "email", width: 15 },
       { header: "profit", key: "profit", width: 15 },
       { header: "commission", key: "commission", width: 15 },
+      { header: "credit", key: "credit", width: 15 },
       { header: "deposit", key: "deposit", width: 15 },
       { header: "withdraw", key: "withdraw", width: 15 },
       { header: "internalDeposit", key: "internalDeposit", width: 15 },
@@ -238,13 +252,8 @@ function generateExcell(endOfDayBalances, path) {
         width: 15,
       },
       {
-        header: "endOfDayWalletBalance",
-        key: "endOfDayWalletBalance",
-        width: 15,
-      },
-      {
-        header: "endOfDayBalanceTotal",
-        key: "endOfDayBalanceTotal",
+        header: "endOfDayCreditTotal",
+        key: "endOfDayCreditTotal",
         width: 15,
       },
       { header: "amount", key: "amount", width: 15 },
@@ -254,8 +263,8 @@ function generateExcell(endOfDayBalances, path) {
 
     // Add the data from the extractedData array to the worksheet
     endOfDayBalances.forEach((item) => {
-      item.profit = parseFloat(item.profit);
       item.commission = parseFloat(item.commission);
+      item.credit = parseFloat(item.credit);
       item.deposit = parseFloat(item.deposit);
       item.withdraw = parseFloat(item.withdraw);
       item.internalDeposit = parseFloat(item.internalDeposit);
@@ -263,8 +272,7 @@ function generateExcell(endOfDayBalances, path) {
       item.pnl = parseFloat(item.pnl);
       item.endOfDayBalance = parseFloat(item.endOfDayBalance);
       item.endOfDayAccountBalance = parseFloat(item.endOfDayAccountBalance);
-      item.endOfDayWalletBalance = parseFloat(item.endOfDayWalletBalance);
-      item.endOfDayBalanceTotal = parseFloat(item.endOfDayBalanceTotal);
+      item.endOfDayCreditTotal = parseFloat(item.endOfDayCreditTotal);
       item.amount = parseFloat(item.amount);
       worksheet.addRow(item);
     });
