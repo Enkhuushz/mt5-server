@@ -48,8 +48,8 @@ router.post("/endofdaybalance", async (req, res) => {
 
     let data = await getEndOfDay(
       group,
-      "2023-08-01 00:00:00",
-      "2023-11-01 23:59:59",
+      "2023-07-01 00:00:00",
+      "2023-12-31 23:59:59",
       MT5_SERVER_TYPE.LIVE
     );
 

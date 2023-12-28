@@ -37,7 +37,7 @@ const getEndOfDay = async (groups, from, to, type) => {
         console.log(index);
         list = list.concat(finance);
       }
-      generateExcell(list, `endOfDayBalancesAllStandartFirst${i + 500}`);
+      generateExcell(list, `endOfDayBalancesAll${groups}First${i + 500}`);
 
       setTimeout(() => {
         console.log("Slept for 5 seconds");
@@ -101,8 +101,16 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
 
     resDeal.forEach((deal) => {
       const timestamp = parseInt(deal.Time, 10) * 1000;
-      const date = new Date(timestamp);
-      const dayKey = date.toISOString().split("T")[0];
+      let dayKey;
+      let date;
+
+      if (timestamp < 1702770513000) {
+        date = new Date(timestamp);
+        dayKey = date.toISOString().split("T")[0];
+      } else {
+        date = new Date(timestamp - 6 * 60 * 60 * 1000);
+        dayKey = date.toISOString().split("T")[0];
+      }
 
       if (!endOfDayBalances[dayKey]) {
         endOfDayBalances[dayKey] = {
@@ -128,13 +136,14 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
       const action = parseInt(deal.Action, 10);
       const profit = new Decimal(deal.Profit);
       const commission = new Decimal(deal.Commission);
+      const storage = new Decimal(deal.Storage);
       const comment = deal.Comment.toLowerCase() || "";
 
       if (!profit.isZero()) {
         endOfDayBalances[dayKey].amount =
           endOfDayBalances[dayKey].amount.add(profit);
 
-        eodBalance = eodBalance.add(profit);
+        eodBalance = eodBalance.add(profit).add(commission).add(storage);
 
         if (comment.includes("wallet")) {
           if (profit.greaterThan(0)) {
