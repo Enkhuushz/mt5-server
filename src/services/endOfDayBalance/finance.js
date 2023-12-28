@@ -37,7 +37,10 @@ const getEndOfDay = async (groups, from, to, type) => {
         console.log(index);
         list = list.concat(finance);
       }
-      generateExcell(list, `endOfDayBalancesAll${groups}First${i + 500}`);
+      generateExcell(
+        list,
+        `endOfDayBalancesAll${groups.split("\\")[1]}First${i + 500}`
+      );
 
       setTimeout(() => {
         console.log("Slept for 5 seconds");
