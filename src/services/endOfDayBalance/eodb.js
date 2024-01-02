@@ -125,6 +125,7 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
           commission: new Decimal(0),
           swap: new Decimal(0),
           credit: new Decimal(0),
+          correction: new Decimal(0),
 
           profit: new Decimal(0),
           deposit: new Decimal(0),
@@ -159,14 +160,15 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
       }
 
       //End Of Day Equity
-      eodAccountBalance = eodAccountBalance
-        .add(profit)
-        .add(commission)
-        .add(swap);
+      eodAccountBalance = eodAccountBalance.add(profit);
+      eodAccountBalance = eodAccountBalance.add(commission);
+      eodAccountBalance = eodAccountBalance.add(swap);
 
       //End Of Day Balance
       if (action == 0 || action == 1 || action == 2 || action == 5) {
-        eodBalance = eodBalance.add(profit).add(commission).add(swap);
+        eodBalance = eodBalance.add(profit);
+        eodBalance = eodBalance.add(commission);
+        eodBalance = eodBalance.add(swap);
       }
 
       console.log(
@@ -175,10 +177,7 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
 
       if (action === 0 || action === 1) {
         //PnL OPERATION
-        endOfDayBalances[dayKey].pnl = endOfDayBalances[dayKey].pnl
-          .add(profit)
-          .add(commission)
-          .add(swap);
+        endOfDayBalances[dayKey].pnl = endOfDayBalances[dayKey].pnl.add(profit);
       } else if (action === 2) {
         //Deposit Withdraw Operation
         if (
