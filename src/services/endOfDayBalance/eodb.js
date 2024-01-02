@@ -99,7 +99,6 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
     const endOfDayBalances = {};
 
     let eodBalance = new Decimal(0);
-    let eodWalletBalance = new Decimal(0);
     let eodAccountBalance = new Decimal(0);
     let eodCreditBalance = new Decimal(0);
 
@@ -122,18 +121,21 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
           login: login,
           group: group,
           email: email,
-          profit: new Decimal(0),
+
           commission: new Decimal(0),
+          swap: new Decimal(0),
+          credit: new Decimal(0),
+
+          profit: new Decimal(0),
           deposit: new Decimal(0),
           withdraw: new Decimal(0),
-          credit: new Decimal(0),
           internalDeposit: new Decimal(0),
           internalWithdraw: new Decimal(0),
+
           pnl: new Decimal(0),
+
           endOfDayBalance: new Decimal(0),
           endOfDayAccountBalance: new Decimal(0),
-          endOfDayWalletBalance: new Decimal(0),
-          endOfDayBalanceTotal: new Decimal(0),
           endOfDayCreditTotal: new Decimal(0),
           amount: new Decimal(0),
         };
@@ -142,39 +144,29 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
       const action = parseInt(deal.Action, 10);
       const profit = new Decimal(deal.Profit);
       const commission = new Decimal(deal.Commission);
-      const storage = new Decimal(deal.Storage);
+      const swap = new Decimal(deal.Storage);
       const comment = deal.Comment.toLowerCase() || "";
 
-      eodAccountBalance = eodAccountBalance.add(profit);
-
-      endOfDayBalances[dayKey].amount =
-        endOfDayBalances[dayKey].amount.add(profit);
-
+      //Commission
       if (!commission.isZero()) {
         endOfDayBalances[dayKey].commission =
           endOfDayBalances[dayKey].commission.add(commission);
       }
 
-      if (!profit.isZero()) {
-        if (action == 0 || action == 1 || action == 2 || action == 5) {
-          eodBalance = eodBalance.add(profit).add(commission).add(storage);
-        }
-        if (action == 3) {
-          endOfDayBalances[dayKey].credit =
-            endOfDayBalances[dayKey].credit.add(profit);
+      //Swap
+      if (!swap.isZero()) {
+        endOfDayBalances[dayKey].swap = endOfDayBalances[dayKey].swap.add(swap);
+      }
 
-          eodCreditBalance = eodCreditBalance.add(profit);
-        }
+      //End Of Day Equity
+      eodAccountBalance = eodAccountBalance
+        .add(profit)
+        .add(commission)
+        .add(swap);
 
-        if (comment.includes("wallet")) {
-          if (profit.greaterThan(0)) {
-            eodAccountBalance = eodAccountBalance.add(profit);
-            eodWalletBalance = eodWalletBalance.sub(profit);
-          } else {
-            eodAccountBalance = eodAccountBalance.add(profit);
-            eodWalletBalance = eodWalletBalance.sub(profit);
-          }
-        }
+      //End Of Day Balance
+      if (action == 0 || action == 1 || action == 2 || action == 5) {
+        eodBalance = eodBalance.add(profit).add(commission).add(swap);
       }
 
       console.log(
@@ -182,11 +174,13 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
       );
 
       if (action === 0 || action === 1) {
-        endOfDayBalances[dayKey].profit =
-          endOfDayBalances[dayKey].profit.add(profit);
-
-        endOfDayBalances[dayKey].pnl = endOfDayBalances[dayKey].profit;
+        //PnL OPERATION
+        endOfDayBalances[dayKey].pnl = endOfDayBalances[dayKey].pnl
+          .add(profit)
+          .add(commission)
+          .add(swap);
       } else if (action === 2) {
+        //Deposit Withdraw Operation
         if (
           comment.includes("deposit") &&
           comment.includes("->") &&
@@ -216,7 +210,22 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
               endOfDayBalances[dayKey].internalWithdraw.add(profit);
           }
         }
+      } else if (action == 3) {
+        //Credit operation
+        if (!profit.isZero()) {
+          endOfDayBalances[dayKey].credit =
+            endOfDayBalances[dayKey].credit.add(profit);
+
+          eodCreditBalance = eodCreditBalance.add(profit);
+        }
+      } else if (action == 5) {
+        //Correction operation
+        if (!profit.isZero()) {
+          endOfDayBalances[dayKey].correction =
+            endOfDayBalances[dayKey].correction.add(profit);
+        }
       }
+
       endOfDayBalances[dayKey].endOfDayBalance = eodBalance;
       endOfDayBalances[dayKey].endOfDayAccountBalance = eodAccountBalance;
       endOfDayBalances[dayKey].endOfDayCreditTotal = eodCreditBalance;
@@ -236,20 +245,24 @@ function generateExcell(endOfDayBalances, path) {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Data");
 
-    // Define the headers for your Excel sheet
     worksheet.columns = [
       { header: "date", key: "date", width: 15 },
       { header: "login", key: "login", width: 15 },
       { header: "group", key: "group", width: 15 },
       { header: "email", key: "email", width: 15 },
-      { header: "profit", key: "profit", width: 15 },
+
       { header: "commission", key: "commission", width: 15 },
+      { header: "swap", key: "swap", width: 15 },
       { header: "credit", key: "credit", width: 15 },
+
       { header: "deposit", key: "deposit", width: 15 },
       { header: "withdraw", key: "withdraw", width: 15 },
+      { header: "correction", key: "correction", width: 15 },
       { header: "internalDeposit", key: "internalDeposit", width: 15 },
       { header: "internalWithdraw", key: "internalWithdraw", width: 15 },
+
       { header: "pnl", key: "pnl", width: 15 },
+
       { header: "endOfDayBalance", key: "endOfDayBalance", width: 15 },
       {
         header: "endOfDayAccountBalance",
@@ -261,7 +274,6 @@ function generateExcell(endOfDayBalances, path) {
         key: "endOfDayCreditTotal",
         width: 15,
       },
-      { header: "amount", key: "amount", width: 15 },
     ];
 
     console.log(`endOfDayBalances.length: ${endOfDayBalances.length}`);
@@ -269,16 +281,20 @@ function generateExcell(endOfDayBalances, path) {
     // Add the data from the extractedData array to the worksheet
     endOfDayBalances.forEach((item) => {
       item.commission = parseFloat(item.commission);
+      item.swap = parseFloat(item.swap);
       item.credit = parseFloat(item.credit);
+
       item.deposit = parseFloat(item.deposit);
       item.withdraw = parseFloat(item.withdraw);
+      item.correction = parseFloat(item.correction);
       item.internalDeposit = parseFloat(item.internalDeposit);
       item.internalWithdraw = parseFloat(item.internalWithdraw);
+
       item.pnl = parseFloat(item.pnl);
+
       item.endOfDayBalance = parseFloat(item.endOfDayBalance);
       item.endOfDayAccountBalance = parseFloat(item.endOfDayAccountBalance);
       item.endOfDayCreditTotal = parseFloat(item.endOfDayCreditTotal);
-      item.amount = parseFloat(item.amount);
       worksheet.addRow(item);
     });
 
@@ -299,15 +315,6 @@ function generateExcell(endOfDayBalances, path) {
     console.log(error);
   }
 }
-
-// getEndOfDay(
-//   "real\\standart",
-//   "2023-08-01 00:00:00",
-//   "2023-11-01 23:59:59",
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   console.log("res");
-// });
 
 module.exports = {
   getEndOfDay,

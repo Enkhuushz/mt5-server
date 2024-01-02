@@ -10,7 +10,7 @@ const { MT5_SERVER_TYPE } = require("../lib/constants");
 const logger = require("../config/winston");
 const { sendSuccess, sendError } = require("../utils/response");
 const { doFiftyPercentCashBackController } = require("../controller/cashback");
-const { getEndOfDay } = require("../services/endOfDayBalance/finance");
+const { getEndOfDay } = require("../services/endOfDayBalance/eodb");
 
 let upload = multer({ dest: "uploads/" });
 
