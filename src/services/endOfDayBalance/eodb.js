@@ -278,6 +278,8 @@ function generateExcell(endOfDayBalances, path) {
       { header: "correction", key: "correction", width: 15 },
       { header: "internalDeposit", key: "internalDeposit", width: 15 },
       { header: "internalWithdraw", key: "internalWithdraw", width: 15 },
+      { header: "walletDeposit", key: "walletDeposit", width: 15 },
+      { header: "walletWithdraw", key: "walletWithdraw", width: 15 },
 
       { header: "pnl", key: "pnl", width: 15 },
 
