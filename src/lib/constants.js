@@ -43,6 +43,7 @@ const EXCLUDE_LOGINS = [
   "516465",
   "516892",
   "1044",
+  "523948",
 ];
 
 const EXCLUDE_LOGINS_CREDIT_ZERO = [
@@ -54,6 +55,7 @@ const EXCLUDE_LOGINS_CREDIT_ZERO = [
   "511221",
   "511220",
   "511219",
+  "523948",
 ];
 
 module.exports = {
