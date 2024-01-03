@@ -314,6 +314,8 @@ function generateExcell(endOfDayBalances, path) {
       item.correction = parseFloat(item.correction);
       item.internalDeposit = parseFloat(item.internalDeposit);
       item.internalWithdraw = parseFloat(item.internalWithdraw);
+      item.walletDeposit = parseFloat(item.walletDeposit);
+      item.walletWithdraw = parseFloat(item.walletWithdraw);
 
       item.pnl = parseFloat(item.pnl);
 
