@@ -37,32 +37,38 @@ const getNoDeposit = async (groups, fromDate, toDate, type, day) => {
 
       const totalRecords = resTotal.answer.total;
 
-      const resDeal = await authAndGetRequest(
-        `/api/deal/get_page?login=${login}&from=${timestampFrom}&to=${timestampTo}&offset=${
-          totalRecords - 1
-        }&total=1`,
-        type
-      );
+      console.log(`totalRecords: ${totalRecords}`);
 
-      const timestamp = parseInt(resDeal.answer[0].Time, 10) * 1000;
-      let date;
+      if (totalRecords > 0) {
+        const resDeal = await authAndGetRequest(
+          `/api/deal/get_page?login=${login}&from=${timestampFrom}&to=${timestampTo}&offset=${
+            totalRecords - 1
+          }&total=1`,
+          type
+        );
 
-      if (timestamp < 1702770513000) {
-        date = new Date(timestamp);
-      } else {
-        date = new Date(timestamp - 6 * 60 * 60 * 1000);
-      }
+        console.log(`resDeal: ${resDeal}`);
 
-      if (date.getTime() < dayAgo.getTime()) {
-        console.log(`${date.toISOString()} is 10 days before today.`);
-        resultArray.push({
-          login,
-          date: date.toISOString(),
-          parsedBalance: parseFloat(filtered.Balance),
-          group: groups,
-          email: filtered.Email,
-          phone: filtered.Phone,
-        });
+        const timestamp = parseInt(resDeal.answer[0].Time, 10) * 1000;
+        let date;
+
+        if (timestamp < 1702770513000) {
+          date = new Date(timestamp);
+        } else {
+          date = new Date(timestamp - 6 * 60 * 60 * 1000);
+        }
+
+        if (date.getTime() < dayAgo.getTime()) {
+          console.log(`${date.toISOString()} is 10 days before today.`);
+          resultArray.push({
+            login,
+            date: date.toISOString(),
+            parsedBalance: parseFloat(filtered.Balance),
+            group: groups,
+            email: filtered.Email,
+            phone: filtered.Phone,
+          });
+        }
       }
     }
     generateExcell(resultArray, `${groups}10dayNoDeposit`);
