@@ -101,6 +101,7 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
     let eodBalance = new Decimal(0);
     let eodAccountBalance = new Decimal(0);
     let eodCreditBalance = new Decimal(0);
+    let eodWalletBalance = new Decimal(0);
 
     resDeal.forEach((deal) => {
       const timestamp = parseInt(deal.Time, 10) * 1000;
@@ -132,12 +133,15 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
           withdraw: new Decimal(0),
           internalDeposit: new Decimal(0),
           internalWithdraw: new Decimal(0),
+          walletDeposit: new Decimal(0),
+          walletWithdraw: new Decimal(0),
 
           pnl: new Decimal(0),
 
           endOfDayBalance: new Decimal(0),
           endOfDayAccountBalance: new Decimal(0),
           endOfDayCreditTotal: new Decimal(0),
+          endOfDayWalletTotal: new Decimal(0),
           amount: new Decimal(0),
         };
       }
@@ -208,6 +212,20 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
             endOfDayBalances[dayKey].internalWithdraw =
               endOfDayBalances[dayKey].internalWithdraw.add(profit);
           }
+        } else if (
+          comment.includes("wallet") &&
+          comment.includes("->") &&
+          comment.includes(login)
+        ) {
+          eodWalletBalance = eodWalletBalance.add(profit);
+
+          if (profit.greaterThan(0)) {
+            endOfDayBalances[dayKey].walletDeposit =
+              endOfDayBalances[dayKey].walletDeposit.add(profit);
+          } else {
+            endOfDayBalances[dayKey].walletWithdraw =
+              endOfDayBalances[dayKey].walletWithdraw.add(profit);
+          }
         }
       } else if (action == 3) {
         //Credit operation
@@ -228,6 +246,7 @@ function calculateEndOfDayBalances(resDeal, group, login, email) {
       endOfDayBalances[dayKey].endOfDayBalance = eodBalance;
       endOfDayBalances[dayKey].endOfDayAccountBalance = eodAccountBalance;
       endOfDayBalances[dayKey].endOfDayCreditTotal = eodCreditBalance;
+      endOfDayBalances[dayKey].endOfDayWalletTotal = eodWalletBalance;
     });
 
     const endOfDayBalancesArray = Object.values(endOfDayBalances);
@@ -273,6 +292,11 @@ function generateExcell(endOfDayBalances, path) {
         key: "endOfDayCreditTotal",
         width: 15,
       },
+      {
+        header: "endOfDayWalletTotal",
+        key: "endOfDayWalletTotal",
+        width: 15,
+      },
     ];
 
     console.log(`endOfDayBalances.length: ${endOfDayBalances.length}`);
@@ -294,6 +318,7 @@ function generateExcell(endOfDayBalances, path) {
       item.endOfDayBalance = parseFloat(item.endOfDayBalance);
       item.endOfDayAccountBalance = parseFloat(item.endOfDayAccountBalance);
       item.endOfDayCreditTotal = parseFloat(item.endOfDayCreditTotal);
+      item.endOfDayWalletTotal = parseFloat(item.endOfDayWalletTotal);
       worksheet.addRow(item);
     });
 

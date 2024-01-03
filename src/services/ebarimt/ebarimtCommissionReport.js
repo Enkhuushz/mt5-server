@@ -15,6 +15,9 @@ const getCommissionLogins = async (groups, fromDate, toDate, type) => {
     const end = new Date(toDate);
     const skippLogin = [];
 
+    console.log(start);
+    console.log(end);
+
     for (let day = start; day <= end; day.setDate(day.getDate() + 1)) {
       const timestampFrom = new Date(
         day.getFullYear(),
@@ -48,7 +51,7 @@ const getCommissionLogins = async (groups, fromDate, toDate, type) => {
         }
       }
     }
-    generateJson(skippLogin, "loginsThatDidTradeMonth09");
+    generateJson(skippLogin, "loginsThatDidTradeMonth1024");
   } catch (error) {
     console.log(error);
   }
@@ -335,7 +338,7 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
 getCommissionLogins(
   "real\\pro",
   "2023-10-24 00:00:00",
-  "2023-12-31 23:59:59",
+  "2023-10-24 23:59:59",
   MT5_SERVER_TYPE.LIVE
 ).then((res) => {
   console.log("getCommissionLogins done");
