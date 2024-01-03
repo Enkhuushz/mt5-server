@@ -47,8 +47,6 @@ const getNoDeposit = async (groups, fromDate, toDate, type, day) => {
           type
         );
 
-        console.log(`resDeal: ${resDeal}`);
-
         const timestamp = parseInt(resDeal.answer[0].Time, 10) * 1000;
         let date;
 
