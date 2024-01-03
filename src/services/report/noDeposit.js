@@ -69,7 +69,7 @@ const getNoDeposit = async (groups, fromDate, toDate, type, day) => {
         }
       }
     }
-    generateExcell(resultArray, `${groups}10dayNoDeposit`);
+    generateExcell(resultArray, `${groups.split("\\")[1]}10dayNoDeposit`);
   } catch (error) {
     console.log(error);
   }
