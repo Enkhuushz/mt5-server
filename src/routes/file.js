@@ -11,6 +11,7 @@ const logger = require("../config/winston");
 const { sendSuccess, sendError } = require("../utils/response");
 const { doFiftyPercentCashBackController } = require("../controller/cashback");
 const { getEndOfDay } = require("../services/endOfDayBalance/eodb");
+const { getNoDeposit } = require("../services/report/noDeposit");
 
 let upload = multer({ dest: "uploads/" });
 
@@ -51,6 +52,25 @@ router.post("/endofdaybalance", async (req, res) => {
       "2023-07-01 00:00:00",
       "2023-12-31 23:59:59",
       MT5_SERVER_TYPE.LIVE
+    );
+
+    return sendSuccess(res, "success", 200, "true");
+  } catch (error) {
+    logger.error(`/POST /endofdaybalance ERROR: ${error.message}`);
+    return sendError(res, error.message, 500);
+  }
+});
+
+router.post("/nodeposit", async (req, res) => {
+  try {
+    const { group, day } = req.body;
+
+    let data = await getNoDeposit(
+      group,
+      "2023-07-01 00:00:00",
+      "2023-12-31 23:59:59",
+      MT5_SERVER_TYPE.LIVE,
+      day
     );
 
     return sendSuccess(res, "success", 200, "true");
