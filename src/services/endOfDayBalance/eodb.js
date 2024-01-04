@@ -25,16 +25,16 @@ const getEndOfDay = async (groups, from, to, type) => {
       const loginList = resLoginList.answer.slice(i, i + 500);
       let token;
       console.log(loginList);
-      if (i % 5 == 0) {
-        const url = "http://13.215.227.120:8089/api/uptrader-jwt/token";
+      //token crm
+      const url = "http://13.215.227.120:8089/api/uptrader-jwt/token";
 
-        const headers = {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        };
-        token = await axios.get(url, headers);
-      }
+      const headers = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      token = await axios.get(url, headers);
+
       for (let j = 0; j < loginList.length; j++) {
         const login = loginList[j];
         console.log(login);
