@@ -5,6 +5,7 @@ const { authAndGetRequest } = require("../mt5Service/MT5Request");
 const Decimal = require("decimal.js");
 const ExcelJS = require("exceljs");
 const axios = require("axios");
+const fs = require("fs");
 
 function readNumbersFromFile(callback) {
   const filePath = "file/login.txt";
