@@ -6,71 +6,96 @@ const Decimal = require("decimal.js");
 const ExcelJS = require("exceljs");
 const axios = require("axios");
 
+function readNumbersFromFile(callback) {
+  const filePath = "file/login.txt";
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading text file:", err);
+      callback(err, null);
+    } else {
+      const numbers = data.trim().split("\n");
+      callback(null, numbers);
+    }
+  });
+}
+
 const getEndOfDay = async (groups, from, to, type) => {
   try {
-    const resLoginList = await authAndGetRequest(
-      `/api/user/logins?group=${groups}`,
-      type
-    );
-
-    console.log(resLoginList);
-
-    let list = [];
-
-    let index = 0;
-
-    const length = resLoginList.answer.length;
-
-    for (let i = 0; i < length; i += 500) {
-      const loginList = resLoginList.answer.slice(i, i + 500);
-      let token;
-      console.log(loginList);
-
-      for (let j = 0; j < loginList.length; j++) {
-        const login = loginList[j];
-        console.log(login);
-
-        //token crm
-        if (j % 50 == 0) {
-          const url = "http://13.215.227.120:8089/api/uptrader-jwt/token";
-
-          const headers = {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          };
-          token = await axios.get(url, headers);
-        }
-
-        const finance = await getFinancial(
-          login,
-          from,
-          to,
-          100,
-          token,
-          MT5_SERVER_TYPE.LIVE
-        );
-        index++;
-        console.log(index);
-        list = list.concat(finance);
-      }
-      generateExcell(
-        list,
-        `endOfDayBalancesAll${groups.split("\\")[1]}First${i + 500}`
+    readNumbersFromFile(async (err, jsonData) => {
+      const resLoginList = await authAndGetRequest(
+        `/api/user/logins?group=${groups}`,
+        type
       );
 
-      setTimeout(() => {
-        console.log("Slept for 5 seconds");
-      }, 5000);
+      console.log(resLoginList);
 
-      list = [];
-    }
+      let list = [];
+
+      let index = 0;
+
+      const length = resLoginList.answer.length;
+
+      for (let i = 0; i < length; i += 500) {
+        const loginList = resLoginList.answer.slice(i, i + 500);
+        let token;
+        console.log(loginList);
+
+        for (let j = 0; j < loginList.length; j++) {
+          const login = loginList[j];
+          console.log(login);
+
+          //token crm
+          if (j % 50 == 0) {
+            const url = "http://13.215.227.120:8089/api/uptrader-jwt/token";
+
+            const headers = {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            };
+            token = await axios.get(url, headers);
+          }
+
+          const finance = await getFinancial(
+            login,
+            from,
+            to,
+            100,
+            token,
+            jsonData,
+            MT5_SERVER_TYPE.LIVE
+          );
+          index++;
+          console.log(index);
+          list = list.concat(finance);
+        }
+        generateExcell(
+          list,
+          `endOfDayBalancesAll${groups.split("\\")[1]}First${i + 500}`
+        );
+
+        setTimeout(() => {
+          console.log("Slept for 5 seconds");
+        }, 5000);
+
+        list = [];
+      }
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
-const getFinancial = async (login, fromDate, toDate, number, token, type) => {
+const getFinancial = async (
+  login,
+  fromDate,
+  toDate,
+  number,
+  token,
+  jsonData,
+  type
+) => {
   try {
     const timestampFrom = toTimestamp(fromDate);
     const timestampTo = toTimestamp(toDate);
@@ -99,72 +124,74 @@ const getFinancial = async (login, fromDate, toDate, number, token, type) => {
       results = results.concat(resDeal.answer);
     }
 
-    const hasWalletComment = results.some(
-      (e) => (e) => e.Comment && e.Comment.toLowerCase().includes("wallet")
-    );
-
     let withdrawList = [];
     let depositList = [];
 
-    if (hasWalletComment) {
-      const userUrl = `https://portal.motforex.com/api/backoffice/user/?page_size=10&page=1&search=${encodeURIComponent(
-        email
-      )}`;
+    if (jsonData.includes(login)) {
+      const hasWalletComment = results.some(
+        (e) => (e) => e.Comment && e.Comment.toLowerCase().includes("wallet")
+      );
 
-      const tokenHeaders = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `JWT ${token.data.message}`,
-        },
-      };
+      if (hasWalletComment) {
+        const userUrl = `https://portal.motforex.com/api/backoffice/user/?page_size=10&page=1&search=${encodeURIComponent(
+          email
+        )}`;
 
-      const user = await axios.get(userUrl, tokenHeaders);
+        const tokenHeaders = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `JWT ${token.data.message}`,
+          },
+        };
 
-      const id = user.data.results[0].id;
+        const user = await axios.get(userUrl, tokenHeaders);
 
-      const depositUrl = `https://portal.motforex.com/api/backoffice/user/${id}/payments/?page=1&page_size=100&_status=deposited&tab=payments`;
-      const withdrawUrl = `https://portal.motforex.com/api/backoffice/user/${id}/payments/?page=1&page_size=10&tab=payments&_status=done`;
+        const id = user.data.results[0].id;
 
-      const deposit = await axios.get(depositUrl, tokenHeaders);
+        const depositUrl = `https://portal.motforex.com/api/backoffice/user/${id}/payments/?page=1&page_size=100&_status=deposited&tab=payments`;
+        const withdrawUrl = `https://portal.motforex.com/api/backoffice/user/${id}/payments/?page=1&page_size=10&tab=payments&_status=done`;
 
-      const filterDeposit = deposit.data.results.map((e) => {
-        if (e.accountLogin == "wallet") {
-          const originalDate = new Date(e.created);
-          const modifiedDate = new Date(
-            originalDate.getTime() + 8 * 60 * 60 * 1000
-          );
+        const deposit = await axios.get(depositUrl, tokenHeaders);
 
-          depositList.push({
-            login: login,
-            amount: new Decimal(e.balanceChangeAmount.amount),
-            dateKey: modifiedDate.toISOString().split("T")[0],
-            date: modifiedDate,
-            type: "deposit",
-          });
-        }
-      });
+        const filterDeposit = deposit.data.results.map((e) => {
+          if (e.accountLogin == "wallet") {
+            const originalDate = new Date(e.created);
+            const modifiedDate = new Date(
+              originalDate.getTime() + 8 * 60 * 60 * 1000
+            );
 
-      console.log(depositList);
+            depositList.push({
+              login: login,
+              amount: new Decimal(e.balanceChangeAmount.amount),
+              dateKey: modifiedDate.toISOString().split("T")[0],
+              date: modifiedDate,
+              type: "deposit",
+            });
+          }
+        });
 
-      const withdraw = await axios.get(withdrawUrl, tokenHeaders);
+        console.log(depositList);
 
-      const filterWithdraw = withdraw.data.results.map((e) => {
-        if (e.accountLogin == "wallet") {
-          const originalDate = new Date(e.created);
-          const modifiedDate = new Date(
-            originalDate.getTime() + 8 * 60 * 60 * 1000
-          );
+        const withdraw = await axios.get(withdrawUrl, tokenHeaders);
 
-          withdrawList.push({
-            login: login,
-            amount: new Decimal(e.balanceChangeAmount.amount),
-            dateKey: modifiedDate.toISOString().split("T")[0],
-            date: modifiedDate,
-            type: "withdraw",
-          });
-        }
-      });
-      console.log(withdrawList);
+        const filterWithdraw = withdraw.data.results.map((e) => {
+          if (e.accountLogin == "wallet") {
+            const originalDate = new Date(e.created);
+            const modifiedDate = new Date(
+              originalDate.getTime() + 8 * 60 * 60 * 1000
+            );
+
+            withdrawList.push({
+              login: login,
+              amount: new Decimal(e.balanceChangeAmount.amount),
+              dateKey: modifiedDate.toISOString().split("T")[0],
+              date: modifiedDate,
+              type: "withdraw",
+            });
+          }
+        });
+        console.log(withdrawList);
+      }
     }
 
     const endOfDayBalances = calculateEndOfDayBalances(
