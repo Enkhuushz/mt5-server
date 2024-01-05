@@ -296,7 +296,7 @@ function readNumbersFromFile(callback) {
   });
 }
 
-const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
+const calculateCommissionDoLoginGetEmail = async (path) => {
   try {
     readNumbersFromFile(async (err, jsonData) => {
       const dataArray = [];
@@ -305,7 +305,7 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
 
         const res = await authAndGetRequest(
           `/api/user/get?login=${login}`,
-          type
+          MT5_SERVER_TYPE.LIVE
         );
 
         if (res.retcode === "0 Done") {
@@ -332,8 +332,6 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
       dataArray.forEach((item) => {
         worksheet.addRow(item);
       });
-
-      const path = "12sar50avsan";
 
       // Define the file path where you want to save the Excel file
       const filePath = `file/${path}.xlsx`;
@@ -388,10 +386,14 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
 //   console.log("calculateCommissionDoLoginNoBonus 9month done");
 // });
 
-calculateCommissionDoLoginGetEmail(
-  "2023-09-01 00:00:00",
-  "2023-09-30 23:59:59",
-  MT5_SERVER_TYPE.LIVE
-).then((res) => {
-  console.log("res");
-});
+// calculateCommissionDoLoginGetEmail(
+//   "2023-09-01 00:00:00",
+//   "2023-09-30 23:59:59",
+//   MT5_SERVER_TYPE.LIVE
+// ).then((res) => {
+//   console.log("res");
+// });
+
+module.exports = {
+  calculateCommissionDoLoginGetEmail,
+};

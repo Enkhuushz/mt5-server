@@ -17,6 +17,9 @@ const {
 const { send } = require("../services/ebarimt/ebarimtFromExcel");
 
 const { getCurrencyRate } = require("../services/currencyRate");
+const {
+  calculateCommissionDoLoginGetEmail,
+} = require("../services/ebarimt/ebarimtCommissionReport");
 
 const logger = require("../config/winston");
 const { Receipt, SkipLogin } = require("../model");
@@ -182,6 +185,19 @@ router.get("/send-ebarimt-excel", async (req, res) => {
     return sendSuccess(res, "success", 200, "true");
   } catch (error) {
     logger.error(`/GET /ebarimt ERROR: ${error.message}`);
+    return sendError(res, error.message, 500);
+  }
+});
+
+router.get("/get-login-email/:path", async (req, res) => {
+  try {
+    const { path } = req.params;
+
+    const response = await calculateCommissionDoLoginGetEmail(path);
+
+    return sendSuccess(res, "success", 200, "true");
+  } catch (error) {
+    logger.error(`/GET /get-login-email ERROR: ${error.message}`);
     return sendError(res, error.message, 500);
   }
 });
