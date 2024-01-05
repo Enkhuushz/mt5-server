@@ -282,22 +282,42 @@ const calculateCommissionDoLoginNoBonus = async (fromDate, toDate, type) => {
   }
 };
 
+function readNumbersFromFile(callback) {
+  const filePath = "file/login.txt";
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading text file:", err);
+      callback(err, null);
+    } else {
+      const numbers = data.trim().split("\n");
+      callback(null, numbers);
+    }
+  });
+}
+
 const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
   try {
-    readFromFileJson(async (err, jsonData) => {
+    readNumbersFromFile(async (err, jsonData) => {
       const dataArray = [];
-      for (const key in jsonData) {
-        const res = await authAndGetRequest(`/api/user/get?login=${key}`, type);
+      for (const login of jsonData) {
+        console.log(login);
 
-        const body = {
-          id: key,
-          value: parseFloat(jsonData[key]),
-          email: res.answer.Email,
-        };
+        const res = await authAndGetRequest(
+          `/api/user/get?login=${login}`,
+          type
+        );
 
-        console.log(body);
+        if (res.retcode === "0 Done") {
+          const body = {
+            id: login,
+            email: res.answer.Email,
+          };
 
-        dataArray.push(body);
+          dataArray.push(body);
+        } else {
+          dataArray.push({ id: login, email: "not found" });
+        }
       }
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet("Data");
@@ -305,7 +325,6 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
       // Define the headers for your Excel sheet
       worksheet.columns = [
         { header: "id", key: "id", width: 15 },
-        { header: "value", key: "value", width: 15 },
         { header: "email", key: "email", width: 15 },
       ];
 
@@ -314,7 +333,7 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
         worksheet.addRow(item);
       });
 
-      const path = "ebarimtCommissionsNoBonusMonth09";
+      const path = "12sar50avsan";
 
       // Define the file path where you want to save the Excel file
       const filePath = `file/${path}.xlsx`;
@@ -335,14 +354,14 @@ const calculateCommissionDoLoginGetEmail = async (fromDate, toDate, type) => {
 };
 
 //1
-getCommissionLogins(
-  "real\\pro",
-  "2023-10-24 00:00:00",
-  "2023-10-24 23:59:59",
-  MT5_SERVER_TYPE.LIVE
-).then((res) => {
-  console.log("getCommissionLogins done");
-});
+// getCommissionLogins(
+//   "real\\pro",
+//   "2023-10-24 00:00:00",
+//   "2023-10-24 23:59:59",
+//   MT5_SERVER_TYPE.LIVE
+// ).then((res) => {
+//   console.log("getCommissionLogins done");
+// });
 
 //2
 // getCommissionDoLogin(
@@ -369,10 +388,10 @@ getCommissionLogins(
 //   console.log("calculateCommissionDoLoginNoBonus 9month done");
 // });
 
-// calculateCommissionDoLoginGetEmail(
-//   "2023-09-01 00:00:00",
-//   "2023-09-30 23:59:59",
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   console.log("res");
-// });
+calculateCommissionDoLoginGetEmail(
+  "2023-09-01 00:00:00",
+  "2023-09-30 23:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
+  console.log("res");
+});

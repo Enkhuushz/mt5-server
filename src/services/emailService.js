@@ -1,4 +1,4 @@
-const emailServiceProvider = require("../lib/emailProviderSMTP");
+const emailServiceProvider = require("../lib/emailProviderSendGrid");
 const emailHtmlGenerator = require("../utils/emailHtmlGenerator");
 const { NOTIFICATION_EMAIL } = process.env;
 const logger = require("../config/winston");

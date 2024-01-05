@@ -177,7 +177,7 @@ router.get("/currency-rate", async (req, res) => {
 
 router.get("/send-ebarimt-excel", async (req, res) => {
   try {
-    const response = await send("2023-10-10", "2023-11-10");
+    const response = await send("2023-10-24", "2023-10-31");
 
     return sendSuccess(res, "success", 200, "true");
   } catch (error) {

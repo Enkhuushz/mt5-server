@@ -10,11 +10,11 @@ const send = async (fromDate, toDate) => {
     for (data of list) {
       console.log(data);
 
-      const receipt = await sendReceiptFromExcel(
-        data.amount,
-        data.vat,
-        data.email
-      );
+      // const receipt = await sendReceiptFromExcel(
+      //   data.amount,
+      //   data.vat,
+      //   data.email
+      // );
 
       await sendEmail(
         data.amount,
@@ -23,7 +23,7 @@ const send = async (fromDate, toDate) => {
         receipt.qrData,
         receipt.date,
         data.login,
-        "e.enkhbayat@gmail.com",
+        data.email,
         fromDate.replace(/-/g, "/"),
         toDate.replace(/-/g, "/"),
         data.vat,
