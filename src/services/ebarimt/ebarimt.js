@@ -111,7 +111,7 @@ const sendReceiptFromExcel = async (amount, vat, email) => {
       ],
     };
 
-    console.log(JSON.stringify(body));
+    logger.info(`ebarimt body: ${JSON.stringify(body)}`);
 
     const headers = {
       headers: {
@@ -119,6 +119,7 @@ const sendReceiptFromExcel = async (amount, vat, email) => {
       },
     };
     const response = await axios.post(url, body, headers);
+    logger.info(`receipt : ${JSON.stringify(response.data)}`);
 
     const receipt = new Receipt(response.data);
     receipt.email = email;
@@ -259,6 +260,68 @@ const deleteReceipt = async (id, date) => {
   }
 };
 
+const massDeleteReceipt = async () => {
+  try {
+    const url = `http://18.141.137.234:7080/rest/receipt`;
+
+    const headers = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const receipts = await Receipt.find();
+
+    let count = 0;
+
+    for (const receipt of receipts) {
+      const { id, date, status, _id } = receipt;
+
+      logger.info(
+        `receipt id: ${id}, date: ${date}, status: ${status}, _id: ${_id}`
+      );
+
+      if (status === "SUCCESS") {
+        const body = {
+          id: id,
+          date: date,
+        };
+
+        logger.info(`body: ${JSON.stringify(body)}`);
+
+        await Receipt.findByIdAndUpdate(receipt._id, {
+          $set: { status: "DELETED" },
+        });
+
+        console.log(`url: ${url}`);
+
+        const response = await axios.delete(
+          "http://18.141.137.234:7080/rest/receipt",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            data: {
+              id: id,
+              date: date,
+            },
+          }
+        );
+
+        logger.info(`response done: ${body.id}`);
+
+        count++;
+      } else {
+        logger.info(`receipt status is not SUCCESS: ${id}`);
+      }
+    }
+
+    return "response";
+  } catch (err) {
+    logger.error(`SENT ERROR ${err}`);
+  }
+};
+
 module.exports = {
   sendReceipt,
   sendReceiptFromExcel,
@@ -266,4 +329,5 @@ module.exports = {
   getInfo,
   deleteReceipt,
   update,
+  massDeleteReceipt,
 };

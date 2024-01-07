@@ -7,6 +7,7 @@ const {
   getInfo,
   deleteReceipt,
   update,
+  massDeleteReceipt,
 } = require("../services/ebarimt/ebarimt");
 const {
   getMultipleDealGroupDateForSkipLogin,
@@ -63,6 +64,18 @@ router.post("/delete", async (req, res) => {
     return sendSuccess(res, "success", 200, "true");
   } catch (error) {
     logger.error(`/GET /ebarimt ERROR: ${error.message}`);
+    return sendError(res, error.message, 500);
+  }
+});
+
+router.post("/delete/mass", async (req, res) => {
+  try {
+    const response = await massDeleteReceipt();
+    console.log(response);
+
+    return sendSuccess(res, "success", 200, "true");
+  } catch (error) {
+    logger.error(`/GET /massDeleteReceipt ERROR: ${error.message}`);
     return sendError(res, error.message, 500);
   }
 });
@@ -180,7 +193,7 @@ router.get("/currency-rate", async (req, res) => {
 
 router.get("/send-ebarimt-excel", async (req, res) => {
   try {
-    const response = await send("2023-10-24", "2023-10-31");
+    const response = await send("2023-12-01", "2023-12-31");
 
     return sendSuccess(res, "success", 200, "true");
   } catch (error) {

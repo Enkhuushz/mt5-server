@@ -44,6 +44,10 @@ const sendEmail = async (
       totalAmount
     );
 
+    logger.info(
+      `amount: ${amount}, tax: ${tax}, totalAmount: ${totalAmount} receiptId: ${receiptId}, login: ${login} `
+    );
+
     const data = {
       sender: process.env.NOTIFICATION_EMAIL,
       html: htmlData,
