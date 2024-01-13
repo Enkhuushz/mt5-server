@@ -372,6 +372,7 @@ function calculateEndOfDayBalances(
             swap: new Decimal(0),
             credit: new Decimal(0),
             correction: new Decimal(0),
+            balanceAction: new Decimal(0),
 
             profit: new Decimal(0),
             deposit: new Decimal(0),
@@ -484,6 +485,9 @@ function calculateEndOfDayBalances(
               endOfDayBalances[dayKey].internalDepositWallet =
                 endOfDayBalances[dayKey].internalDepositWallet.sub(profit);
             }
+          } else {
+            endOfDayBalances[dayKey].balanceAction =
+              endOfDayBalances[dayKey].balanceAction.add(profit);
           }
         } else if (action == 3) {
           //Credit operation
@@ -531,6 +535,7 @@ function generateExcell(endOfDayBalances, path) {
       { header: "commission", key: "commission", width: 15 },
       { header: "swap", key: "swap", width: 15 },
       { header: "credit", key: "credit", width: 15 },
+      { header: "balanceAction", key: "balanceAction", width: 15 },
 
       { header: "deposit", key: "deposit", width: 15 },
       { header: "withdraw", key: "withdraw", width: 15 },
@@ -594,6 +599,7 @@ function generateExcell(endOfDayBalances, path) {
       item.correction = parseFloat(item.correction);
       item.internalDeposit = parseFloat(item.internalDeposit);
       item.internalWithdraw = parseFloat(item.internalWithdraw);
+      item.balanceAction = parseFloat(item.balanceAction);
 
       item.internalDepositWallet = parseFloat(item.internalDepositWallet);
       item.internalWithdrawWallet = parseFloat(item.internalWithdrawWallet);

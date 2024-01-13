@@ -2,6 +2,7 @@ const { EBARIMT_URL, EBARIMT_MERCHANT_TIN, EBARIMT_POS_ID } = process.env;
 const axios = require("axios");
 const logger = require("../../config/winston");
 const { Receipt } = require("../../model");
+const ExcelJS = require("exceljs");
 
 const sendReceipt = async (amountt, email) => {
   try {
@@ -259,6 +260,47 @@ const deleteReceipt = async (id, date) => {
     logger.error(`SENT ERROR ${err}`);
   }
 };
+const getReceiptUnique = async () => {
+  try {
+    const receipts = await Receipt.find();
+
+    dataArray = [];
+
+    for (const receipt of receipts) {
+      const { id } = receipt;
+
+      dataArray.push({
+        id: id,
+      });
+    }
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Data");
+
+    // Define the headers for your Excel sheet
+    worksheet.columns = [{ header: "id", key: "id", width: 15 }];
+
+    // Add the data from the extractedData array to the worksheet
+    dataArray.forEach((item) => {
+      worksheet.addRow(item);
+    });
+
+    // Define the file path where you want to save the Excel file
+    const filePath = `file/ebarimtIds.xlsx`;
+
+    // Save the Excel workbook to the file
+    workbook.xlsx
+      .writeFile(filePath)
+      .then(() => {
+        console.log("Excel file saved to", filePath);
+      })
+      .catch((error) => {
+        console.error("Error saving the Excel file:", error);
+      });
+  } catch (error) {
+    logger.error(`SENT ERROR ${error}`);
+  }
+};
 
 const massDeleteReceipt = async () => {
   try {
@@ -330,4 +372,5 @@ module.exports = {
   deleteReceipt,
   update,
   massDeleteReceipt,
+  getReceiptUnique,
 };

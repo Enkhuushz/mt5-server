@@ -8,6 +8,7 @@ const {
   deleteReceipt,
   update,
   massDeleteReceipt,
+  getReceiptUnique,
 } = require("../services/ebarimt/ebarimt");
 const {
   getMultipleDealGroupDateForSkipLogin,
@@ -76,6 +77,18 @@ router.post("/delete/mass", async (req, res) => {
     return sendSuccess(res, "success", 200, "true");
   } catch (error) {
     logger.error(`/GET /massDeleteReceipt ERROR: ${error.message}`);
+    return sendError(res, error.message, 500);
+  }
+});
+
+router.get("/getReceipts", async (req, res) => {
+  try {
+    const response = await getReceiptUnique();
+    console.log(response);
+
+    return sendSuccess(res, "success", 200, "true");
+  } catch (error) {
+    logger.error(`/GET /getReceiptUnique ERROR: ${error.message}`);
     return sendError(res, error.message, 500);
   }
 });
