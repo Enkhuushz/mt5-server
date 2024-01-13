@@ -277,6 +277,7 @@ function calculateEndOfDayBalances(
               swap: new Decimal(0),
               credit: new Decimal(0),
               correction: new Decimal(0),
+              balanceAction: new Decimal(0),
 
               profit: new Decimal(0),
               deposit: new Decimal(0),
@@ -319,6 +320,7 @@ function calculateEndOfDayBalances(
               swap: new Decimal(0),
               credit: new Decimal(0),
               correction: new Decimal(0),
+              balanceAction: new Decimal(0),
 
               profit: new Decimal(0),
               deposit: new Decimal(0),
