@@ -17,9 +17,9 @@ const getFundFailedUsers = async (groups, fromDate, toDate, type) => {
     );
     let count = 0;
     for (const user of res.answer) {
-      if (count == 5) {
-        break;
-      }
+      //   if (count == 5) {
+      //     break;
+      //   }
       const login = user.Login;
 
       const resp = await getFailedDate(login, fromDate, toDate, type);
