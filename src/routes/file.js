@@ -13,6 +13,8 @@ const { doFiftyPercentCashBackController } = require("../controller/cashback");
 const { getEndOfDay } = require("../services/endOfDayBalance/eodb");
 const { getNoDeposit } = require("../services/report/noDeposit");
 
+const { getFundFailedUsers } = require("../services/fundfailed/report");
+
 let upload = multer({ dest: "uploads/" });
 
 router.post("/read", upload.single("file"), async (req, res) => {
@@ -52,6 +54,22 @@ router.post("/endofdaybalance", async (req, res) => {
       "2023-07-01 00:00:00",
       "2023-12-31 23:59:59",
       MT5_SERVER_TYPE.LIVE
+    );
+
+    return sendSuccess(res, "success", 200, "true");
+  } catch (error) {
+    logger.error(`/POST /endofdaybalance ERROR: ${error.message}`);
+    return sendError(res, error.message, 500);
+  }
+});
+
+router.get("/fundfailed", async (req, res) => {
+  try {
+    let data = await getFundFailedUsers(
+      "demo\\failed",
+      "2023-07-01 00:00:00",
+      "2024-02-10 23:59:59",
+      MT5_SERVER_TYPE.DEMO
     );
 
     return sendSuccess(res, "success", 200, "true");
