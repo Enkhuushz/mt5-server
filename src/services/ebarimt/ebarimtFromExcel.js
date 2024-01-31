@@ -1,7 +1,10 @@
 const xlsx = require("xlsx");
 const fs = require("fs");
-const { sendReceiptFromExcel } = require("./ebarimt");
-const { sendEmail } = require("../emailService");
+const {
+  sendReceiptFromExcel,
+  sendReceiptFromExcelFunds,
+} = require("./ebarimt");
+const { sendEmail, sendEmailFunds } = require("../emailService");
 const logger = require("../../config/winston");
 
 const send = async (fromDate, toDate) => {
@@ -12,10 +15,6 @@ const send = async (fromDate, toDate) => {
 
     for (data of list) {
       console.log(data);
-
-      if (count == 1) {
-        break;
-      }
 
       const receipt = await sendReceiptFromExcel(
         data.amount,
@@ -29,7 +28,41 @@ const send = async (fromDate, toDate) => {
         receipt.id,
         receipt.qrData,
         receipt.date,
-        data.login,
+        data.email,
+        fromDate.replace(/-/g, "/"),
+        toDate.replace(/-/g, "/"),
+        data.vat,
+        data.revenue
+      );
+
+      count++;
+    }
+  } catch (error) {
+    logger.error(`send ebarimt from excel ERROR ${error}`);
+  }
+};
+
+const sendFunds = async (fromDate, toDate) => {
+  try {
+    const list = await read();
+
+    let count = 0;
+
+    for (data of list) {
+      console.log(data);
+
+      const receipt = await sendReceiptFromExcelFunds(
+        data.amount,
+        data.vat,
+        data.email
+      );
+
+      await sendEmailFunds(
+        data.amount,
+        receipt.lottery,
+        receipt.id,
+        receipt.qrData,
+        receipt.date,
         data.email,
         fromDate.replace(/-/g, "/"),
         toDate.replace(/-/g, "/"),
@@ -65,4 +98,5 @@ const read = async () => {
 
 module.exports = {
   send,
+  sendFunds,
 };

@@ -16,7 +16,7 @@ const {
   getMultipleDealGroupDateV2Test,
 } = require("../services/ebarimt/ebarimtSend");
 
-const { send } = require("../services/ebarimt/ebarimtFromExcel");
+const { send, sendFunds } = require("../services/ebarimt/ebarimtFromExcel");
 
 const { getCurrencyRate } = require("../services/currencyRate");
 const {
@@ -207,6 +207,17 @@ router.get("/currency-rate", async (req, res) => {
 router.get("/send-ebarimt-excel", async (req, res) => {
   try {
     const response = await send("2024-01-01", "2024-01-31");
+
+    return sendSuccess(res, "success", 200, "true");
+  } catch (error) {
+    logger.error(`/GET /ebarimt ERROR: ${error.message}`);
+    return sendError(res, error.message, 500);
+  }
+});
+
+router.get("/send-ebarimt-excel/funds", async (req, res) => {
+  try {
+    const response = await sendFunds("2024-01-01", "2024-01-31");
 
     return sendSuccess(res, "success", 200, "true");
   } catch (error) {
