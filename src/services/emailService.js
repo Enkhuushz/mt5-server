@@ -11,7 +11,6 @@ const logger = require("../config/winston");
  * @param {string} receiptId - The ID of the receipt.
  * @param {string} qrData - The QR code data.
  * @param {Date} date - The date of the transaction.
- * @param {string} login - The user's login.
  * @param {string} recipient - The recipient's email address.
  * @param {Date} dateFrom - The start date of the transaction.
  * @param {Date} dateTo - The end date of the transaction.
@@ -23,7 +22,6 @@ const sendEmail = async (
   receiptId,
   qrData,
   date,
-  login,
   recipient,
   dateFrom,
   dateTo,
@@ -37,7 +35,6 @@ const sendEmail = async (
       receiptId,
       qrData,
       date,
-      login,
       dateFrom,
       dateTo,
       tax,
@@ -45,7 +42,7 @@ const sendEmail = async (
     );
 
     logger.info(
-      `amount: ${amount}, tax: ${tax}, totalAmount: ${totalAmount} receiptId: ${receiptId}, login: ${login} `
+      `amount: ${amount}, tax: ${tax}, totalAmount: ${totalAmount} receiptId: ${receiptId} `
     );
 
     const data = {

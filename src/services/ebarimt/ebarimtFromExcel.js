@@ -8,21 +8,27 @@ const send = async (fromDate, toDate) => {
   try {
     const list = await read();
 
+    let count = 0;
+
     for (data of list) {
       console.log(data);
 
-      // const receipt = await sendReceiptFromExcel(
-      //   data.amount,
-      //   data.vat,
-      //   data.email
-      // );
+      if (count == 1) {
+        break;
+      }
+
+      const receipt = await sendReceiptFromExcel(
+        data.amount,
+        data.vat,
+        data.email
+      );
 
       await sendEmail(
         data.amount,
-        "receipt.lottery",
-        "receipt.id",
-        "receipt.qrData",
-        "receipt.date",
+        receipt.lottery,
+        receipt.id,
+        receipt.qrData,
+        receipt.date,
         data.login,
         data.email,
         fromDate.replace(/-/g, "/"),
@@ -30,10 +36,12 @@ const send = async (fromDate, toDate) => {
         data.vat,
         data.revenue
       );
-    }
 
-    console.log(list);
-  } catch (error) {}
+      count++;
+    }
+  } catch (error) {
+    logger.error(`send ebarimt from excel ERROR ${error}`);
+  }
 };
 
 const read = async () => {
@@ -50,7 +58,9 @@ const read = async () => {
       return jsonData;
     }
     return "false";
-  } catch (error) {}
+  } catch (error) {
+    logger.error(`read excel ERROR ${error}`);
+  }
 };
 
 module.exports = {

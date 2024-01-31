@@ -4,7 +4,6 @@ const generate = async (
   receiptId,
   qrCode,
   date,
-  login,
   dateFrom,
   dateTo,
   tax,
@@ -530,20 +529,6 @@ const generate = async (
                       >
                     </td>
                   </tr>
-                  <tr>
-                    <td style="text-align: left; width: 50%">
-                      <span class="label" style="font-size: 14px"
-                        >Хэрэглэгчийн данс:</span
-                      >
-                    </td>
-                    <td style="text-align: right; width: 50%">
-                      <span
-                        class="value"
-                        style="font-size: 14px; font-weight: bold"
-                        >${login}</span
-                      >
-                    </td>
-                  </tr>
                   <!-- <tr>
                     <td style="text-align: left; width: 50%">
                       <span class="label" style="font-size: 14px"
@@ -573,27 +558,6 @@ const generate = async (
                     </td>
                   </tr> -->
                 </table>
-                <!-- <div class="flex-container" style="display: flex; justify-content: space-between;">
-                    <span class="label" style="font-size: 12px">ДДТД:</span>
-                    <span class="value" style="font-size: 12px" font-weight: bold>${receiptId}</span>
-                </div>
-                <div class="flex-container" style="display: flex; justify-content: space-between;">
-                    <span class="label">Гүйлгээний огноо:</span>
-                    <span class="value" style="font-weight: bold">${date}</span>
-                </div>    
-                <div class="flex-container" style="display: flex; justify-content: space-between;">
-                    <div>
-                    <span class="label">Хэрэглэгчийн данс:</span>
-                    </div>
-                    <div>
-                    <span class="value" style="font-weight: bold">${login}</span>
-                    </div>
-                </div>
-                <div class="flex-container" style="display: flex; justify-content: space-between;">
-                    <span class="label">Мөнгөн дүн:</span>
-                    <span class="value" style="font-weight: bold">${amount}</span>
-                </div> -->
-  
                 <br />
                 <hr style="border-style:solid; border-color: grey; border-width: 1px;">
 
