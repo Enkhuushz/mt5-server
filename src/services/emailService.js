@@ -5,19 +5,6 @@ const emailHtmlFundsGenerator = require("../utils/emailHtmlFundsGenerator");
 const { NOTIFICATION_EMAIL } = process.env;
 const logger = require("../config/winston");
 
-/**
- * Sends an email with the given parameters.
- * @async
- * @param {number} amount - The amount of the transaction.
- * @param {string} lottery - The name of the lottery.
- * @param {string} receiptId - The ID of the receipt.
- * @param {string} qrData - The QR code data.
- * @param {Date} date - The date of the transaction.
- * @param {string} recipient - The recipient's email address.
- * @param {Date} dateFrom - The start date of the transaction.
- * @param {Date} dateTo - The end date of the transaction.
- * @returns {Promise<void>} - A Promise that resolves when the email is sent.
- */
 const sendEmail = async (
   amount,
   lottery,
@@ -68,10 +55,8 @@ const sendEmailFunds = async (
   lottery,
   receiptId,
   qrData,
-  date,
+  login,
   recipient,
-  dateFrom,
-  dateTo,
   tax,
   totalAmount
 ) => {
@@ -81,9 +66,7 @@ const sendEmailFunds = async (
       lottery,
       receiptId,
       qrData,
-      date,
-      dateFrom,
-      dateTo,
+      login,
       tax,
       totalAmount
     );
@@ -95,7 +78,7 @@ const sendEmailFunds = async (
     const data = {
       sender: process.env.NOTIFICATION_EMAIL,
       html: htmlData,
-      subject: "и-баримт | MOT FUNDS",
+      subject: "Худалдан авалтын баримт | MOT FUNDS ",
       recipient: recipient,
       body: "info",
     };

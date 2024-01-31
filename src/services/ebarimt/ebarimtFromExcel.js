@@ -42,7 +42,7 @@ const send = async (fromDate, toDate) => {
   }
 };
 
-const sendFunds = async (fromDate, toDate) => {
+const sendFunds = async () => {
   try {
     const list = await read();
 
@@ -51,21 +51,23 @@ const sendFunds = async (fromDate, toDate) => {
     for (data of list) {
       console.log(data);
 
-      const receipt = await sendReceiptFromExcelFunds(
-        data.amount,
-        data.vat,
-        data.email
-      );
+      if (count == 1) {
+        break;
+      }
+
+      // const receipt = await sendReceiptFromExcelFunds(
+      //   data.amount,
+      //   data.vat,
+      //   data.email
+      // );
 
       await sendEmailFunds(
         data.amount,
         receipt.lottery,
         receipt.id,
         receipt.qrData,
-        receipt.date,
+        data.login,
         data.email,
-        fromDate.replace(/-/g, "/"),
-        toDate.replace(/-/g, "/"),
         data.vat,
         data.revenue
       );

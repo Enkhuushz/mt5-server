@@ -217,11 +217,11 @@ router.get("/send-ebarimt-excel", async (req, res) => {
 
 router.get("/send-ebarimt-excel/funds", async (req, res) => {
   try {
-    const response = await sendFunds("2024-01-01", "2024-01-31");
+    const response = await sendFunds();
 
     return sendSuccess(res, "success", 200, "true");
   } catch (error) {
-    logger.error(`/GET /ebarimt ERROR: ${error.message}`);
+    logger.error(`/GET /ebarimtFunds ERROR: ${error.message}`);
     return sendError(res, error.message, 500);
   }
 });
