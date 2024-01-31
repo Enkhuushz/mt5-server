@@ -164,11 +164,11 @@ function generateExcell(endOfDayBalances, path) {
 //   console.log("done");
 // });
 
-getFundFailedUsersFromLogin(
-  "2023-07-01 00:00:00",
-  "2024-02-10 23:59:59",
-  MT5_SERVER_TYPE.DEMO
-);
+// getFundFailedUsersFromLogin(
+//   "2023-07-01 00:00:00",
+//   "2024-02-10 23:59:59",
+//   MT5_SERVER_TYPE.DEMO
+// );
 
 module.exports = {
   getFundFailedUsers,
