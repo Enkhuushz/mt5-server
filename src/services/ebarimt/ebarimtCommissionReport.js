@@ -4,6 +4,7 @@ const logger = require("../../config/winston");
 const fs = require("fs");
 const ExcelJS = require("exceljs");
 const { toTimestamp, toTimestampFromDate } = require("../../utils/utils");
+const axios = require("axios");
 
 const { generateJson, readFromFileJson } = require("../../utils/file");
 const Decimal = require("decimal.js");
@@ -347,6 +348,72 @@ const calculateCommissionDoLoginGetEmail = async (path) => {
     console.log(error);
   }
 };
+
+const getUpTraderWithdrawListReport = async (path) => {
+  try {
+    const dataArray = [];
+
+    const headers = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const resp = await axios.get(
+      "http://localhost:8084/api/withdraw/list/all",
+      headers
+    );
+
+    for (const data of resp.data) {
+      console.log(data);
+
+      dataArray.push({
+        id: data?.id,
+        amount: data?.amount?.amount,
+        email: data?.user?.email,
+        login: data?.account?.login,
+        created: data?.created,
+        paymentMethod: data?.paymentMethodTitle,
+      });
+    }
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Data");
+
+    // Define the headers for your Excel sheet
+    worksheet.columns = [
+      { header: "id", key: "id", width: 15 },
+      { header: "amount", key: "amount", width: 15 },
+      { header: "email", key: "email", width: 15 },
+      { header: "login", key: "login", width: 15 },
+      { header: "created", key: "created", width: 15 },
+      { header: "paymentMethod", key: "paymentMethod", width: 15 },
+    ];
+
+    // Add the data from the extractedData array to the worksheet
+    dataArray.forEach((item) => {
+      worksheet.addRow(item);
+    });
+
+    // Define the file path where you want to save the Excel file
+    const filePath = `file/${path}.xlsx`;
+
+    // Save the Excel workbook to the file
+    workbook.xlsx
+      .writeFile(filePath)
+      .then(() => {
+        console.log("Excel file saved to", filePath);
+      })
+      .catch((error) => {
+        console.error("Error saving the Excel file:", error);
+      });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+getUpTraderWithdrawListReport("uptraderWithdrawListReport").then((res) => {
+  console.log("done");
+});
 
 //1
 // getCommissionLogins(

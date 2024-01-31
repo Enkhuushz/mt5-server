@@ -7,6 +7,41 @@ const ExcelJS = require("exceljs");
 const axios = require("axios");
 const fs = require("fs");
 
+function readNumbersFromFile(callback) {
+  const filePath = "file/login.txt";
+
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading text file:", err);
+      callback(err, null);
+    } else {
+      const numbers = data.trim().split("\n");
+      callback(null, numbers);
+    }
+  });
+}
+
+const getFundFailedUsersFromLogin = async (fromDate, toDate, type) => {
+  try {
+    readNumbersFromFile(async (err, jsonData) => {
+      let list = [];
+
+      for (const login of jsonData) {
+        console.log(login);
+
+        const resp = await getFailedDate(login, fromDate, toDate, type);
+
+        list = list.concat(resp);
+
+        console.log(list);
+      }
+
+      console.log(list);
+      generateExcell(list, `failedUserData`);
+    });
+  } catch (error) {}
+};
+
 const getFundFailedUsers = async (groups, fromDate, toDate, type) => {
   try {
     let list = [];
@@ -128,6 +163,12 @@ function generateExcell(endOfDayBalances, path) {
 // ).then((res) => {
 //   console.log("done");
 // });
+
+getFundFailedUsersFromLogin(
+  "2023-07-01 00:00:00",
+  "2024-02-10 23:59:59",
+  MT5_SERVER_TYPE.DEMO
+);
 
 module.exports = {
   getFundFailedUsers,
