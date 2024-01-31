@@ -55,11 +55,11 @@ const sendFunds = async () => {
         break;
       }
 
-      // const receipt = await sendReceiptFromExcelFunds(
-      //   data.amount,
-      //   data.vat,
-      //   data.email
-      // );
+      const receipt = await sendReceiptFromExcelFunds(
+        data.amount,
+        data.vat,
+        data.email
+      );
 
       await sendEmailFunds(
         data.amount,
