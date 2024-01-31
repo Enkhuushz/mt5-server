@@ -411,9 +411,9 @@ const getUpTraderWithdrawListReport = async (path) => {
   }
 };
 
-getUpTraderWithdrawListReport("uptraderWithdrawListReport").then((res) => {
-  console.log("done");
-});
+// getUpTraderWithdrawListReport("uptraderWithdrawListReport").then((res) => {
+//   console.log("done");
+// });
 
 //1
 // getCommissionLogins(
