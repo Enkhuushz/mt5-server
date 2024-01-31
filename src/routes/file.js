@@ -66,10 +66,10 @@ router.post("/endofdaybalance", async (req, res) => {
 router.get("/fundfailed", async (req, res) => {
   try {
     let data = await getFundFailedUsers(
-      "demo\\failed",
+      "real\\challengefailed",
       "2023-07-01 00:00:00",
       "2024-02-10 23:59:59",
-      MT5_SERVER_TYPE.DEMO
+      MT5_SERVER_TYPE.LIVE
     );
 
     return sendSuccess(res, "success", 200, "true");
