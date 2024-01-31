@@ -247,9 +247,6 @@ const calculateCommissionDoLoginNoBonus = async (fromDate, toDate, type) => {
       const timestampTo = toTimestamp(toDate);
 
       for (const login of jsonData) {
-        // const login = data.login;
-        // const time = data.bonus50Time;
-
         const resTotal = await authAndGetRequest(
           `/api/deal/get_total?login=${login}&from=${timestampFrom}&to=${timestampTo}`,
           type
