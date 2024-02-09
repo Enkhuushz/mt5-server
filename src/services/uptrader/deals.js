@@ -146,10 +146,10 @@ function generateExcell(list, path) {
     console.log(error);
   }
 }
-getDeals(
-  "2024-02-01 00:00:00",
-  "2024-02-11 23:59:59",
-  MT5_SERVER_TYPE.LIVE
-).then((res) => {
-  console.log("res");
-});
+// getDeals(
+//   "2024-02-01 00:00:00",
+//   "2024-02-11 23:59:59",
+//   MT5_SERVER_TYPE.LIVE
+// ).then((res) => {
+//   console.log("res");
+// });
