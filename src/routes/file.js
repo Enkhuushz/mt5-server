@@ -14,6 +14,7 @@ const { getEndOfDay } = require("../services/endOfDayBalance/eodb");
 const { getNoDeposit } = require("../services/report/noDeposit");
 
 const { getFundFailedUsers } = require("../services/fundfailed/report");
+const { doAddBalanceFunds } = require("../controller/funds");
 
 let upload = multer({ dest: "uploads/" });
 
@@ -44,6 +45,8 @@ router.post("/read", upload.single("file"), async (req, res) => {
 router
   .route("/:envtype/cashback")
   .post(upload.single("file"), doFiftyPercentCashBackController);
+
+router.route("/:envtype/funds").post(upload.single("file"), doAddBalanceFunds);
 
 router.post("/endofdaybalance", async (req, res) => {
   try {
