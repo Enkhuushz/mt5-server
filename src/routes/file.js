@@ -14,7 +14,10 @@ const { getEndOfDay } = require("../services/endOfDayBalance/eodb");
 const { getNoDeposit } = require("../services/report/noDeposit");
 
 const { getFundFailedUsers } = require("../services/fundfailed/report");
-const { doAddBalanceFunds } = require("../controller/funds");
+const {
+  doAddBalanceFunds,
+  doRecoverAddBalanceFunds,
+} = require("../controller/funds");
 
 let upload = multer({ dest: "uploads/" });
 
@@ -47,6 +50,9 @@ router
   .post(upload.single("file"), doFiftyPercentCashBackController);
 
 router.route("/:envtype/funds").post(upload.single("file"), doAddBalanceFunds);
+router
+  .route("/:envtype/funds-recover")
+  .post(upload.single("file"), doRecoverAddBalanceFunds);
 
 router.post("/endofdaybalance", async (req, res) => {
   try {
@@ -54,8 +60,8 @@ router.post("/endofdaybalance", async (req, res) => {
 
     let data = await getEndOfDay(
       group,
-      "2024-01-01 00:00:00",
-      "2024-01-31 12:00:00",
+      "2024-02-01 00:00:00",
+      "2024-02-29 12:00:00",
       MT5_SERVER_TYPE.LIVE
     );
 
