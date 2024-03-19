@@ -90,7 +90,7 @@ app.use("/trade-request", tradeRequestRoute);
 app.use("/bridge", bridgeRoute);
 app.use("/file", fileRoute);
 
-cron.schedule("*/5 * * * *", async () => {
+cron.schedule("*/2 * * * *", async () => {
   if (!process.env.BASE_URL.includes("localhost")) {
     await runCronJobsBalanceCorrection();
     await runCronJobsCreditCorrection();
