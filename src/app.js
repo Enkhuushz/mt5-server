@@ -92,10 +92,10 @@ app.use("/file", fileRoute);
 
 cron.schedule("*/2 * * * *", async () => {
   if (!process.env.BASE_URL.includes("localhost")) {
-    await runCronJobsBalanceCorrection();
-    await runCronJobsCreditCorrection();
-    await runCronJobsCreditBalanceCorrection();
-    await runCronJobsCreditZeroCorrectionWhenBalanceGreatherThanZero();
+    // await runCronJobsBalanceCorrection();
+    // await runCronJobsCreditCorrection();
+    // await runCronJobsCreditBalanceCorrection();
+    // await runCronJobsCreditZeroCorrectionWhenBalanceGreatherThanZero();
   }
 });
 
