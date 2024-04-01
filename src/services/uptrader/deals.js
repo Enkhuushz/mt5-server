@@ -124,8 +124,14 @@ function generateExcell(list, path) {
       { header: "swap", key: "swap", width: 15 },
       { header: "comment", key: "comment", width: 15 },
     ];
+    const validItems = list.filter(
+      (item) =>
+        item &&
+        Object.keys(item).length > 0 &&
+        Object.values(item).some((value) => value !== null && value !== "")
+    );
 
-    list.forEach((item) => {
+    validItems.forEach((item) => {
       worksheet.addRow(item);
     });
 
@@ -146,10 +152,11 @@ function generateExcell(list, path) {
     console.log(error);
   }
 }
-// getDeals(
-//   "2024-02-01 00:00:00",
-//   "2024-02-11 23:59:59",
-//   MT5_SERVER_TYPE.LIVE
-// ).then((res) => {
-//   console.log("res");
-// });
+
+getDeals(
+  "2024-03-05 19:00:00",
+  "2024-03-08 18:59:59",
+  MT5_SERVER_TYPE.LIVE
+).then((res) => {
+  console.log("res");
+});
