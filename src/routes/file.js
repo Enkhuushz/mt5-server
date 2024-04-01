@@ -56,14 +56,9 @@ router
 
 router.post("/endofdaybalance", async (req, res) => {
   try {
-    const { group } = req.body;
+    const { group, from, to } = req.body;
 
-    let data = await getEndOfDay(
-      group,
-      "2024-02-29 12:00:01",
-      "2024-03-29 12:00:00",
-      MT5_SERVER_TYPE.LIVE
-    );
+    let data = await getEndOfDay(group, from, to, MT5_SERVER_TYPE.LIVE);
 
     return sendSuccess(res, "success", 200, "true");
   } catch (error) {
