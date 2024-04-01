@@ -35,7 +35,7 @@ const getDeals = async (fromDate, toDate, type) => {
       }
 
       console.log(list);
-      generateExcell(list, `nijuPartnerDeals`);
+      generateExcell(list, `nijuPartnerDeals1`);
     });
   } catch (error) {}
 };
