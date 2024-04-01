@@ -35,7 +35,7 @@ const getDeals = async (fromDate, toDate, type) => {
       }
 
       console.log(list);
-      generateExcell(list, `nijuPartnerDeals1`);
+      generateExcell(list, `nijuPartnerDeals2`);
     });
   } catch (error) {}
 };
@@ -154,8 +154,8 @@ function generateExcell(list, path) {
 }
 
 getDeals(
-  "2024-03-25 19:00:00",
-  "2024-03-28 18:59:59",
+  "2024-03-18 19:00:00",
+  "2024-03-19 18:59:59",
   MT5_SERVER_TYPE.LIVE
 ).then((res) => {
   console.log("res");
