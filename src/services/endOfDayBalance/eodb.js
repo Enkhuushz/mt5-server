@@ -24,10 +24,11 @@ function readNumbersFromFile(callback) {
 const getEndOfDay = async (groups, from, to, type) => {
   try {
     readNumbersFromFile(async (err, jsonData) => {
-      const resLoginList = await authAndGetRequest(
-        `/api/user/logins?group=${groups}`,
-        type
-      );
+      // const resLoginList = await authAndGetRequest(
+      //   `/api/user/logins?group=${groups}`,
+      //   type
+      // );
+      const resLoginList = { answer: [517826] };
 
       console.log(resLoginList);
 

@@ -154,8 +154,8 @@ function generateExcell(list, path) {
 }
 
 getDeals(
-  "2024-03-18 19:00:00",
-  "2024-03-19 18:59:59",
+  "2024-03-31 19:00:00",
+  "2024-04-02 18:59:59",
   MT5_SERVER_TYPE.LIVE
 ).then((res) => {
   console.log("res");
