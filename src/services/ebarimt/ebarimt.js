@@ -160,7 +160,8 @@ const sendReceiptFromExcelFunds = async (amount, vat, email) => {
               name: process.env.EBARIMT_NAME,
               barCode: process.env.EBARIMT_BAR_CODE,
               barCodeType: process.env.EBARIMT_BAR_CODE_TYPE,
-              classificationCode: process.env.EBARIMT_CLASSIFICATION_CODE,
+              classificationCode:
+                process.env.EBARIMT_MOT_FUND_CLASSIFICATION_CODE,
               qty: 1,
               unitPrice: parsedAmount,
               totalAmount: parsedAmount,

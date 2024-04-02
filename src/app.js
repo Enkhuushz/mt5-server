@@ -183,7 +183,7 @@ const runCronJobsBalanceCorrection = async () => {
       MT5_GROUP_TYPE.GOLD,
       0,
       100000.0,
-      -1000,
+      -100000,
       0,
       MT5_SERVER_TYPE.LIVE
     );
