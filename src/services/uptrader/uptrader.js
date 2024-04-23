@@ -112,9 +112,9 @@ const getUserAccount = async (userId) => {
     return respone.data;
   } catch (error) {}
 };
-// fetch().then((res) => {
-//   console.log("res");
-// });
+fetch().then((res) => {
+  console.log("res");
+});
 
 const getPartners = async () => {
   try {
