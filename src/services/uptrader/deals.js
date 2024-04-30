@@ -21,7 +21,7 @@ function readNumbersFromFile(callback) {
   });
 }
 
-const getDeals = async (fromDate, toDate, type) => {
+const getDeals = async (path, fromDate, toDate, type) => {
   try {
     readNumbersFromFile(async (err, jsonData) => {
       let list = [];
@@ -35,7 +35,7 @@ const getDeals = async (fromDate, toDate, type) => {
       }
 
       console.log(list);
-      generateExcell(list, `nijuPartnerDeals2`);
+      generateExcell(list, `${path}`);
     });
   } catch (error) {}
 };
@@ -154,8 +154,9 @@ function generateExcell(list, path) {
 }
 
 getDeals(
+  "niju",
   "2024-04-22 06:00:00",
-  "2024-04-23 06:00:00",
+  "2024-04-28 06:00:00",
   MT5_SERVER_TYPE.LIVE
 ).then((res) => {
   console.log("res");
