@@ -114,9 +114,9 @@ const getUserAccount = async (token, userId) => {
     return respone.data;
   } catch (error) {}
 };
-fetch(1, "enkhchimeg", 9295662).then((res) => {
-  console.log("res");
-});
+// fetch(1, "enkhchimeg", 9295662).then((res) => {
+//   console.log("res");
+// });
 
 const getPartners = async () => {
   try {
