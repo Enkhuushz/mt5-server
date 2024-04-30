@@ -6,29 +6,33 @@ const Decimal = require("decimal.js");
 const ExcelJS = require("exceljs");
 const axios = require("axios");
 
-const fetch = async () => {
+const fetch = async (pageCount, name, ib) => {
   try {
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("Accounts");
 
     sheet.columns = [
+      { header: "ib", key: "ib" },
+      { header: "name", key: "name" },
       { header: "login", key: "login" },
       { header: "userid", key: "userid" },
       { header: "group", key: "group" },
     ];
 
-    token = await getToken();
+    for (let page = 1; page <= pageCount; page++) {
+      let token = await getToken();
 
-    for (let page = 1; page <= 14; page++) {
-      const users = await getUsers(token, page);
+      const users = await getUsers(token, page, ib);
 
       for (const user of users) {
-        const accounts = await getUserAccount(user.id);
+        const accounts = await getUserAccount(token, user.id);
 
         for (const account of accounts) {
           if (!account.isDemo) {
             console.log(account);
             sheet.addRow({
+              ib: ib,
+              name: name,
               login: account.login,
               userid: user.id,
               group: account.accountTypeTitle,
@@ -37,7 +41,7 @@ const fetch = async () => {
         }
       }
     }
-    const filePath = `file/niju.xlsx`;
+    const filePath = `file/${name}.xlsx`;
 
     workbook.xlsx
       .writeFile(filePath)
@@ -80,10 +84,10 @@ const getPartnership = async (token, page) => {
   } catch (error) {}
 };
 
-const getUsers = async (token, page) => {
+const getUsers = async (token, page, ib) => {
   try {
     token = await getToken();
-    const url = `https://portal.motforex.com/api/backoffice/user/?page_size=100&page=${page}&partner_account=1352158&status=verified`;
+    const url = `https://portal.motforex.com/api/backoffice/user/?page_size=100&page=${page}&partner_account=${ib}&status=verified`;
 
     const headers = {
       headers: {
@@ -96,10 +100,8 @@ const getUsers = async (token, page) => {
   } catch (error) {}
 };
 
-const getUserAccount = async (userId) => {
+const getUserAccount = async (token, userId) => {
   try {
-    token = await getToken();
-
     const url = `https://portal.motforex.com/api/backoffice/user/${userId}/account/`;
 
     const headers = {
@@ -112,7 +114,7 @@ const getUserAccount = async (userId) => {
     return respone.data;
   } catch (error) {}
 };
-fetch().then((res) => {
+fetch(1, "enkhchimeg", 9295662).then((res) => {
   console.log("res");
 });
 
