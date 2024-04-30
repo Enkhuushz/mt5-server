@@ -69,12 +69,7 @@ const getDate = async (login, fromDate, toDate, type) => {
 
       let dayKey;
       let date;
-
-      if (timestamp < 1702770513000) {
-        date = new Date(timestamp);
-      } else {
-        date = new Date(timestamp - 6 * 60 * 60 * 1000);
-      }
+      date = new Date(timestamp);
 
       dayKey = date.toISOString();
 
@@ -155,8 +150,8 @@ function generateExcell(list, path) {
 
 getDeals(
   "niju2",
-  "2024-04-21 18:00:00",
-  "2024-04-22 17:59:59",
+  "2024-04-22 00:00:00",
+  "2024-04-22 23:59:59",
   MT5_SERVER_TYPE.LIVE
 ).then((res) => {
   console.log("res");
