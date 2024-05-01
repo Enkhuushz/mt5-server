@@ -55,6 +55,10 @@ const sendFunds = async () => {
     for (data of list) {
       console.log(data);
 
+      // if (count == 1) {
+      //   break;
+      // }
+
       const receipt = await sendReceiptFromExcelFunds(
         data.amount,
         data.vat,
