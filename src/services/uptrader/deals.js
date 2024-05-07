@@ -149,7 +149,7 @@ function generateExcell(list, path) {
 }
 
 getDeals(
-  "niju",
+  "dashka",
   "2024-04-29 00:00:00",
   "2024-05-05 23:59:59",
   MT5_SERVER_TYPE.LIVE
