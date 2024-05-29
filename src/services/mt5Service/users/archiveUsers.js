@@ -39,12 +39,14 @@ const getMultipleUserGroups = async (groups, type) => {
       );
       const totalRecords = resTotal.answer.total;
 
+      console.log(`totalRecords: ${totalRecords}`);
+
       if (totalRecords == "0") {
         list.push(login);
       }
     }
   }
-
+  console.log(list);
   list.forEach((item) => {
     worksheet.addRow(item);
   });
@@ -70,6 +72,6 @@ const checkIfPassed32Days = (currentDate, registrationTimestamp) => {
   return daysPassed > 32;
 };
 
-getMultipleUserGroups("real\\xauusd", MT5_SERVER_TYPE.LIVE).then((res) => {
+getMultipleUserGroups("real\\standart", MT5_SERVER_TYPE.LIVE).then((res) => {
   console.log("dome");
 });
