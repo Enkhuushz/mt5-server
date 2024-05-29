@@ -42,7 +42,7 @@ const getMultipleUserGroups = async (groups, type) => {
       console.log(`totalRecords: ${totalRecords}`);
 
       if (totalRecords == "0") {
-        list.push(login);
+        list.push({ login });
       }
     }
   }
