@@ -70,6 +70,6 @@ const checkIfPassed32Days = (currentDate, registrationTimestamp) => {
   return daysPassed > 32;
 };
 
-getMultipleUserGroups("real//xauusd", MT5_SERVER_TYPE.LIVE).then((res) => {
+getMultipleUserGroups("real\\xauusd", MT5_SERVER_TYPE.LIVE).then((res) => {
   console.lo("dome");
 });
