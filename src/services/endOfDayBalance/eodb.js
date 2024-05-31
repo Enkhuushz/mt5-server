@@ -29,6 +29,10 @@ const getEndOfDay = async (groups, from, to, type) => {
         type
       );
 
+      // const resLoginList = {
+      //   answer: ["512988"],
+      // };
+
       console.log(resLoginList);
 
       let list = [];
@@ -359,7 +363,7 @@ function calculateEndOfDayBalances(
           date = new Date(timestamp);
           dayKey = date.toISOString().split("T")[0];
         } else {
-          date = new Date(timestamp - 6 * 60 * 60 * 1000);
+          date = new Date(timestamp - 3 * 60 * 60 * 1000);
           dayKey = date.toISOString().split("T")[0];
         }
 
