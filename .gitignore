@@ -1,7 +1,6 @@
 .env
 .trunk/
 node_modules/
-file/
 filev2/
 filev2Test/
 uploads/
