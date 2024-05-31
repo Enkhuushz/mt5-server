@@ -48,7 +48,7 @@ const getEndOfDay = async (groups, from, to, type) => {
 
           //token crm
           if (j % 50 == 0) {
-            const url = "http://13.215.227.120:8089/api/uptrader-jwt/token";
+            const url = "http://3.1.237.167:8089/api/uptrader-jwt/token";
 
             const headers = {
               headers: {
