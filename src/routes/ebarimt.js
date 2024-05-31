@@ -219,7 +219,7 @@ router.get("/currency-rate", async (req, res) => {
 
 // router.get("/send-ebarimt-excel", async (req, res) => {
 //   try {
-//     const response = await send("2024-04-01", "2024-04-30");
+//     const response = await send("2024-05-01", "2024-05-31");
 
 //     return sendSuccess(res, "success", 200, "true");
 //   } catch (error) {
@@ -228,16 +228,16 @@ router.get("/currency-rate", async (req, res) => {
 //   }
 // });
 
-// router.get("/send-ebarimt-excel/funds", async (req, res) => {
-//   try {
-//     const response = await sendFunds();
+router.get("/send-ebarimt-excel/funds", async (req, res) => {
+  try {
+    const response = await sendFunds();
 
-//     return sendSuccess(res, "success", 200, "true");
-//   } catch (error) {
-//     logger.error(`/GET /ebarimtFunds ERROR: ${error.message}`);
-//     return sendError(res, error.message, 500);
-//   }
-// });
+    return sendSuccess(res, "success", 200, "true");
+  } catch (error) {
+    logger.error(`/GET /ebarimtFunds ERROR: ${error.message}`);
+    return sendError(res, error.message, 500);
+  }
+});
 
 router.get("/get-login-email/:path", async (req, res) => {
   try {
