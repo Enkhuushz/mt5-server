@@ -141,6 +141,6 @@ const getUsers = async (token, page, ibAccount) => {
 //   console.log("res");
 // });
 
-get().then((res) => {
-  console.log("res");
-});
+// get().then((res) => {
+//   console.log("res");
+// });
