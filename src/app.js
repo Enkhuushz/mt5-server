@@ -90,14 +90,14 @@ app.use("/trade-request", tradeRequestRoute);
 app.use("/bridge", bridgeRoute);
 app.use("/file", fileRoute);
 
-cron.schedule("*/2 * * * *", async () => {
-  if (!process.env.BASE_URL.includes("localhost")) {
-    // await runCronJobsBalanceCorrection();
-    // await runCronJobsCreditCorrection();
-    // await runCronJobsCreditBalanceCorrection();
-    // await runCronJobsCreditZeroCorrectionWhenBalanceGreatherThanZero();
-  }
-});
+// cron.schedule("*/2 * * * *", async () => {
+//   if (!process.env.BASE_URL.includes("localhost")) {
+//     // await runCronJobsBalanceCorrection();
+//     // await runCronJobsCreditCorrection();
+//     // await runCronJobsCreditBalanceCorrection();
+//     // await runCronJobsCreditZeroCorrectionWhenBalanceGreatherThanZero();
+//   }
+// });
 
 const runCronJobsBalanceCorrection = async () => {
   try {

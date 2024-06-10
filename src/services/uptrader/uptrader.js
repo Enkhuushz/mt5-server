@@ -56,7 +56,7 @@ const fetch = async (pageCount, name, ib) => {
 
 const getToken = async () => {
   try {
-    const url = `http://13.215.227.120:8089/api/uptrader-jwt/token`;
+    const url = `http://3.1.237.167:8089/api/uptrader-jwt/token`;
 
     const headers = {
       headers: {
@@ -115,9 +115,9 @@ const getUserAccount = async (token, userId) => {
   } catch (error) {}
 };
 
-// fetch(1, "enkhchimeg", 9295662).then((res) => {
-//   console.log("res");
-// });
+fetch(20, "niju", 1352158).then((res) => {
+  console.log("res");
+});
 
 const getPartners = async () => {
   try {

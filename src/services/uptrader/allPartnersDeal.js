@@ -9,7 +9,7 @@ const fs = require("fs");
 
 const getToken = async () => {
   try {
-    const url = `http://13.215.227.120:8089/api/uptrader-jwt/token`;
+    const url = `http://3.1.237.167:8089/api/uptrader-jwt/token`;
 
     const headers = {
       headers: {
@@ -55,51 +55,53 @@ const get = async () => {
       { header: "group", key: "group" },
     ];
 
-    const partners = await getPartners(1);
+    // const partners = await getPartners(1);
 
-    for (const c of partners) {
-      token = await getToken();
+    // for (const c of partners) {
+    token = await getToken();
 
-      let count = 100;
-      console.log(c.ibAccounts[0]);
+    //   let count = 100;
+    //   console.log(c.ibAccounts[0]);
 
-      for (i = 1; i < count; i++) {
-        const users = await getUsers(token, i, c.ibAccounts[0]);
+    for (i = 1; i < 20; i++) {
+      const users = await getUsers(token, i, "1352158");
 
-        for (const user of users.results) {
-          const accounts = await getUserAccount(token, user.id);
+      console.log(users);
 
-          for (const account of accounts) {
-            if (!account.isDemo) {
-              console.log(account);
+      for (const user of users.results) {
+        const accounts = await getUserAccount(token, user.id);
 
-              sheet.addRow({
-                email: c.email,
-                ibaccount: c.ibAccounts[0],
-                login: account.login,
-                userid: user.id,
-                group: account.accountTypeTitle,
-              });
-            }
+        for (const account of accounts) {
+          if (!account.isDemo) {
+            console.log(account);
+
+            sheet.addRow({
+              email: c.email,
+              ibaccount: "1352158",
+              login: account.login,
+              userid: user.id,
+              group: account.accountTypeTitle,
+            });
           }
         }
-        console.log(users.count);
-
-        if (users.count / 100 < i) {
-          break;
-        }
       }
-      const filePath = `file/${c.firstName}.xlsx`;
+      // console.log(users.count);
 
-      workbook.xlsx
-        .writeFile(filePath)
-        .then(() => {
-          console.log("Excel file saved to", filePath);
-        })
-        .catch((error) => {
-          console.error("Error saving the Excel file:", error);
-        });
+      // if (users.count / 100 < i) {
+      //   break;
+      // }
     }
+    const filePath = `file/${c.firstName}.xlsx`;
+
+    workbook.xlsx
+      .writeFile(filePath)
+      .then(() => {
+        console.log("Excel file saved to", filePath);
+      })
+      .catch((error) => {
+        console.error("Error saving the Excel file:", error);
+      });
+    // }
   } catch (error) {}
 };
 
@@ -138,3 +140,7 @@ const getUsers = async (token, page, ibAccount) => {
 // getPartners(1).then((res) => {
 //   console.log("res");
 // });
+
+get().then((res) => {
+  console.log("res");
+});
